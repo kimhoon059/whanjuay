@@ -79,7 +79,7 @@
             this.FORGETPASSWORD.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.FORGETPASSWORD.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.FORGETPASSWORD.FillColor = System.Drawing.Color.Transparent;
-            this.FORGETPASSWORD.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FORGETPASSWORD.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.FORGETPASSWORD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(139)))), ((int)(((byte)(71)))), ((int)(((byte)(59)))));
             this.FORGETPASSWORD.Location = new System.Drawing.Point(455, 516);
             this.FORGETPASSWORD.Name = "FORGETPASSWORD";

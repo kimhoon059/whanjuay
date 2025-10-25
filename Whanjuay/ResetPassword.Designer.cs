@@ -1,6 +1,6 @@
 ﻿namespace Whanjuay
 {
-    partial class ForgetPassword
+    partial class ResetPassword
     {
         /// <summary>
         /// Required designer variable.
@@ -28,26 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.verify = new Guna.UI2.WinForms.Guna2Panel();
+            this.resetpw = new Guna.UI2.WinForms.Guna2Panel();
             this.SUBMIT = new Guna.UI2.WinForms.Guna2Button();
             this.guna2TextBox1 = new Guna.UI2.WinForms.Guna2TextBox();
             this.USERNAME = new Guna.UI2.WinForms.Guna2TextBox();
-            this.verify.SuspendLayout();
+            this.resetpw.SuspendLayout();
             this.SuspendLayout();
             // 
-            // verify
+            // resetpw
             // 
-            this.verify.BackgroundImage = global::Whanjuay.Properties.Resources.K_PRA__9_;
-            this.verify.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.verify.Controls.Add(this.SUBMIT);
-            this.verify.Controls.Add(this.guna2TextBox1);
-            this.verify.Controls.Add(this.USERNAME);
-            this.verify.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.verify.Location = new System.Drawing.Point(0, 0);
-            this.verify.Name = "verify";
-            this.verify.Size = new System.Drawing.Size(1264, 681);
-            this.verify.TabIndex = 0;
-            this.verify.Paint += new System.Windows.Forms.PaintEventHandler(this.guna2Panel1_Paint);
+            this.resetpw.BackgroundImage = global::Whanjuay.Properties.Resources.K_PRA__10_;
+            this.resetpw.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.resetpw.Controls.Add(this.SUBMIT);
+            this.resetpw.Controls.Add(this.guna2TextBox1);
+            this.resetpw.Controls.Add(this.USERNAME);
+            this.resetpw.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.resetpw.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.resetpw.Location = new System.Drawing.Point(0, 0);
+            this.resetpw.Name = "resetpw";
+            this.resetpw.Size = new System.Drawing.Size(1264, 681);
+            this.resetpw.TabIndex = 0;
+            this.resetpw.Paint += new System.Windows.Forms.PaintEventHandler(this.resetpw_Paint);
             // 
             // SUBMIT
             // 
@@ -60,12 +61,12 @@
             this.SUBMIT.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.SUBMIT.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SUBMIT.ForeColor = System.Drawing.Color.White;
-            this.SUBMIT.Location = new System.Drawing.Point(429, 550);
+            this.SUBMIT.Location = new System.Drawing.Point(413, 560);
             this.SUBMIT.Name = "SUBMIT";
             this.SUBMIT.Size = new System.Drawing.Size(158, 37);
-            this.SUBMIT.TabIndex = 7;
+            this.SUBMIT.TabIndex = 8;
             this.SUBMIT.Text = "SUBMIT";
-            this.SUBMIT.Click += new System.EventHandler(this.SUBMIT_Click);
+            this.SUBMIT.Click += new System.EventHandler(this.SUBMIT_Click_1);
             // 
             // guna2TextBox1
             // 
@@ -81,13 +82,13 @@
             this.guna2TextBox1.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.guna2TextBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2TextBox1.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guna2TextBox1.Location = new System.Drawing.Point(317, 466);
+            this.guna2TextBox1.Location = new System.Drawing.Point(304, 495);
             this.guna2TextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.guna2TextBox1.Name = "guna2TextBox1";
-            this.guna2TextBox1.PlaceholderText = "E-MAIL";
+            this.guna2TextBox1.PlaceholderText = "CONFIRM PASSWORD";
             this.guna2TextBox1.SelectedText = "";
             this.guna2TextBox1.Size = new System.Drawing.Size(381, 44);
-            this.guna2TextBox1.TabIndex = 6;
+            this.guna2TextBox1.TabIndex = 7;
             this.guna2TextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // USERNAME
@@ -104,37 +105,35 @@
             this.USERNAME.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.USERNAME.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.USERNAME.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.USERNAME.Location = new System.Drawing.Point(317, 396);
+            this.USERNAME.Location = new System.Drawing.Point(304, 422);
             this.USERNAME.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.USERNAME.Name = "USERNAME";
-            this.USERNAME.PlaceholderText = "USERNAME";
+            this.USERNAME.PlaceholderText = "PASSWORD";
             this.USERNAME.SelectedText = "";
             this.USERNAME.Size = new System.Drawing.Size(381, 44);
-            this.USERNAME.TabIndex = 5;
+            this.USERNAME.TabIndex = 6;
             this.USERNAME.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.USERNAME.TextChanged += new System.EventHandler(this.USERNAME_TextChanged);
             // 
-            // ForgetPassword
+            // ResetPassword
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1264, 681);
-            this.Controls.Add(this.verify);
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "ForgetPassword";
+            this.Controls.Add(this.resetpw);
+            this.Name = "ResetPassword";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ForgetPassword";
-            this.verify.ResumeLayout(false);
+            this.Text = "ResetPassword";
+            this.resetpw.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Guna.UI2.WinForms.Guna2Panel verify;
-        private Guna.UI2.WinForms.Guna2TextBox USERNAME;
+        private Guna.UI2.WinForms.Guna2Panel resetpw;
         private Guna.UI2.WinForms.Guna2TextBox guna2TextBox1;
+        private Guna.UI2.WinForms.Guna2TextBox USERNAME;
         private Guna.UI2.WinForms.Guna2Button SUBMIT;
     }
 }

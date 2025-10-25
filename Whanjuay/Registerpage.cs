@@ -22,7 +22,7 @@ namespace Whanjuay
         {
             base.OnLoad(e);
 
-            // ซ่อนรหัสเป็นจุด (เลือกอย่างใดอย่างหนึ่ง)
+            // ซ่อนรหัสเป็นจุด
             PASSWORD.UseSystemPasswordChar = true;
             CONFIRMPASSWORD.UseSystemPasswordChar = true;
             // หรือ:
@@ -37,10 +37,13 @@ namespace Whanjuay
         // ตรวจข้อมูล → บันทึก DB → แจ้งสำเร็จ → ปิด
         private void SUBMIT_Click(object sender, EventArgs e)
         {
-            string username = USERNAME.Text.Trim();
-            string password = PASSWORD.Text.Trim();
-            string confirm = CONFIRMPASSWORD.Text.Trim();
-            string email = guna2TextBox2.Text.Trim(); // ช่องอีเมลในฟอร์มของคุณ
+            string username = (USERNAME.Text ?? "").Trim();
+            string password = (PASSWORD.Text ?? "").Trim();
+            string confirm = (CONFIRMPASSWORD.Text ?? "").Trim();
+
+            // ทำอีเมลให้เรียบร้อย: trim + lower
+            string emailRaw = (guna2TextBox2.Text ?? "");
+            string email = emailRaw.Trim().ToLowerInvariant();
 
             // 1) Username: ตัวอักษร/ตัวเลข 8–15
             if (!RxUserPass.IsMatch(username))
@@ -69,10 +72,17 @@ namespace Whanjuay
                 return;
             }
 
-            // 4) Email ต้องเป็น @gmail.com
+            // 4) Email ต้องเป็น @gmail.com และความยาว ≤ 100 (ให้ตรงกับสคีมาใหม่)
             if (!RxGmail.IsMatch(email))
             {
                 MessageBox.Show("กรุณากรอกอีเมลให้ถูกต้อง และเป็น @gmail.com",
+                                "กรอกข้อมูลไม่ถูกต้อง", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                guna2TextBox2.Focus();
+                return;
+            }
+            if (email.Length > 100)
+            {
+                MessageBox.Show("อีเมลยาวเกินกำหนด (สูงสุด 100 ตัวอักษร)",
                                 "กรอกข้อมูลไม่ถูกต้อง", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 guna2TextBox2.Focus();
                 return;
@@ -86,13 +96,14 @@ namespace Whanjuay
                 {
                     conn.Open();
 
-                    // กันซ้ำ: username / email
+                    // กันซ้ำ: username / email (เทียบกับค่าที่ trim/lower แล้ว)
                     using (var chk = new MySqlCommand(
-                        "SELECT COUNT(*) FROM users WHERE username = @u OR email = @e", conn))
+                        "SELECT COUNT(*) FROM users WHERE username = @u OR LOWER(TRIM(email)) = LOWER(TRIM(@e))", conn))
                     {
                         chk.Parameters.AddWithValue("@u", username);
                         chk.Parameters.AddWithValue("@e", email);
-                        long exists = (long)chk.ExecuteScalar();
+
+                        long exists = Convert.ToInt64(chk.ExecuteScalar()); // ปลอดภัยกว่าการ cast ตรง ๆ
                         if (exists > 0)
                         {
                             MessageBox.Show("Username หรือ Email นี้ถูกใช้แล้ว",
@@ -101,7 +112,7 @@ namespace Whanjuay
                         }
                     }
 
-                    // บันทึก (สาธิต—งานจริงควรทำ hashing รหัสผ่าน)
+                    // บันทึก (ยังไม่ทำ hashing ตามที่ตกลง)
                     using (var cmd = new MySqlCommand(
                         "INSERT INTO users (username, password, email) VALUES (@u, @p, @e)", conn))
                     {
@@ -115,6 +126,12 @@ namespace Whanjuay
                 MessageBox.Show("สมัครสมาชิกสำเร็จ", "สำเร็จ",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close(); // ปิด Register → กลับหน้า Login (หากเปิดแบบโมดัล)
+            }
+            // ดักชน UNIQUE ของ MySQL (เผื่อมี race condition)
+            catch (MySqlException mex) when (mex.Number == 1062)
+            {
+                MessageBox.Show("Username หรือ Email นี้ถูกใช้แล้ว (ชน UNIQUE ที่ฐานข้อมูล)",
+                                "สมัครไม่สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {

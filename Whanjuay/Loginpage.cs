@@ -22,37 +22,146 @@ namespace Whanjuay
             // ผูกปุ่ม REGISTER ให้เปิดหน้า Register
             this.REGISTER.Click += Register_Click;
 
-            // ให้ช่องรหัสผ่านพิมพ์แล้วเป็นจุด
-            PASSWORD.UseSystemPasswordChar = true;
-            // ถ้า control ของคุณไม่มี UseSystemPasswordChar ให้ใช้:
-            // PASSWORD.PasswordChar = '●';
+            // ✅ ให้ช่องรหัสผ่านพิมพ์แล้วเป็นจุด (รองรับทั้ง TextBox/Guna2TextBox)
+            try { MaskAsPassword(this.PASSWORD); } catch { /* เผื่อ control ไม่ตรงชนิด ข้ามได้ */ }
+
+            // ✅ ผูก "Forget Password" แบบไม่พึ่ง Designer (ค้นหาคอนโทรลให้เอง)
+            WireForgetPassword();
+
+            // ✅ ผูกปุ่ม "ล็อกอิน" เพื่อเช็คแอดมิน (SUBMIT/LOGIN/หรือปุ่มแรกตาม TabIndex)
+            WireLoginButton();
         }
 
-        private void guna2Button1_Click(object sender, EventArgs e)
+        // ====== ผูกปุ่มล็อกอิน แล้วชี้มาที่ Login_Click ======
+        private void WireLoginButton()
         {
+            // หาได้ทั้งชื่อ SUBMIT/LOGIN หรือถ้าไม่เจอหยิบปุ่มแรกตาม TabIndex (ไม่จำกัดชนิดปุ่ม)
+            Control btnLogin =
+                this.Controls.Find("SUBMIT", true).FirstOrDefault() ??
+                this.Controls.Find("LOGIN", true).FirstOrDefault() ??
+                GetAllControls(this)
+                    .Where(c => c is ButtonBase || c.GetType().Name.IndexOf("Button", StringComparison.OrdinalIgnoreCase) >= 0)
+                    .OrderBy(c => c.TabIndex)
+                    .FirstOrDefault();
 
+            if (btnLogin != null)
+            {
+                // กันผูกซ้ำ แล้วค่อยผูกใหม่
+                btnLogin.Click -= Login_Click;
+                btnLogin.Click += Login_Click;
+            }
         }
 
-        private void guna2TextBox1_TextChanged(object sender, EventArgs e)
+        // ====== ล็อกอิน: เช็คแอดมินก่อน (ไม่สนตัวพิมพ์เล็ก-ใหญ่) ======
+        private void Login_Click(object sender, EventArgs e)
         {
+            string user = (this.USERNAME.Text ?? "").Trim();
+            string pass = (this.PASSWORD.Text ?? "").Trim();
 
+            bool isAdmin =
+                string.Equals(user, "adminwj", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(pass, "wj88888888", StringComparison.OrdinalIgnoreCase);
+
+            if (isAdmin)
+            {
+                // เข้าหน้าแอดมิน (ฟอร์มชื่อ Admin ตามที่คุณสร้าง)
+                this.Hide();
+                using (var admin = new Admin())
+                {
+                    admin.StartPosition = FormStartPosition.CenterParent; // ให้เปิดกลางจอ
+                    admin.ShowDialog(this);
+                }
+                this.Show();
+                return;
+            }
+
+            // (ยังไม่ทำล็อกอินผู้ใช้ทั่วไปในจุดนี้)
+            MessageBox.Show("บัญชีนี้ไม่ใช่แอดมิน หรือรหัสผ่านไม่ถูกต้อง",
+                "เข้าสู่ระบบไม่สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        private void guna2TextBox1_TextChanged_1(object sender, EventArgs e)
+        // ====== ค้นหาแล้วผูกคลิกกับคอนโทรล Forget Password ======
+        private void WireForgetPassword()
         {
+            // พยายามหาจากชื่อคอนโทรลก่อน
+            Control forgotCtrl =
+                this.Controls.Find("FORGETPASSWORD", true).FirstOrDefault()  // ชื่อเต็ม
+                ?? this.Controls.Find("FORGET", true).FirstOrDefault()       // ชื่อสั้น
+                                                                             // ถ้ายังไม่เจอ ลองเทียบจากข้อความบนคอนโทรล (เช่น "FORGET PASSWORD")
+                ?? this.Controls
+                      .OfType<Control>()
+                      .FirstOrDefault(c =>
+                      {
+                          var t = (c.Text ?? "").Replace(" ", "");
+                          return t.Equals("FORGETPASSWORD", StringComparison.OrdinalIgnoreCase)
+                                 || t.Equals("FORGET", StringComparison.OrdinalIgnoreCase)
+                                 || t.Equals("FORGETPASSWORD?", StringComparison.OrdinalIgnoreCase);
+                      });
 
+            if (forgotCtrl != null)
+            {
+                // กันผูกซ้ำ + ผูกอีเวนต์คลิก
+                forgotCtrl.Click -= FORGETPASSWORD_Click;
+                forgotCtrl.Click += FORGETPASSWORD_Click;
+
+                // ถ้าเป็น Label ทำให้ดูเหมือนลิงก์ (คลิกได้)
+                if (forgotCtrl is Label lbl)
+                {
+                    lbl.Cursor = Cursors.Hand;
+                    lbl.ForeColor = Color.RoyalBlue; // ปรับสีตามชอบได้
+                }
+            }
         }
 
-        private void USERNAME_TextChanged(object sender, EventArgs e)
+        // เมื่อคลิก Forget Password → เปิดหน้าลืมรหัสผ่านแบบโมดัล
+        private void FORGETPASSWORD_Click(object sender, EventArgs e)
         {
-
+            using (var f = new ForgetPassword())
+            {
+                f.StartPosition = FormStartPosition.CenterParent;
+                f.ShowDialog(this);
+            }
         }
 
-        private void PASSWORD_TextChanged(object sender, EventArgs e)
+        // ====== Helper: ทำให้ช่องเป็นรหัส (รองรับ Guna2TextBox / TextBox / MaskedTextBox) ======
+        private void MaskAsPassword(Control c)
         {
+            if (c == null) return;
 
+            // TextBox ปกติ
+            if (c is TextBox tb)
+            {
+                tb.UseSystemPasswordChar = true;
+                return;
+            }
+
+            // MaskedTextBox
+            if (c is MaskedTextBox mtb)
+            {
+                mtb.UseSystemPasswordChar = true;
+                return;
+            }
+
+            // อื่น ๆ (เช่น Guna2TextBox) ใช้ reflection หา property ที่มี
+            var t = c.GetType();
+
+            // ลองตั้ง UseSystemPasswordChar ถ้ามี
+            var pUse = t.GetProperty("UseSystemPasswordChar");
+            if (pUse != null && pUse.PropertyType == typeof(bool) && pUse.CanWrite)
+            {
+                pUse.SetValue(c, true);
+                return;
+            }
+
+            // ไม่มีก็ลองตั้ง PasswordChar เป็นจุด
+            var pChar = t.GetProperty("PasswordChar");
+            if (pChar != null && pChar.PropertyType == typeof(char) && pChar.CanWrite)
+            {
+                pChar.SetValue(c, '●');  // หรือ '*'
+            }
         }
 
+        // ====== ของเดิม (คงไว้เผื่อ Designer อ้างถึง) ======
         private void Register_Click(object sender, EventArgs e)
         {
             this.Hide(); // ซ่อนหน้า Login ชั่วคราว
@@ -63,14 +172,23 @@ namespace Whanjuay
             this.Show(); // กลับมาโชว์หน้า Login เมื่อปิด Register
         }
 
-        private void guna2Button1_Click_1(object sender, EventArgs e)
+        private void guna2Button1_Click(object sender, EventArgs e) { }
+        private void guna2TextBox1_TextChanged(object sender, EventArgs e) { }
+        private void guna2TextBox1_TextChanged_1(object sender, EventArgs e) { }
+        private void USERNAME_TextChanged(object sender, EventArgs e) { }
+        private void PASSWORD_TextChanged(object sender, EventArgs e) { }
+        private void guna2Button1_Click_1(object sender, EventArgs e) { }
+        private void LOGIN_Paint(object sender, PaintEventArgs e) { }
+
+        // ====== Helper: ดึงคอนโทรลทั้งหมดแบบ recursive ======
+        private IEnumerable<Control> GetAllControls(Control root)
         {
-
-        }
-
-        private void LOGIN_Paint(object sender, PaintEventArgs e)
-        {
-
+            foreach (Control c in root.Controls)
+            {
+                yield return c;
+                foreach (var child in GetAllControls(c))
+                    yield return child;
+            }
         }
     }
 }
