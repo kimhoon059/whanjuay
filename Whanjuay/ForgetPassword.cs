@@ -10,13 +10,11 @@ namespace Whanjuay
 {
     public partial class ForgetPassword : Form
     {
-        // ✅ กติกาเดิมตามที่ต้องการ: a-zA-Z0-9 ความยาว 8–15
         private static readonly Regex RxUser = new Regex(@"^[A-Za-z0-9]{8,15}$");
         private static readonly Regex RxGmail = new Regex(@"^[A-Za-z0-9._%+-]+@gmail\.com$", RegexOptions.IgnoreCase);
 
-        // อ้างอิงคอนโทรล (ไม่ต้องแตะ Designer)
-        private Control _tbUser;   // ช่อง Username
-        private Control _tbEmail;  // ช่อง Email
+        private Control _tbUser;   // Username
+        private Control _tbEmail;  // Email
         private Button _btnSubmit;
 
         public ForgetPassword()
@@ -28,52 +26,45 @@ namespace Whanjuay
         {
             base.OnLoad(e);
 
-            // ---------- ขั้นที่ 1: พยายามหาโดย "ชื่อคอนโทรล" ก่อน ----------
             _tbUser = FindCtrl("USERNAME") ?? FindCtrl("txtUser");
             _tbEmail = FindCtrl("EMAIL") ?? FindCtrl("txtEmail") ?? FindCtrl("guna2TextBox2");
             _btnSubmit = FindCtrl<Button>("SUBMIT") ?? FindCtrl<Button>("btnSubmit");
 
-            // ---------- ขั้นที่ 2: ถ้าไม่เจอ ให้กวาด input ทั้งหมด แล้วเดาตาม heuristic ----------
             var inputs = GetAllInputTextControls(this).OrderBy(c => c.TabIndex).ToList();
 
             if (_tbUser == null)
             {
                 _tbUser =
-                    // จากชื่อคอนโทรล
                     inputs.FirstOrDefault(c => NameLike(c, "user") && !NameLike(c, "email")) ??
-                    // จาก placeholder
                     inputs.FirstOrDefault(c => PlaceholderLike(c, "user")) ??
-                    // fallback: ช่องแรก
                     inputs.FirstOrDefault();
             }
 
             if (_tbEmail == null)
             {
                 _tbEmail =
-                    // จากชื่อคอนโทรล
                     inputs.FirstOrDefault(c => NameLike(c, "mail") || NameLike(c, "email")) ??
-                    // จาก placeholder
                     inputs.FirstOrDefault(c => PlaceholderLike(c, "mail") || PlaceholderLike(c, "email") || PlaceholderLike(c, "@")) ??
-                    // fallback: ช่องถัดจาก user (ถ้าเจอ user แล้ว)
                     (_tbUser != null && inputs.Contains(_tbUser)
                         ? inputs.Skip(inputs.IndexOf(_tbUser) + 1).FirstOrDefault()
                         : null)
                     ?? inputs.ElementAtOrDefault(1);
             }
 
-            // ---------- ขั้นที่ 3: หา/ผูกปุ่ม Submit ----------
             if (_btnSubmit == null)
-            {
                 _btnSubmit = GetAllControls(this).OfType<Button>().OrderBy(b => b.TabIndex).FirstOrDefault();
-            }
+
             if (_btnSubmit != null)
             {
-                _btnSubmit.Click -= SUBMIT_Click; // กันผูกซ้ำ
+                if (_btnSubmit is IButtonControl ib) ib.DialogResult = DialogResult.None;        // กันปิดฟอร์มเอง
+                var pDR = _btnSubmit.GetType().GetProperty("DialogResult");
+                if (pDR != null && pDR.CanWrite) pDR.SetValue(_btnSubmit, DialogResult.None);
+
+                _btnSubmit.Click -= SUBMIT_Click;
                 _btnSubmit.Click += SUBMIT_Click;
             }
         }
 
-        // ===== กด SUBMIT → ตรวจ Username/Email → เปิดหน้า Reset =====
         private void SUBMIT_Click(object sender, EventArgs e)
         {
             if (_tbUser == null || _tbEmail == null)
@@ -86,11 +77,9 @@ namespace Whanjuay
             string username = (_tbUser.Text ?? string.Empty);
             string email = (_tbEmail.Text ?? string.Empty);
 
-            // Normalize: ลบช่องว่างทุกชนิด + ตัดหัวท้าย; อีเมลแปลงเป็นตัวเล็ก
             username = Regex.Replace(username, @"\s", "").Trim();
             email = Regex.Replace(email, @"\s", "").Trim().ToLowerInvariant();
 
-            // ตรวจรูปแบบ (กติกาเดิม 8–15)
             if (!RxUser.IsMatch(username))
             {
                 MessageBox.Show("Username ต้องเป็นตัวอักษร/ตัวเลข 8–15 ตัว",
@@ -106,7 +95,6 @@ namespace Whanjuay
                 return;
             }
 
-            // ตรวจในฐานข้อมูล (ไม่สนพิมพ์เล็ก-ใหญ่ และตัดช่องว่าง)
             try
             {
                 string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
@@ -135,11 +123,24 @@ namespace Whanjuay
                     }
                 }
 
-                // ผ่าน → เปิดหน้าเปลี่ยนรหัสผ่าน
+                // ✅ ผ่าน → เคลียร์ช่อง แล้วไปหน้า Reset แบบโมดัล
+                ClearInputs();                      // <<< เคลียร์ช่องที่ขอ
+                this.Hide();                        // ซ่อน Forget ระหว่างรีเซ็ต
                 using (var reset = new ResetPassword(username, email))
                 {
-                    reset.ShowDialog(this);
+                    reset.StartPosition = FormStartPosition.CenterParent;
+                    var dr = reset.ShowDialog(this);
+                    if (dr == DialogResult.OK)
+                    {
+                        // รีเซ็ตสำเร็จ → Reset จะพาไปหน้า Login แล้ว ปิด Forget ต่อเลย
+                        this.Close();
+                        return;
+                    }
                 }
+                // ถ้ารีเซ็ตถูกยกเลิก → กลับมา Forget ต่อ
+                this.Show();
+                // โฟกัสกลับไปที่ช่องแรก
+                _tbUser?.Focus();
             }
             catch (Exception ex)
             {
@@ -148,9 +149,20 @@ namespace Whanjuay
             }
         }
 
-        // ================= Helpers =================
+        // ===== Helpers =====
+        private void ClearInputs()
+        {
+            SetText(_tbUser, string.Empty);
+            SetText(_tbEmail, string.Empty);
+        }
+        private void SetText(Control c, string value)
+        {
+            if (c == null) return;
+            if (c is TextBoxBase tb) { tb.Text = value; return; }
+            var pText = c.GetType().GetProperty("Text");
+            if (pText != null && pText.CanWrite) pText.SetValue(c, value);
+        }
 
-        // หา Control ตาม “ชื่อเป๊ะ” (recursive, case-insensitive)
         private Control FindCtrl(string name)
         {
             return GetAllControls(this)
@@ -162,8 +174,6 @@ namespace Whanjuay
                    .OfType<T>()
                    .FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
         }
-
-        // เดินทุกคอนโทรลในฟอร์ม (รวมลูกหลาน)
         private IEnumerable<Control> GetAllControls(Control root)
         {
             foreach (Control c in root.Controls)
@@ -173,8 +183,6 @@ namespace Whanjuay
                     yield return child;
             }
         }
-
-        // ดึง “ช่องกรอกข้อความ” ทั้งหมด (TextBoxBase + Guna2TextBox)
         private IEnumerable<Control> GetAllInputTextControls(Control root)
         {
             foreach (var c in GetAllControls(root))
@@ -188,14 +196,9 @@ namespace Whanjuay
                     yield return c;
             }
         }
+        private bool NameLike(Control c, string keyword) =>
+            (c.Name ?? "").IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0;
 
-        // เช็คว่าชื่อคอนโทรลมีคีย์เวิร์ด
-        private bool NameLike(Control c, string keyword)
-        {
-            return (c.Name ?? "").IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
-        // อ่าน PlaceholderText (รองรับ Guna2TextBox ด้วย reflection)
         private bool PlaceholderLike(Control c, string keyword)
         {
             try
@@ -207,11 +210,10 @@ namespace Whanjuay
                     return (val ?? "").IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0;
                 }
             }
-            catch { /* ignore */ }
+            catch { }
             return false;
         }
 
-        // Stubs ที่ Designer เคยผูกไว้ (เว้นว่างได้)
         private void guna2Panel1_Paint(object sender, PaintEventArgs e) { }
         private void USERNAME_TextChanged(object sender, EventArgs e) { }
     }

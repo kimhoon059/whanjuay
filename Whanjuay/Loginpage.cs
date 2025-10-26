@@ -65,13 +65,21 @@ namespace Whanjuay
             if (isAdmin)
             {
                 // เข้าหน้าแอดมิน (ฟอร์มชื่อ Admin ตามที่คุณสร้าง)
-                this.Hide();
-                using (var admin = new Admin())
+                var admin = new Admin();
+                admin.StartPosition = FormStartPosition.CenterScreen;
+
+                // เมื่อปิดหน้า Admin แล้ว ให้เคลียร์ฟอร์ม + โชว์หน้า Login กลับมา
+                admin.FormClosed += (s, ea) =>
                 {
-                    admin.StartPosition = FormStartPosition.CenterParent; // ให้เปิดกลางจอ
-                    admin.ShowDialog(this);
-                }
-                this.Show();
+                    if (!this.IsDisposed)
+                    {
+                        ResetLoginForm();
+                        this.Show();
+                    }
+                };
+
+                this.Hide();    // ❗อย่า Close() ฟอร์มหลัก ไม่งั้นแอปจะปิดหมด
+                admin.Show();
                 return;
             }
 
@@ -113,14 +121,56 @@ namespace Whanjuay
             }
         }
 
-        // เมื่อคลิก Forget Password → เปิดหน้าลืมรหัสผ่านแบบโมดัล
+        // ====== เมื่อคลิก Forget Password → เปิดหน้า ForgetPassword แบบไม่ปิดแอป ======
         private void FORGETPASSWORD_Click(object sender, EventArgs e)
         {
-            using (var f = new ForgetPassword())
+            var f = new ForgetPassword();
+            f.StartPosition = FormStartPosition.CenterScreen;
+
+            // เมื่อปิดหน้า Forget แล้ว ให้เคลียร์ฟอร์ม + โชว์หน้า Login กลับมา
+            f.FormClosed += (s, ea) =>
             {
-                f.StartPosition = FormStartPosition.CenterParent;
-                f.ShowDialog(this);
+                if (!this.IsDisposed)
+                {
+                    ResetLoginForm();
+                    this.Show();
+                }
+            };
+
+            this.Hide();   // ❗ซ่อนฟอร์มหลักแทนการ Close()
+            f.Show();
+        }
+
+        // ====== Helper: เคลียร์ฟอร์มล็อกอิน (ช่องกรอก/โฟกัส/ซ่อนรหัส) ======
+        private void ResetLoginForm()
+        {
+            try
+            {
+                // เคลียร์ Text ของทุก TextBox/MaskedTextBox/Guna2TextBox ภายในฟอร์ม
+                foreach (var c in GetAllControls(this))
+                {
+                    if (c is TextBox tb) tb.Text = string.Empty;
+                    else if (c is MaskedTextBox mtb) mtb.Text = string.Empty;
+                    else
+                    {
+                        // รองรับ Guna2TextBox
+                        var typeName = c.GetType().FullName ?? "";
+                        if (typeName.IndexOf("Guna2TextBox", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            var pText = c.GetType().GetProperty("Text");
+                            if (pText != null && pText.CanWrite) pText.SetValue(c, string.Empty);
+                        }
+                    }
+                }
+
+                // ตั้งให้ช่องรหัสเป็นจุดอีกครั้ง เผื่อ control เปลี่ยน state
+                try { MaskAsPassword(this.PASSWORD); } catch { }
+
+                // โฟกัสกลับไปที่ USERNAME ถ้ามี
+                if (this.USERNAME != null && this.USERNAME.CanFocus)
+                    this.USERNAME.Focus();
             }
+            catch { /* ป้องกัน error เล็ก ๆ น้อย ๆ */ }
         }
 
         // ====== Helper: ทำให้ช่องเป็นรหัส (รองรับ Guna2TextBox / TextBox / MaskedTextBox) ======
@@ -167,9 +217,11 @@ namespace Whanjuay
             this.Hide(); // ซ่อนหน้า Login ชั่วคราว
             using (var reg = new Registerpage())
             {
+                reg.StartPosition = FormStartPosition.CenterParent;
                 reg.ShowDialog(); // เปิดหน้า Register แบบ modal
             }
-            this.Show(); // กลับมาโชว์หน้า Login เมื่อปิด Register
+            ResetLoginForm();   // กลับมาแล้วเคลียร์ช่องให้พร้อมใช้
+            this.Show();        // กลับมาโชว์หน้า Login เมื่อปิด Register
         }
 
         private void guna2Button1_Click(object sender, EventArgs e) { }

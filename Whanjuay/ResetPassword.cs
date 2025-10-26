@@ -19,7 +19,7 @@ namespace Whanjuay
         // อ้างอิงคอนโทรลแบบยืดหยุ่น
         private Control _tbPass;      // PASSWORD / NEWPASSWORD / txtNewPass / Guna2TextBox
         private Control _tbConfirm;   // CONFIRMPASSWORD / txtConfirm / Guna2TextBox
-        private Button _btnSubmit;   // SUBMIT / btnSave
+        private Button _btnSubmit;    // SUBMIT / btnSave
 
         public ResetPassword(string username, string email)
         {
@@ -46,10 +46,7 @@ namespace Whanjuay
             // ----- 2) ถ้ายังไม่เจอ textbox ให้เดา 2 ช่องแรกตาม TabIndex -----
             if (_tbPass == null || _tbConfirm == null)
             {
-                var inputs = GetAllInputTextControls(this)
-                            .OrderBy(c => c.TabIndex)
-                            .ToList();
-
+                var inputs = GetAllInputTextControls(this).OrderBy(c => c.TabIndex).ToList();
                 if (inputs.Count >= 2)
                 {
                     if (_tbPass == null) _tbPass = inputs[0];
@@ -69,9 +66,8 @@ namespace Whanjuay
             }
             if (_btnSubmit != null)
             {
-                // กันผูกซ้ำ (และรองรับกรณี Designer ผูก SUBMIT_Click_1)
                 _btnSubmit.Click -= SUBMIT_Click;
-                _btnSubmit.Click -= SUBMIT_Click_1;
+                _btnSubmit.Click -= SUBMIT_Click_1; // เผื่อเคยผูกใน Designer
                 _btnSubmit.Click += SUBMIT_Click;
             }
         }
@@ -117,7 +113,7 @@ namespace Whanjuay
                           WHERE LOWER(TRIM(username)) = LOWER(TRIM(@u))
                             AND LOWER(TRIM(email))    = LOWER(TRIM(@e));", conn))
                     {
-                        cmd.Parameters.AddWithValue("@p", p);   // **งานจริงควรทำ hashing**
+                        cmd.Parameters.AddWithValue("@p", p);   // **โปรดพิจารณาเพิ่ม hashing ในงานจริง**
                         cmd.Parameters.AddWithValue("@u", _username);
                         cmd.Parameters.AddWithValue("@e", _email);
 
@@ -131,34 +127,37 @@ namespace Whanjuay
                     }
                 }
 
-                // ===== ส่วนพากลับหน้า Login =====
+                // ===== พากลับหน้า Login =====
                 var res = MessageBox.Show("เปลี่ยนรหัสผ่านสำเร็จ",
                     "สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 if (res == DialogResult.OK)
                 {
-                    // ปิดฟอร์ม Reset (และส่งสัญญาณกลับว่า OK)
+                    // แจ้งผลกลับให้ ForgetPassword รู้ว่าเสร็จแล้ว
                     this.DialogResult = DialogResult.OK;
-                    this.Close();
 
-                    // ถ้าฟอร์ม ForgetPassword เป็นเจ้าของ (Owner) อยู่ ให้ปิดด้วย
+                    // ปิดหน้า ForgetPassword (ถ้าเป็น Owner)
                     if (this.Owner != null && !this.Owner.IsDisposed)
                     {
-                        this.Owner.DialogResult = DialogResult.OK;
                         this.Owner.Close();
                     }
 
-                    // แสดงหน้า Login: ถ้ามีอยู่แล้วให้ Show/Activate, ถ้าไม่มีก็สร้างใหม่
+                    // เปิด/โฟกัสหน้า Login
                     var login = Application.OpenForms.OfType<Loginpage>().FirstOrDefault();
                     if (login != null && !login.IsDisposed)
                     {
+                        login.StartPosition = FormStartPosition.CenterScreen;
                         login.Show();
                         login.Activate();
                     }
                     else
                     {
-                        new Loginpage().Show();
+                        var lp = new Loginpage { StartPosition = FormStartPosition.CenterScreen };
+                        lp.Show();
                     }
+
+                    // ปิดหน้าปัจจุบัน
+                    this.Close();
                 }
             }
             catch (Exception ex)
