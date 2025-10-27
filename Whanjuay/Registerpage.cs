@@ -42,7 +42,7 @@ namespace Whanjuay
             string confirm = (CONFIRMPASSWORD.Text ?? "").Trim();
 
             // ทำอีเมลให้เรียบร้อย: trim + lower
-            string emailRaw = (guna2TextBox2.Text ?? "");
+            string emailRaw = (this.email.Text ?? "");
             string email = emailRaw.Trim().ToLowerInvariant();
 
             // 1) Username: ตัวอักษร/ตัวเลข 8–15
@@ -77,14 +77,14 @@ namespace Whanjuay
             {
                 MessageBox.Show("กรุณากรอกอีเมลให้ถูกต้อง และเป็น @gmail.com",
                                 "กรอกข้อมูลไม่ถูกต้อง", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                guna2TextBox2.Focus();
+                this.email.Focus();
                 return;
             }
             if (email.Length > 100)
             {
                 MessageBox.Show("อีเมลยาวเกินกำหนด (สูงสุด 100 ตัวอักษร)",
                                 "กรอกข้อมูลไม่ถูกต้อง", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                guna2TextBox2.Focus();
+                this.email.Focus();
                 return;
             }
 

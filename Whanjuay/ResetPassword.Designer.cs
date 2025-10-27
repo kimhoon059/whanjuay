@@ -30,8 +30,8 @@
         {
             this.resetpw = new Guna.UI2.WinForms.Guna2Panel();
             this.SUBMIT = new Guna.UI2.WinForms.Guna2Button();
-            this.guna2TextBox1 = new Guna.UI2.WinForms.Guna2TextBox();
-            this.USERNAME = new Guna.UI2.WinForms.Guna2TextBox();
+            this.CONFIRMPASS = new Guna.UI2.WinForms.Guna2TextBox();
+            this.PASSWORD = new Guna.UI2.WinForms.Guna2TextBox();
             this.resetpw.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -40,8 +40,8 @@
             this.resetpw.BackgroundImage = global::Whanjuay.Properties.Resources.K_PRA__10_;
             this.resetpw.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.resetpw.Controls.Add(this.SUBMIT);
-            this.resetpw.Controls.Add(this.guna2TextBox1);
-            this.resetpw.Controls.Add(this.USERNAME);
+            this.resetpw.Controls.Add(this.CONFIRMPASS);
+            this.resetpw.Controls.Add(this.PASSWORD);
             this.resetpw.Dock = System.Windows.Forms.DockStyle.Fill;
             this.resetpw.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.resetpw.Location = new System.Drawing.Point(0, 0);
@@ -68,51 +68,51 @@
             this.SUBMIT.Text = "SUBMIT";
             this.SUBMIT.Click += new System.EventHandler(this.SUBMIT_Click_1);
             // 
-            // guna2TextBox1
+            // CONFIRMPASS
             // 
-            this.guna2TextBox1.BackColor = System.Drawing.Color.Transparent;
-            this.guna2TextBox1.BorderColor = System.Drawing.Color.Black;
-            this.guna2TextBox1.BorderRadius = 20;
-            this.guna2TextBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.guna2TextBox1.DefaultText = "";
-            this.guna2TextBox1.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.guna2TextBox1.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.guna2TextBox1.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.guna2TextBox1.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.guna2TextBox1.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guna2TextBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.guna2TextBox1.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guna2TextBox1.Location = new System.Drawing.Point(304, 495);
-            this.guna2TextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.guna2TextBox1.Name = "guna2TextBox1";
-            this.guna2TextBox1.PlaceholderText = "CONFIRM PASSWORD";
-            this.guna2TextBox1.SelectedText = "";
-            this.guna2TextBox1.Size = new System.Drawing.Size(381, 44);
-            this.guna2TextBox1.TabIndex = 7;
-            this.guna2TextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CONFIRMPASS.BackColor = System.Drawing.Color.Transparent;
+            this.CONFIRMPASS.BorderColor = System.Drawing.Color.Black;
+            this.CONFIRMPASS.BorderRadius = 20;
+            this.CONFIRMPASS.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.CONFIRMPASS.DefaultText = "";
+            this.CONFIRMPASS.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.CONFIRMPASS.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.CONFIRMPASS.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.CONFIRMPASS.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.CONFIRMPASS.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.CONFIRMPASS.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CONFIRMPASS.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.CONFIRMPASS.Location = new System.Drawing.Point(304, 495);
+            this.CONFIRMPASS.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CONFIRMPASS.Name = "CONFIRMPASS";
+            this.CONFIRMPASS.PlaceholderText = "CONFIRM PASSWORD";
+            this.CONFIRMPASS.SelectedText = "";
+            this.CONFIRMPASS.Size = new System.Drawing.Size(381, 44);
+            this.CONFIRMPASS.TabIndex = 7;
+            this.CONFIRMPASS.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // USERNAME
+            // PASSWORD
             // 
-            this.USERNAME.BackColor = System.Drawing.Color.Transparent;
-            this.USERNAME.BorderColor = System.Drawing.Color.Black;
-            this.USERNAME.BorderRadius = 20;
-            this.USERNAME.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.USERNAME.DefaultText = "";
-            this.USERNAME.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.USERNAME.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.USERNAME.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.USERNAME.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.USERNAME.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.USERNAME.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.USERNAME.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.USERNAME.Location = new System.Drawing.Point(304, 422);
-            this.USERNAME.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.USERNAME.Name = "USERNAME";
-            this.USERNAME.PlaceholderText = "PASSWORD";
-            this.USERNAME.SelectedText = "";
-            this.USERNAME.Size = new System.Drawing.Size(381, 44);
-            this.USERNAME.TabIndex = 6;
-            this.USERNAME.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.PASSWORD.BackColor = System.Drawing.Color.Transparent;
+            this.PASSWORD.BorderColor = System.Drawing.Color.Black;
+            this.PASSWORD.BorderRadius = 20;
+            this.PASSWORD.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.PASSWORD.DefaultText = "";
+            this.PASSWORD.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.PASSWORD.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.PASSWORD.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.PASSWORD.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.PASSWORD.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.PASSWORD.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PASSWORD.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.PASSWORD.Location = new System.Drawing.Point(304, 422);
+            this.PASSWORD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PASSWORD.Name = "PASSWORD";
+            this.PASSWORD.PlaceholderText = "PASSWORD";
+            this.PASSWORD.SelectedText = "";
+            this.PASSWORD.Size = new System.Drawing.Size(381, 44);
+            this.PASSWORD.TabIndex = 6;
+            this.PASSWORD.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ResetPassword
             // 
@@ -132,8 +132,8 @@
         #endregion
 
         private Guna.UI2.WinForms.Guna2Panel resetpw;
-        private Guna.UI2.WinForms.Guna2TextBox guna2TextBox1;
-        private Guna.UI2.WinForms.Guna2TextBox USERNAME;
+        private Guna.UI2.WinForms.Guna2TextBox CONFIRMPASS;
+        private Guna.UI2.WinForms.Guna2TextBox PASSWORD;
         private Guna.UI2.WinForms.Guna2Button SUBMIT;
     }
 }

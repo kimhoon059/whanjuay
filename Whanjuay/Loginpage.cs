@@ -59,8 +59,8 @@ namespace Whanjuay
             string pass = (this.PASSWORD.Text ?? "").Trim();
 
             bool isAdmin =
-                string.Equals(user, "adminwj", StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(pass, "wj88888888", StringComparison.OrdinalIgnoreCase);
+                string.Equals(user, "a", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(pass, "a1", StringComparison.OrdinalIgnoreCase);
 
             if (isAdmin)
             {

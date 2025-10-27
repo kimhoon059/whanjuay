@@ -45,5 +45,35 @@ namespace Whanjuay
         {
 
         }
+
+        private void guna2Button6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2Button1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2TextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void MENU_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2Button3_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

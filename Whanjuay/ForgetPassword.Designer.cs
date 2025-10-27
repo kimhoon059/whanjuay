@@ -30,7 +30,7 @@
         {
             this.verify = new Guna.UI2.WinForms.Guna2Panel();
             this.SUBMIT = new Guna.UI2.WinForms.Guna2Button();
-            this.guna2TextBox1 = new Guna.UI2.WinForms.Guna2TextBox();
+            this.email = new Guna.UI2.WinForms.Guna2TextBox();
             this.USERNAME = new Guna.UI2.WinForms.Guna2TextBox();
             this.verify.SuspendLayout();
             this.SuspendLayout();
@@ -40,7 +40,7 @@
             this.verify.BackgroundImage = global::Whanjuay.Properties.Resources.K_PRA__9_;
             this.verify.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.verify.Controls.Add(this.SUBMIT);
-            this.verify.Controls.Add(this.guna2TextBox1);
+            this.verify.Controls.Add(this.email);
             this.verify.Controls.Add(this.USERNAME);
             this.verify.Dock = System.Windows.Forms.DockStyle.Fill;
             this.verify.Location = new System.Drawing.Point(0, 0);
@@ -67,28 +67,28 @@
             this.SUBMIT.Text = "SUBMIT";
             this.SUBMIT.Click += new System.EventHandler(this.SUBMIT_Click);
             // 
-            // guna2TextBox1
+            // email
             // 
-            this.guna2TextBox1.BackColor = System.Drawing.Color.Transparent;
-            this.guna2TextBox1.BorderColor = System.Drawing.Color.Black;
-            this.guna2TextBox1.BorderRadius = 20;
-            this.guna2TextBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.guna2TextBox1.DefaultText = "";
-            this.guna2TextBox1.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.guna2TextBox1.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.guna2TextBox1.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.guna2TextBox1.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.guna2TextBox1.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guna2TextBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.guna2TextBox1.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guna2TextBox1.Location = new System.Drawing.Point(317, 466);
-            this.guna2TextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.guna2TextBox1.Name = "guna2TextBox1";
-            this.guna2TextBox1.PlaceholderText = "E-MAIL";
-            this.guna2TextBox1.SelectedText = "";
-            this.guna2TextBox1.Size = new System.Drawing.Size(381, 44);
-            this.guna2TextBox1.TabIndex = 6;
-            this.guna2TextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.email.BackColor = System.Drawing.Color.Transparent;
+            this.email.BorderColor = System.Drawing.Color.Black;
+            this.email.BorderRadius = 20;
+            this.email.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.email.DefaultText = "";
+            this.email.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.email.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.email.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.email.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.email.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.email.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.email.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.email.Location = new System.Drawing.Point(317, 466);
+            this.email.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.email.Name = "email";
+            this.email.PlaceholderText = "E-MAIL";
+            this.email.SelectedText = "";
+            this.email.Size = new System.Drawing.Size(381, 44);
+            this.email.TabIndex = 6;
+            this.email.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // USERNAME
             // 
@@ -134,7 +134,7 @@
 
         private Guna.UI2.WinForms.Guna2Panel verify;
         private Guna.UI2.WinForms.Guna2TextBox USERNAME;
-        private Guna.UI2.WinForms.Guna2TextBox guna2TextBox1;
+        private Guna.UI2.WinForms.Guna2TextBox email;
         private Guna.UI2.WinForms.Guna2Button SUBMIT;
     }
 }
