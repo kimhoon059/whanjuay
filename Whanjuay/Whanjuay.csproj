@@ -112,6 +112,7 @@
     <Compile Include="DashboardView.Designer.cs">
       <DependentUpon>DashboardView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Db.cs" />
     <Compile Include="ForgetPassword.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,6 +124,18 @@
     </Compile>
     <Compile Include="Loginpage.Designer.cs">
       <DependentUpon>Loginpage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProductAddView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProductAddView.Designer.cs">
+      <DependentUpon>ProductAddView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProductListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProductListView.Designer.cs">
+      <DependentUpon>ProductListView.cs</DependentUpon>
     </Compile>
     <Compile Include="ProductView.cs">
       <SubType>UserControl</SubType>
@@ -158,6 +171,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Loginpage.resx">
       <DependentUpon>Loginpage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductAddView.resx">
+      <DependentUpon>ProductAddView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductListView.resx">
+      <DependentUpon>ProductListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductView.resx">
+      <DependentUpon>ProductView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -236,6 +258,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Admin1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\admin2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\admin3.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -16,5 +16,15 @@ namespace Whanjuay
         {
             InitializeComponent();
         }
+
+        private void ProductView_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2DataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

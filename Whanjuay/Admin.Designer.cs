@@ -29,18 +29,20 @@
         private void InitializeComponent()
         {
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.DASHBOARD = new Guna.UI2.WinForms.Guna2Button();
             this.MENU = new System.Windows.Forms.Label();
             this.USERS = new Guna.UI2.WinForms.Guna2Button();
             this.PRODUCT = new Guna.UI2.WinForms.Guna2Button();
             this.LOGOUTad = new Guna.UI2.WinForms.Guna2Button();
-            this.DASHBOARD = new Guna.UI2.WinForms.Guna2Button();
+            this.guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             this.guna2Panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // guna2Panel1
             // 
-            this.guna2Panel1.BackgroundImage = global::Whanjuay.Properties.Resources.Admin1;
+            this.guna2Panel1.BackgroundImage = global::Whanjuay.Properties.Resources.admin3;
             this.guna2Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.guna2Panel1.Controls.Add(this.guna2CustomGradientPanel1);
             this.guna2Panel1.Controls.Add(this.DASHBOARD);
             this.guna2Panel1.Controls.Add(this.MENU);
             this.guna2Panel1.Controls.Add(this.USERS);
@@ -52,6 +54,24 @@
             this.guna2Panel1.Size = new System.Drawing.Size(1155, 681);
             this.guna2Panel1.TabIndex = 0;
             this.guna2Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.guna2Panel1_Paint);
+            // 
+            // DASHBOARD
+            // 
+            this.DASHBOARD.BackColor = System.Drawing.Color.Transparent;
+            this.DASHBOARD.BorderRadius = 15;
+            this.DASHBOARD.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.DASHBOARD.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.DASHBOARD.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.DASHBOARD.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.DASHBOARD.FillColor = System.Drawing.Color.Transparent;
+            this.DASHBOARD.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
+            this.DASHBOARD.ForeColor = System.Drawing.Color.SaddleBrown;
+            this.DASHBOARD.Location = new System.Drawing.Point(43, 281);
+            this.DASHBOARD.Name = "DASHBOARD";
+            this.DASHBOARD.Size = new System.Drawing.Size(220, 50);
+            this.DASHBOARD.TabIndex = 10;
+            this.DASHBOARD.Text = "     DASHBOARD";
+            this.DASHBOARD.Click += new System.EventHandler(this.guna2Button3_Click_1);
             // 
             // MENU
             // 
@@ -120,23 +140,15 @@
             this.LOGOUTad.Text = "LOG OUT";
             this.LOGOUTad.Click += new System.EventHandler(this.guna2Button6_Click);
             // 
-            // DASHBOARD
+            // guna2CustomGradientPanel1
             // 
-            this.DASHBOARD.BackColor = System.Drawing.Color.Transparent;
-            this.DASHBOARD.BorderRadius = 15;
-            this.DASHBOARD.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.DASHBOARD.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.DASHBOARD.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.DASHBOARD.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.DASHBOARD.FillColor = System.Drawing.Color.Transparent;
-            this.DASHBOARD.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
-            this.DASHBOARD.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.DASHBOARD.Location = new System.Drawing.Point(43, 281);
-            this.DASHBOARD.Name = "DASHBOARD";
-            this.DASHBOARD.Size = new System.Drawing.Size(220, 50);
-            this.DASHBOARD.TabIndex = 10;
-            this.DASHBOARD.Text = "     DASHBOARD";
-            this.DASHBOARD.Click += new System.EventHandler(this.guna2Button3_Click_1);
+            this.guna2CustomGradientPanel1.BackColor = System.Drawing.Color.Transparent;
+            this.guna2CustomGradientPanel1.BorderRadius = 20;
+            this.guna2CustomGradientPanel1.Location = new System.Drawing.Point(288, 114);
+            this.guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
+            this.guna2CustomGradientPanel1.Size = new System.Drawing.Size(855, 545);
+            this.guna2CustomGradientPanel1.TabIndex = 0;
+            this.guna2CustomGradientPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.guna2CustomGradientPanel1_Paint);
             // 
             // Admin
             // 
@@ -162,5 +174,6 @@
         private Guna.UI2.WinForms.Guna2Button USERS;
         private System.Windows.Forms.Label MENU;
         private Guna.UI2.WinForms.Guna2Button DASHBOARD;
+        protected Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel1;
     }
 }

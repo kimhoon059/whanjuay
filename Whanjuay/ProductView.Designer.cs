@@ -28,8 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // ProductView
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Name = "ProductView";
+            this.Load += new System.EventHandler(this.ProductView_Load);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
