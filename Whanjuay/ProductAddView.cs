@@ -18,12 +18,8 @@ namespace Whanjuay
         public ProductAddView()
         {
             InitializeComponent();
-
-            // ********** FIX: ทำให้พื้นหลังโปร่งใส **********
-            this.BackColor = System.Drawing.Color.Transparent;
-            // ***********************************************
-
             this.Load += ProductAddView_Load;
+            this.BackColor = System.Drawing.Color.Transparent;
         }
 
         private void ProductAddView_Load(object sender, EventArgs e)
@@ -56,6 +52,7 @@ namespace Whanjuay
             }
 
             // 2. ผูก Event Handler
+            // NOTE: เราผูก Event หลักในโค้ดนี้ โดยที่ Designer.cs ต้องไม่มีการผูก Event เหล่านี้แล้ว
             txtPrice.KeyPress -= TxtPrice_KeyPress;
             txtPrice.KeyPress += TxtPrice_KeyPress;
 
@@ -198,7 +195,12 @@ namespace Whanjuay
             }
         }
 
-        private void btnChangeImage_Click_1(object sender, EventArgs e)
+        private void txtStock_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSave_Click_1(object sender, EventArgs e)
         {
 
         }

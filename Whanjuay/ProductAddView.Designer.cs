@@ -75,7 +75,7 @@
             this.txtPrice.Name = "txtPrice";
             this.txtPrice.PlaceholderText = "";
             this.txtPrice.SelectedText = "";
-            this.txtPrice.Size = new System.Drawing.Size(86, 36);
+            this.txtPrice.Size = new System.Drawing.Size(79, 36);
             this.txtPrice.TabIndex = 2;
             this.txtPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -84,25 +84,26 @@
             this.txtStock.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtStock.DefaultText = "";
             this.txtStock.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtStock.Location = new System.Drawing.Point(247, 303);
+            this.txtStock.Location = new System.Drawing.Point(238, 303);
             this.txtStock.Name = "txtStock";
             this.txtStock.PlaceholderText = "";
             this.txtStock.SelectedText = "";
             this.txtStock.Size = new System.Drawing.Size(86, 36);
             this.txtStock.TabIndex = 3;
             this.txtStock.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtStock.TextChanged += new System.EventHandler(this.txtStock_TextChanged);
             // 
             // txtDescription
             // 
             this.txtDescription.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtDescription.DefaultText = "";
             this.txtDescription.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtDescription.Location = new System.Drawing.Point(20, 406);
+            this.txtDescription.Location = new System.Drawing.Point(26, 401);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.PlaceholderText = "";
             this.txtDescription.SelectedText = "";
-            this.txtDescription.Size = new System.Drawing.Size(400, 98);
+            this.txtDescription.Size = new System.Drawing.Size(400, 92);
             this.txtDescription.TabIndex = 4;
             // 
             // btnSave
@@ -111,17 +112,18 @@
             this.btnSave.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(175)))), ((int)(((byte)(100)))));
             this.btnSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnSave.ForeColor = System.Drawing.Color.White;
-            this.btnSave.Location = new System.Drawing.Point(563, 459);
+            this.btnSave.Location = new System.Drawing.Point(562, 448);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(180, 45);
             this.btnSave.TabIndex = 5;
             this.btnSave.Text = "บันทึกสินค้า";
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click_1);
             // 
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.Location = new System.Drawing.Point(18, 33);
+            this.lblTitle.Location = new System.Drawing.Point(20, 20);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(160, 32);
             this.lblTitle.TabIndex = 6;
@@ -161,7 +163,7 @@
             // 
             this.lblStock.AutoSize = true;
             this.lblStock.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblStock.Location = new System.Drawing.Point(247, 268);
+            this.lblStock.Location = new System.Drawing.Point(238, 268);
             this.lblStock.Name = "lblStock";
             this.lblStock.Size = new System.Drawing.Size(86, 19);
             this.lblStock.TabIndex = 10;
@@ -171,7 +173,7 @@
             // 
             this.lblDescription.AutoSize = true;
             this.lblDescription.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblDescription.Location = new System.Drawing.Point(20, 363);
+            this.lblDescription.Location = new System.Drawing.Point(22, 363);
             this.lblDescription.Name = "lblDescription";
             this.lblDescription.Size = new System.Drawing.Size(74, 19);
             this.lblDescription.TabIndex = 11;
@@ -194,7 +196,7 @@
             this.btnBack.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(175)))), ((int)(((byte)(100)))));
             this.btnBack.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnBack.ForeColor = System.Drawing.Color.White;
-            this.btnBack.Location = new System.Drawing.Point(729, 33);
+            this.btnBack.Location = new System.Drawing.Point(792, 20);
             this.btnBack.Name = "btnBack";
             this.btnBack.Size = new System.Drawing.Size(100, 36);
             this.btnBack.TabIndex = 13;
@@ -204,14 +206,13 @@
             // 
             this.btnChangeImage.BorderRadius = 10;
             this.btnChangeImage.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(175)))), ((int)(((byte)(100)))));
-            this.btnChangeImage.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnChangeImage.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnChangeImage.ForeColor = System.Drawing.Color.White;
             this.btnChangeImage.Location = new System.Drawing.Point(575, 363);
             this.btnChangeImage.Name = "btnChangeImage";
             this.btnChangeImage.Size = new System.Drawing.Size(150, 35);
             this.btnChangeImage.TabIndex = 1;
             this.btnChangeImage.Text = "เปลี่ยนรูปภาพ";
-            this.btnChangeImage.Click += new System.EventHandler(this.btnChangeImage_Click_1);
             // 
             // pnlImage
             // 
@@ -226,6 +227,7 @@
             // 
             // pbImage
             // 
+            this.pbImage.BackColor = System.Drawing.Color.LightGray;
             this.pbImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbImage.Location = new System.Drawing.Point(0, 0);
             this.pbImage.Name = "pbImage";
@@ -257,7 +259,7 @@
             this.Controls.Add(this.cmbCategory);
             this.Controls.Add(this.txtName);
             this.Name = "ProductAddView";
-            this.Size = new System.Drawing.Size(855, 600);
+            this.Size = new System.Drawing.Size(918, 545);
             this.pnlImage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
             this.ResumeLayout(false);
