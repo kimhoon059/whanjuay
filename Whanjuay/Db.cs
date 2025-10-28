@@ -30,7 +30,6 @@ namespace Whanjuay
         }
 
         // ---------- Products: list for grid ----------
-        // คืน: product_id, name, price, status, image_path, category_name
         public static DataTable GetProductsForList()
         {
             using (var conn = CreateConn())
@@ -42,10 +41,11 @@ SELECT p.product_id,
        p.price,
        p.status,
        p.image_path,
+       p.is_hot_sale,  
        c.name AS category_name
 FROM products p
 LEFT JOIN categories c ON c.category_id = p.category_id
-ORDER BY p.created_at DESC, p.product_id DESC;", conn))
+ORDER BY p.is_hot_sale DESC, p.created_at DESC, p.product_id DESC;", conn))
                 using (var da = new MySqlDataAdapter(cmd))
                 {
                     var dt = new DataTable();
@@ -56,15 +56,17 @@ ORDER BY p.created_at DESC, p.product_id DESC;", conn))
         }
 
         // ---------- Insert product -> return new ID ----------
+        // FIX: เพิ่มพารามิเตอร์ stockQuantity เพื่อรับค่าจาก ProductAddView.cs
         public static int InsertProduct(string name, int categoryId, decimal price,
-                                        string status, string description, string imagePath)
+                                        string status, string description, string imagePath,
+                                        int stockQuantity)
         {
             using (var conn = CreateConn())
             {
                 conn.Open();
                 using (var cmd = new MySqlCommand(@"
-INSERT INTO products (name, category_id, price, status, description, image_path, created_at)
-VALUES (@n, @c, @p, @s, @d, @img, NOW());
+INSERT INTO products (name, category_id, price, status, description, image_path, stock_quantity, is_hot_sale, created_at)
+VALUES (@n, @c, @p, @s, @d, @img, @stock, 0, NOW());
 SELECT LAST_INSERT_ID();", conn))
                 {
                     cmd.Parameters.AddWithValue("@n", name);
@@ -73,6 +75,7 @@ SELECT LAST_INSERT_ID();", conn))
                     cmd.Parameters.AddWithValue("@s", status);
                     cmd.Parameters.AddWithValue("@d", (object)description ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@img", (object)imagePath ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@stock", stockQuantity); // บันทึก Stock
 
                     object scalar = cmd.ExecuteScalar();
                     return Convert.ToInt32(scalar);
@@ -88,6 +91,21 @@ SELECT LAST_INSERT_ID();", conn))
                 conn.Open();
                 using (var cmd = new MySqlCommand("DELETE FROM products WHERE product_id = @id;", conn))
                 {
+                    cmd.Parameters.AddWithValue("@id", productId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // ---------- Update Hot Sale Status (จำเป็นสำหรับ ProductListView) ----------
+        public static void UpdateHotSaleStatus(int productId, bool isHotSale)
+        {
+            using (var conn = CreateConn())
+            {
+                conn.Open();
+                using (var cmd = new MySqlCommand("UPDATE products SET is_hot_sale = @status WHERE product_id = @id;", conn))
+                {
+                    cmd.Parameters.AddWithValue("@status", isHotSale);
                     cmd.Parameters.AddWithValue("@id", productId);
                     cmd.ExecuteNonQuery();
                 }

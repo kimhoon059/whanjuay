@@ -7,89 +7,40 @@ using System.IO;
 
 namespace Whanjuay
 {
-    // กำหนด Delegate สำหรับการแจ้งเตือนว่าผู้ใช้ต้องการเพิ่มสินค้า
     public delegate void AddProductEventHandler();
 
-    // User Control สำหรับแสดงรายการสินค้า
     public partial class ProductListView : UserControl
     {
         public event AddProductEventHandler AddRequested;
 
-        // *** FIX CS0649: ลบการประกาศ private fields ที่ไม่มีการใช้งานใน Designer.cs ทิ้ง ***
-        // เนื่องจาก productGrid และ btnAddProduct ถูกสร้างและกำหนดค่าใน InitializeProductListUI()
-        // จึงไม่ต้องประกาศซ้ำที่นี่อีกต่อไป
-        private Guna2DataGridView productGrid;
-        private Guna2Button btnAddProduct;
+        // ********** FIX: ลบการประกาศ private fields ที่ซ้ำซ้อนออกทั้งหมด **********
+        // (productGrid, btnAddProduct, ImageBaseDir)
+        // Note: ImageBaseDir ถูกย้ายไปเป็น local field หรือต้องถูกประกาศในส่วนอื่นหากจำเป็น
 
-        private readonly string ImageBaseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images");
+        // เราจะกำหนดค่า ImageBaseDir ในเมธอดแทน
+        private const string ImageBaseDir = "Images"; // กำหนดเป็นค่าคงที่
 
         public ProductListView()
         {
             InitializeComponent();
-            // ********** FIX: ทำให้พื้นหลังโปร่งใส **********
             this.BackColor = System.Drawing.Color.Transparent;
-            // ***********************************************
-            this.Load += ProductListView_Load;
+            this.Load += ProductListView_Load_Logic;
         }
 
-        private void ProductListView_Load(object sender, EventArgs e)
+        private void ProductListView_Load_Logic(object sender, EventArgs e)
         {
+            // ตรวจสอบความพร้อมของ DataGrid ก่อนเรียกใช้ (ป้องกัน Error ใน Designer)
+            if (productGrid == null || btnAddProduct == null)
+            {
+                return;
+            }
             InitializeProductListUI();
             LoadProducts();
         }
 
         private void InitializeProductListUI()
         {
-            // Title Label
-            var lblTitle = new Label
-            {
-                Text = "จัดการสินค้า",
-                Font = new Font("Segoe UI", 18F, FontStyle.Bold),
-                Location = new Point(20, 20),
-                AutoSize = true
-            };
-            this.Controls.Add(lblTitle);
-
-            // ปุ่ม "เพิ่มสินค้าใหม่" 
-            btnAddProduct = new Guna2Button
-            {
-                Text = "+ เพิ่มสินค้าใหม่",
-                FillColor = Color.FromArgb(255, 175, 100),
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                BorderRadius = 10,
-                Size = new Size(150, 40),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right
-            };
-            btnAddProduct.Location = new Point(this.Width - btnAddProduct.Width - 20, 20);
-            btnAddProduct.Click += BtnAddProduct_Click;
-            this.Controls.Add(btnAddProduct);
-
-            // ปรับตำแหน่งปุ่มเมื่อขนาด Control เปลี่ยน
-            this.Resize += (s, e) => {
-                btnAddProduct.Location = new Point(this.Width - btnAddProduct.Width - 20, 20);
-                if (productGrid != null)
-                {
-                    productGrid.Size = new Size(this.Width - 40, this.Height - 120);
-                }
-            };
-
-            // DataGridView (productGrid)
-            productGrid = new Guna2DataGridView
-            {
-                Location = new Point(20, 100),
-                Size = new Size(this.Width - 40, this.Height - 120),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                BorderStyle = BorderStyle.None,
-                ColumnHeadersHeight = 40,
-                RowTemplate = { Height = 80 },
-            };
-
-            // ... (โค้ด DataGridView style และ Event handlers เหมือนเดิม) ...
+            // กำหนด Style Header ของ DataGrid 
             productGrid.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
                 BackColor = Color.FromArgb(249, 243, 237),
@@ -100,20 +51,27 @@ namespace Whanjuay
                 WrapMode = DataGridViewTriState.True
             };
 
-            productGrid.CellContentClick += ProductGrid_CellContentClick;
-            productGrid.CellFormatting += ProductGrid_CellFormatting;
+            // กำหนดความมนของขอบปุ่ม
+            btnAddProduct.BorderRadius = 10;
 
-            this.Controls.Add(productGrid);
+            // ผูก Event Clicks
+            productGrid.CellContentClick -= ProductGrid_CellContentClick;
+            productGrid.CellContentClick += ProductGrid_CellContentClick;
+            productGrid.CellFormatting -= ProductGrid_CellFormatting;
+            productGrid.CellFormatting += ProductGrid_CellFormatting;
+            btnAddProduct.Click -= BtnAddProduct_Click;
+            btnAddProduct.Click += BtnAddProduct_Click;
+
+            ConfigureGridColumns();
         }
 
         public void LoadProducts()
         {
             try
             {
+                ConfigureGridColumns();
                 DataTable dt = Db.GetProductsForList();
                 productGrid.DataSource = dt;
-
-                ConfigureGridColumns();
             }
             catch (Exception ex)
             {
@@ -126,52 +84,51 @@ namespace Whanjuay
             productGrid.Columns.Clear();
 
             // 1. คอลัมน์รูปภาพ
-            var colImage = new DataGridViewImageColumn
+            productGrid.Columns.Add(new DataGridViewImageColumn
             {
                 HeaderText = "รูปภาพ",
-                Name = "ImageCol",
+                Name = "image_path",
                 DataPropertyName = "image_path",
                 ImageLayout = DataGridViewImageCellLayout.Zoom,
-                Width = 100
-            };
-            productGrid.Columns.Add(colImage);
+                Width = 80
+            });
 
-            // 2. ชื่อสินค้า
-            AddTextColumn("name", "ชื่อสินค้า", 250);
+            // 2. คอลัมน์ HOT SALE (ปุ่ม Toggle)
+            productGrid.Columns.Add(new DataGridViewButtonColumn
+            {
+                HeaderText = "HOT SALE",
+                Name = "HotSaleToggleCol",
+                DataPropertyName = "is_hot_sale",
+                UseColumnTextForButtonValue = false,
+                Width = 120
+            });
 
-            // 3. ราคา
+            // 3. ชื่อสินค้า
+            AddTextColumn("name", "ชื่อสินค้า", 200);
+
+            // 4. หมวดหมู่
+            AddTextColumn("category_name", "หมวดหมู่", 120);
+
+            // 5. ราคา
             AddTextColumn("price", "ราคา (บาท)", 100, DataGridViewContentAlignment.MiddleRight);
             productGrid.Columns["price"].DefaultCellStyle.Format = "N2";
 
-            // 4. หมวดหมู่
-            AddTextColumn("category_name", "หมวดหมู่", 150);
+            // 6. คอลัมน์ ACTIONS (Edit/Delete)
+            productGrid.Columns.Add(new DataGridViewImageColumn
+            {
+                HeaderText = "แก้ไข/ลบ",
+                Name = "ActionsCol",
+                Image = null,
+                Width = 100
+            });
 
-            // 5. สถานะ
-            AddTextColumn("status", "สถานะ", 100, DataGridViewContentAlignment.MiddleCenter);
-
-            // ซ่อนคอลัมน์ ID
+            // ซ่อนคอลัมน์ที่ไม่จำเป็น
+            AddTextColumn("is_hot_sale", "IsHotSale", 0);
+            productGrid.Columns["is_hot_sale"].Visible = false;
+            AddTextColumn("status", "Status", 0);
+            productGrid.Columns["status"].Visible = false;
             AddTextColumn("product_id", "ID", 0);
             productGrid.Columns["product_id"].Visible = false;
-
-            // 6. คอลัมน์จัดการ (แก้ไข)
-            var colEdit = new DataGridViewImageColumn
-            {
-                HeaderText = "จัดการ",
-                Name = "EditCol",
-                Image = null,
-                Width = 50
-            };
-            productGrid.Columns.Add(colEdit);
-
-            // 7. คอลัมน์จัดการ (ลบ)
-            var colDelete = new DataGridViewImageColumn
-            {
-                HeaderText = "",
-                Name = "DeleteCol",
-                Image = null,
-                Width = 50
-            };
-            productGrid.Columns.Add(colDelete);
         }
 
         private DataGridViewTextBoxColumn AddTextColumn(string dataPropertyName, string headerText, int width, DataGridViewContentAlignment alignment = DataGridViewContentAlignment.MiddleLeft)
@@ -194,13 +151,13 @@ namespace Whanjuay
 
             var row = productGrid.Rows[e.RowIndex];
 
-            // 1. จัดการคอลัมน์รูปภาพ (ImageCol)
-            if (productGrid.Columns[e.ColumnIndex].Name == "ImageCol")
+            // 1. จัดการคอลัมน์รูปภาพ
+            if (productGrid.Columns[e.ColumnIndex].Name == "image_path")
             {
                 string imagePathFromDb = row.Cells["image_path"].Value?.ToString();
                 if (!string.IsNullOrEmpty(imagePathFromDb))
                 {
-                    string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, imagePathFromDb);
+                    string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", imagePathFromDb);
 
                     if (File.Exists(fullPath))
                     {
@@ -208,31 +165,28 @@ namespace Whanjuay
                         {
                             e.Value = Image.FromFile(fullPath);
                         }
-                        catch (Exception)
-                        {
-                            e.Value = null;
-                        }
+                        catch (Exception) { e.Value = null; }
                     }
-                    else
-                    {
-                        e.Value = null;
-                    }
+                    else { e.Value = null; }
                 }
             }
 
-            // 2. จัดการคอลัมน์สถานะ (status)
-            if (productGrid.Columns[e.ColumnIndex].Name == "status")
+            // 2. จัดการคอลัมน์ HOT SALE (แสดงสถานะ)
+            if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
             {
-                string status = e.Value?.ToString() ?? "";
-                if (status.Contains("มีสินค้า"))
+                bool isHotSale = Convert.ToBoolean(row.Cells["is_hot_sale"].Value);
+
+                if (isHotSale)
                 {
-                    e.CellStyle.BackColor = Color.FromArgb(255, 240, 220);
-                    e.CellStyle.ForeColor = Color.OrangeRed;
+                    e.Value = "🔥 HOT SALE";
+                    e.CellStyle.BackColor = Color.IndianRed;
+                    e.CellStyle.ForeColor = Color.White;
                 }
-                else if (status.Contains("หมด"))
+                else
                 {
+                    e.Value = "NORMAL";
                     e.CellStyle.BackColor = Color.LightGray;
-                    e.CellStyle.ForeColor = Color.DimGray;
+                    e.CellStyle.ForeColor = Color.Black;
                 }
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 e.FormattingApplied = true;
@@ -242,31 +196,28 @@ namespace Whanjuay
         private void ProductGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
-
-            if (productGrid.Rows[e.RowIndex].Cells["product_id"].Value == DBNull.Value) return;
-
             int productId = Convert.ToInt32(productGrid.Rows[e.RowIndex].Cells["product_id"].Value);
 
-            if (productGrid.Columns[e.ColumnIndex].Name == "DeleteCol")
+            // 1. Logic สำหรับ Hot Sale Toggle
+            if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
             {
-                if (MessageBox.Show($"ยืนยันการลบสินค้า ID: {productId}?", "ยืนยัน", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                bool currentStatus = Convert.ToBoolean(productGrid.Rows[e.RowIndex].Cells["is_hot_sale"].Value);
+                bool newStatus = !currentStatus; // สลับสถานะ
+
+                try
                 {
-                    try
-                    {
-                        Db.DeleteProduct(productId);
-                        MessageBox.Show("ลบสินค้าเรียบร้อยแล้ว", "สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadProducts();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"เกิดข้อผิดพลาดในการลบ: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    Db.UpdateHotSaleStatus(productId, newStatus);
+                    LoadProducts();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error updating Hot Sale status: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            else if (productGrid.Columns[e.ColumnIndex].Name == "EditCol")
+            // 2. Logic สำหรับ Edit/Delete 
+            else if (productGrid.Columns[e.ColumnIndex].Name == "ActionsCol")
             {
-                MessageBox.Show($"คุณต้องการแก้ไขสินค้า ID: {productId}", "แก้ไข", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                // *************** ต้องสร้าง logic สำหรับการแก้ไขต่อ ***************
+                // Logic การแก้ไข/ลบ
             }
         }
 

@@ -52,7 +52,6 @@ namespace Whanjuay
             }
 
             // 2. ผูก Event Handler
-            // NOTE: เราผูก Event หลักในโค้ดนี้ โดยที่ Designer.cs ต้องไม่มีการผูก Event เหล่านี้แล้ว
             txtPrice.KeyPress -= TxtPrice_KeyPress;
             txtPrice.KeyPress += TxtPrice_KeyPress;
 
@@ -183,7 +182,7 @@ namespace Whanjuay
                 }
 
                 // --- 2. บันทึกข้อมูลลงฐานข้อมูล ---
-                int newId = Db.InsertProduct(name, categoryId, price, status, description, savedImagePath);
+                int newId = Db.InsertProduct(name, categoryId, price, status, description, savedImagePath, stockQuantity);
 
                 MessageBox.Show($"บันทึกสินค้าใหม่เรียบร้อยแล้ว (ID: {newId})", "สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -195,14 +194,15 @@ namespace Whanjuay
             }
         }
 
-        private void txtStock_TextChanged(object sender, EventArgs e)
-        {
+        // ********** Event Handler ว่างเปล่าที่ Designer.cs อ้างถึง (ต้องมีเพื่อแก้ Error) **********
 
-        }
-
-        private void btnSave_Click_1(object sender, EventArgs e)
-        {
-
-        }
+        private void txtPrice_TextChanged(object sender, EventArgs e) { /* Do Nothing */ }
+        private void txtStock_TextChanged(object sender, EventArgs e) { /* Do Nothing */ }
+        private void btnSave_Click_1(object sender, EventArgs e) { /* Do Nothing */ }
+        private void btnChangeImage_Click_1(object sender, EventArgs e) { /* Do Nothing */ }
+        private void btnBack_Click_1(object sender, EventArgs e) { /* Do Nothing */ }
+        private void lblStock_Click(object sender, EventArgs e) { /* Do Nothing */ }
+        private void txtDescription_TextChanged(object sender, EventArgs e) { /* Do Nothing */ }
+        // เพิ่มเมธอดอื่นๆ ที่ Designer.cs อาจจะอ้างถึงแต่คุณได้ลบทิ้งไปแล้ว
     }
 }

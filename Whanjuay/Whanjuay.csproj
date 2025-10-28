@@ -137,12 +137,6 @@
     <Compile Include="ProductListView.Designer.cs">
       <DependentUpon>ProductListView.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ProductView.Designer.cs">
-      <DependentUpon>ProductView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registerpage.cs">
@@ -177,9 +171,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ProductListView.resx">
       <DependentUpon>ProductListView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ProductView.resx">
-      <DependentUpon>ProductView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
