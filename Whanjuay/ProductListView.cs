@@ -13,10 +13,9 @@ namespace Whanjuay
     {
         public event AddProductEventHandler AddRequested;
 
-        // ********** FIX: ไม่มีประกาศตัวแปร Field ที่นี่อีกต่อไป (ลบ Ambiguity) **********
-        // productGrid, btnAddProduct, txtSearch, btnSearch ถูกประกาศใน Designer.cs แล้ว
+        // ********** FIX: ลบการประกาศ Field ซ้ำซ้อนทั้งหมดออก (ใช้ Fields จาก Designer โดยตรง) **********
 
-        private const string ImageBaseDir = "Images";
+        private readonly string ImageBaseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images");
 
         public ProductListView()
         {
@@ -27,8 +26,8 @@ namespace Whanjuay
 
         private void ProductListView_Load_Logic(object sender, EventArgs e)
         {
-            // ตรวจสอบความพร้อมของ DataGrid ก่อนเรียกใช้
-            if (productGrid == null || btnAddProduct == null)
+            // ตรวจสอบความพร้อมของ DataGrid ก่อนเรียกใช้
+            if (productGrid == null || btnAddProduct == null)
             {
                 return;
             }
@@ -38,8 +37,8 @@ namespace Whanjuay
 
         private void InitializeProductListUI()
         {
-            // กำหนด Style Header ของ DataGrid 
-            productGrid.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
+            // กำหนด Style Header ของ DataGrid 
+            productGrid.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
                 BackColor = Color.FromArgb(249, 243, 237),
                 ForeColor = Color.SaddleBrown,
@@ -49,20 +48,21 @@ namespace Whanjuay
                 WrapMode = DataGridViewTriState.True
             };
 
-            // กำหนดความมนของขอบปุ่ม
-            btnAddProduct.BorderRadius = 10;
+            // กำหนดความมนของขอบปุ่ม
+            btnAddProduct.BorderRadius = 10;
+            txtSearch.BorderRadius = 15;
+            btnSearch.BorderRadius = 15;
 
-            // ผูก Event Clicks
-            // NOTE: ใช้ -= ก่อน += เพื่อป้องกันการผูกซ้ำซ้อนกับ Designer
-            productGrid.CellContentClick -= ProductGrid_CellContentClick;
+            // ผูก Event Clicks
+            productGrid.CellContentClick -= ProductGrid_CellContentClick;
             productGrid.CellContentClick += ProductGrid_CellContentClick;
             productGrid.CellFormatting -= ProductGrid_CellFormatting;
             productGrid.CellFormatting += ProductGrid_CellFormatting;
             btnAddProduct.Click -= BtnAddProduct_Click;
             btnAddProduct.Click += BtnAddProduct_Click;
 
-            // ผูก Event Search
-            txtSearch.TextChanged -= TxtSearch_TextChanged;
+            // ผูก Event Search
+            txtSearch.TextChanged -= TxtSearch_TextChanged;
             txtSearch.TextChanged += TxtSearch_TextChanged;
             btnSearch.Click -= BtnSearch_Click;
             btnSearch.Click += BtnSearch_Click;
@@ -70,8 +70,8 @@ namespace Whanjuay
             ConfigureGridColumns();
         }
 
-        // ********** Logic การค้นหา **********
-        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        // ********** Logic การค้นหา **********
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
         {
             FilterProducts(txtSearch.Text);
         }
@@ -98,9 +98,9 @@ namespace Whanjuay
                 }
             }
         }
-        // **********************************
+        // **********************************
 
-        public void LoadProducts()
+        public void LoadProducts()
         {
             try
             {
@@ -118,8 +118,8 @@ namespace Whanjuay
         {
             productGrid.Columns.Clear();
 
-            // 1. คอลัมน์รูปภาพ
-            productGrid.Columns.Add(new DataGridViewImageColumn
+            // 1. คอลัมน์รูปภาพ
+            productGrid.Columns.Add(new DataGridViewImageColumn
             {
                 HeaderText = "รูปภาพ",
                 Name = "image_path",
@@ -128,8 +128,8 @@ namespace Whanjuay
                 Width = 80
             });
 
-            // 2. คอลัมน์ HOT SALE (ปุ่ม Toggle)
-            productGrid.Columns.Add(new DataGridViewButtonColumn
+            // 2. คอลัมน์ HOT SALE (ปุ่ม Toggle)
+            productGrid.Columns.Add(new DataGridViewButtonColumn
             {
                 HeaderText = "HOT SALE",
                 Name = "HotSaleToggleCol",
@@ -138,27 +138,35 @@ namespace Whanjuay
                 Width = 120
             });
 
-            // 3. ชื่อสินค้า
-            AddTextColumn("name", "ชื่อสินค้า", 200);
+            // 3. ชื่อสินค้า
+            AddTextColumn("name", "ชื่อสินค้า", 200);
 
-            // 4. หมวดหมู่
-            AddTextColumn("category_name", "หมวดหมู่", 120);
+            // 4. หมวดหมู่
+            AddTextColumn("category_name", "หมวดหมู่", 120);
 
-            // 5. ราคา
-            AddTextColumn("price", "ราคา (บาท)", 100, DataGridViewContentAlignment.MiddleRight);
+            // 5. ราคา
+            AddTextColumn("price", "ราคา (บาท)", 100, DataGridViewContentAlignment.MiddleRight);
             productGrid.Columns["price"].DefaultCellStyle.Format = "N2";
 
-            // 6. คอลัมน์ ACTIONS (แก้ไข/ลบ)
-            productGrid.Columns.Add(new DataGridViewImageColumn
+            // 6. คอลัมน์ ACTIONS (แก้ไข)
+            productGrid.Columns.Add(new DataGridViewImageColumn
             {
-                HeaderText = "แก้ไข/ลบ",
-                Name = "ActionsCol",
-                Image = null,
-                Width = 100
+                HeaderText = "แก้ไข",
+                Name = "EditCol",
+                Image = null, // NOTE: ต้องเพิ่ม Image Resource เอง
+                Width = 50
+            });
+            // 7. คอลัมน์ ACTIONS (ลบ)
+            productGrid.Columns.Add(new DataGridViewImageColumn
+            {
+                HeaderText = "ลบ",
+                Name = "DeleteCol",
+                Image = null, // NOTE: ต้องเพิ่ม Image Resource เอง
+                Width = 50
             });
 
-            // ซ่อนคอลัมน์ที่ไม่จำเป็น
-            AddTextColumn("is_hot_sale", "IsHotSale", 0);
+            // ซ่อนคอลัมน์ที่ไม่จำเป็น
+            AddTextColumn("is_hot_sale", "IsHotSale", 0);
             productGrid.Columns["is_hot_sale"].Visible = false;
             AddTextColumn("status", "Status", 0);
             productGrid.Columns["status"].Visible = false;
@@ -186,13 +194,14 @@ namespace Whanjuay
 
             var row = productGrid.Rows[e.RowIndex];
 
-            // 1. จัดการคอลัมน์รูปภาพ
-            if (productGrid.Columns[e.ColumnIndex].Name == "image_path")
+            // 1. จัดการคอลัมน์รูปภาพ (แก้ไข Path และการแสดงผล)
+            if (productGrid.Columns[e.ColumnIndex].Name == "image_path")
             {
                 string imagePathFromDb = row.Cells["image_path"].Value?.ToString();
                 if (!string.IsNullOrEmpty(imagePathFromDb))
                 {
-                    string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", imagePathFromDb);
+                    // Path.Combine จะสร้าง Path ที่ถูกต้องจาก BaseDirectory
+                    string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, imagePathFromDb.Replace('/', Path.DirectorySeparatorChar));
 
                     if (File.Exists(fullPath))
                     {
@@ -206,8 +215,8 @@ namespace Whanjuay
                 }
             }
 
-            // 2. จัดการคอลัมน์ HOT SALE (แสดงสถานะ)
-            if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
+            // 2. จัดการคอลัมน์ HOT SALE (แสดงสถานะ)
+            if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
             {
                 bool isHotSale = Convert.ToBoolean(row.Cells["is_hot_sale"].Value);
 
@@ -233,13 +242,13 @@ namespace Whanjuay
             if (e.RowIndex < 0) return;
             int productId = Convert.ToInt32(productGrid.Rows[e.RowIndex].Cells["product_id"].Value);
 
-            // 1. Logic สำหรับ Hot Sale Toggle
-            if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
+            // 1. Logic สำหรับ Hot Sale Toggle
+            if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
             {
                 bool currentStatus = Convert.ToBoolean(productGrid.Rows[e.RowIndex].Cells["is_hot_sale"].Value);
                 bool newStatus = !currentStatus; // สลับสถานะ
 
-                try
+                try
                 {
                     Db.UpdateHotSaleStatus(productId, newStatus);
                     LoadProducts();
@@ -249,10 +258,26 @@ namespace Whanjuay
                     MessageBox.Show($"Error updating Hot Sale status: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            // 2. Logic สำหรับ Edit/Delete 
-            else if (productGrid.Columns[e.ColumnIndex].Name == "ActionsCol")
+            // 2. Logic สำหรับ Edit
+            else if (productGrid.Columns[e.ColumnIndex].Name == "EditCol")
             {
-                // Logic การแก้ไข/ลบ
+                MessageBox.Show($"เปิดหน้าแก้ไขสินค้า ID: {productId}", "แก้ไข", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            // 3. Logic สำหรับ Delete
+            else if (productGrid.Columns[e.ColumnIndex].Name == "DeleteCol")
+            {
+                if (MessageBox.Show($"ยืนยันการลบสินค้า ID: {productId}?", "ยืนยัน", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        Db.DeleteProduct(productId);
+                        LoadProducts();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"เกิดข้อผิดพลาดในการลบ: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
         }
 
@@ -263,3 +288,4 @@ namespace Whanjuay
         }
     }
 }
+
