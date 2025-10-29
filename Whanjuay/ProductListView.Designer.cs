@@ -4,11 +4,7 @@
     {
         private System.ComponentModel.IContainer components = null;
 
-        // ********** 1. ประกาศตัวแปรคอนโทรลทั้งหมดเป็น internal **********
-        internal Guna.UI2.WinForms.Guna2Button btnAddProduct;
-        internal System.Windows.Forms.Label lblTitle;
-        internal Guna.UI2.WinForms.Guna2DataGridView productGrid;
-        // ******************************************************************
+        // ********** ส่วนนี้ถูกปล่อยว่างเพื่อป้องกัน Ambiguity **********
 
         protected override void Dispose(bool disposing)
         {
@@ -29,6 +25,8 @@
             this.btnAddProduct = new Guna.UI2.WinForms.Guna2Button();
             this.lblTitle = new System.Windows.Forms.Label();
             this.productGrid = new Guna.UI2.WinForms.Guna2DataGridView();
+            this.txtSearch = new Guna.UI2.WinForms.Guna2TextBox();
+            this.btnSearch = new Guna.UI2.WinForms.Guna2Button();
             ((System.ComponentModel.ISupportInitialize)(this.productGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,9 +60,6 @@
             this.productGrid.AllowUserToDeleteRows = false;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
             this.productGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.productGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
@@ -73,7 +68,6 @@
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.productGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.productGrid.ColumnHeadersHeight = 40;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
@@ -83,12 +77,12 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.productGrid.DefaultCellStyle = dataGridViewCellStyle3;
             this.productGrid.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.productGrid.Location = new System.Drawing.Point(20, 90);
+            this.productGrid.Location = new System.Drawing.Point(20, 132);
             this.productGrid.Name = "productGrid";
             this.productGrid.ReadOnly = true;
             this.productGrid.RowHeadersVisible = false;
             this.productGrid.RowTemplate.Height = 80;
-            this.productGrid.Size = new System.Drawing.Size(815, 450);
+            this.productGrid.Size = new System.Drawing.Size(815, 408);
             this.productGrid.TabIndex = 2;
             this.productGrid.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
             this.productGrid.ThemeStyle.AlternatingRowsStyle.Font = null;
@@ -102,7 +96,7 @@
             this.productGrid.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
             this.productGrid.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.White;
             this.productGrid.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.productGrid.ThemeStyle.HeaderStyle.Height = 40;
+            this.productGrid.ThemeStyle.HeaderStyle.Height = 23;
             this.productGrid.ThemeStyle.ReadOnly = true;
             this.productGrid.ThemeStyle.RowsStyle.BackColor = System.Drawing.Color.White;
             this.productGrid.ThemeStyle.RowsStyle.BorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
@@ -114,11 +108,40 @@
             this.productGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ProductGrid_CellContentClick);
             this.productGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.ProductGrid_CellFormatting);
             // 
+            // txtSearch
+            // 
+            this.txtSearch.BorderRadius = 15;
+            this.txtSearch.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtSearch.DefaultText = "";
+            this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtSearch.Location = new System.Drawing.Point(20, 73);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.PlaceholderText = "ค้นหาสินค้า...";
+            this.txtSearch.SelectedText = "";
+            this.txtSearch.Size = new System.Drawing.Size(328, 36);
+            this.txtSearch.TabIndex = 3;
+            this.txtSearch.TextChanged += new System.EventHandler(this.TxtSearch_TextChanged);
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.BorderRadius = 15;
+            this.btnSearch.FillColor = System.Drawing.Color.Transparent;
+            this.btnSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnSearch.ForeColor = System.Drawing.Color.Black;
+            this.btnSearch.Location = new System.Drawing.Point(354, 73);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(36, 36);
+            this.btnSearch.TabIndex = 4;
+            this.btnSearch.Text = "🔍";
+            this.btnSearch.Click += new System.EventHandler(this.BtnSearch_Click);
+            // 
             // ProductListView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Turquoise;
+            this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.btnSearch);
+            this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.productGrid);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnAddProduct);
@@ -131,5 +154,12 @@
         }
 
         #endregion
+
+        // ********** 2. ประกาศตัวแปรคอนโทรลทั้งหมดเป็น internal **********
+        internal Guna.UI2.WinForms.Guna2Button btnAddProduct;
+        internal System.Windows.Forms.Label lblTitle;
+        internal Guna.UI2.WinForms.Guna2DataGridView productGrid;
+        internal Guna.UI2.WinForms.Guna2TextBox txtSearch;
+        internal Guna.UI2.WinForms.Guna2Button btnSearch;
     }
 }

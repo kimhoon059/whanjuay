@@ -13,12 +13,10 @@ namespace Whanjuay
     {
         public event AddProductEventHandler AddRequested;
 
-        // ********** FIX: ลบการประกาศ private fields ที่ซ้ำซ้อนออกทั้งหมด **********
-        // (productGrid, btnAddProduct, ImageBaseDir)
-        // Note: ImageBaseDir ถูกย้ายไปเป็น local field หรือต้องถูกประกาศในส่วนอื่นหากจำเป็น
+        // ********** FIX: ไม่มีประกาศตัวแปร Field ที่นี่อีกต่อไป (ลบ Ambiguity) **********
+        // productGrid, btnAddProduct, txtSearch, btnSearch ถูกประกาศใน Designer.cs แล้ว
 
-        // เราจะกำหนดค่า ImageBaseDir ในเมธอดแทน
-        private const string ImageBaseDir = "Images"; // กำหนดเป็นค่าคงที่
+        private const string ImageBaseDir = "Images";
 
         public ProductListView()
         {
@@ -29,7 +27,7 @@ namespace Whanjuay
 
         private void ProductListView_Load_Logic(object sender, EventArgs e)
         {
-            // ตรวจสอบความพร้อมของ DataGrid ก่อนเรียกใช้ (ป้องกัน Error ใน Designer)
+            // ตรวจสอบความพร้อมของ DataGrid ก่อนเรียกใช้
             if (productGrid == null || btnAddProduct == null)
             {
                 return;
@@ -40,7 +38,7 @@ namespace Whanjuay
 
         private void InitializeProductListUI()
         {
-            // กำหนด Style Header ของ DataGrid 
+            // กำหนด Style Header ของ DataGrid 
             productGrid.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
                 BackColor = Color.FromArgb(249, 243, 237),
@@ -55,6 +53,7 @@ namespace Whanjuay
             btnAddProduct.BorderRadius = 10;
 
             // ผูก Event Clicks
+            // NOTE: ใช้ -= ก่อน += เพื่อป้องกันการผูกซ้ำซ้อนกับ Designer
             productGrid.CellContentClick -= ProductGrid_CellContentClick;
             productGrid.CellContentClick += ProductGrid_CellContentClick;
             productGrid.CellFormatting -= ProductGrid_CellFormatting;
@@ -62,8 +61,44 @@ namespace Whanjuay
             btnAddProduct.Click -= BtnAddProduct_Click;
             btnAddProduct.Click += BtnAddProduct_Click;
 
+            // ผูก Event Search
+            txtSearch.TextChanged -= TxtSearch_TextChanged;
+            txtSearch.TextChanged += TxtSearch_TextChanged;
+            btnSearch.Click -= BtnSearch_Click;
+            btnSearch.Click += BtnSearch_Click;
+
             ConfigureGridColumns();
         }
+
+        // ********** Logic การค้นหา **********
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        {
+            FilterProducts(txtSearch.Text);
+        }
+
+        private void BtnSearch_Click(object sender, EventArgs e)
+        {
+            FilterProducts(txtSearch.Text);
+        }
+
+        public void FilterProducts(string searchTerm)
+        {
+            if (this.productGrid.DataSource is DataTable dt)
+            {
+                string safeSearchTerm = searchTerm.Replace("'", "''");
+
+                if (string.IsNullOrWhiteSpace(safeSearchTerm))
+                {
+                    dt.DefaultView.RowFilter = string.Empty;
+                }
+                else
+                {
+                    string filter = $"name LIKE '%{safeSearchTerm}%' OR category_name LIKE '%{safeSearchTerm}%'";
+                    dt.DefaultView.RowFilter = filter;
+                }
+            }
+        }
+        // **********************************
 
         public void LoadProducts()
         {
@@ -113,7 +148,7 @@ namespace Whanjuay
             AddTextColumn("price", "ราคา (บาท)", 100, DataGridViewContentAlignment.MiddleRight);
             productGrid.Columns["price"].DefaultCellStyle.Format = "N2";
 
-            // 6. คอลัมน์ ACTIONS (Edit/Delete)
+            // 6. คอลัมน์ ACTIONS (แก้ไข/ลบ)
             productGrid.Columns.Add(new DataGridViewImageColumn
             {
                 HeaderText = "แก้ไข/ลบ",
