@@ -55,8 +55,29 @@ ORDER BY p.is_hot_sale DESC, p.created_at DESC, p.product_id DESC;", conn))
             }
         }
 
+        // ---------- NEW: เมธอดสำหรับโหลดข้อมูลสินค้าตาม ID (Item 5) ----------
+        public static DataTable GetProductById(int productId)
+        {
+            using (var conn = CreateConn())
+            {
+                conn.Open();
+                using (var cmd = new MySqlCommand(@"
+SELECT product_id, name, category_id, price, status, description, image_path, stock_quantity, is_hot_sale
+FROM products 
+WHERE product_id = @id;", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", productId);
+                    using (var da = new MySqlDataAdapter(cmd))
+                    {
+                        var dt = new DataTable();
+                        da.Fill(dt);
+                        return dt;
+                    }
+                }
+            }
+        }
+
         // ---------- Insert product -> return new ID ----------
-        // FIX: เพิ่มพารามิเตอร์ stockQuantity เพื่อรับค่าจาก ProductAddView.cs
         public static int InsertProduct(string name, int categoryId, decimal price,
                                         string status, string description, string imagePath,
                                         int stockQuantity)
@@ -75,10 +96,43 @@ SELECT LAST_INSERT_ID();", conn))
                     cmd.Parameters.AddWithValue("@s", status);
                     cmd.Parameters.AddWithValue("@d", (object)description ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@img", (object)imagePath ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@stock", stockQuantity); // บันทึก Stock
+                    cmd.Parameters.AddWithValue("@stock", stockQuantity);
 
                     object scalar = cmd.ExecuteScalar();
                     return Convert.ToInt32(scalar);
+                }
+            }
+        }
+
+        // ---------- NEW: เมธอดสำหรับอัปเดตข้อมูลสินค้า (Item 5) ----------
+        public static void UpdateProduct(int productId, string name, int categoryId, decimal price,
+                                         string status, string description, string imagePath,
+                                         int stockQuantity)
+        {
+            using (var conn = CreateConn())
+            {
+                conn.Open();
+                using (var cmd = new MySqlCommand(@"
+UPDATE products SET 
+    name = @n, 
+    category_id = @c, 
+    price = @p, 
+    status = @s, 
+    description = @d, 
+    image_path = @img, 
+    stock_quantity = @stock
+WHERE product_id = @id;", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", productId);
+                    cmd.Parameters.AddWithValue("@n", name);
+                    cmd.Parameters.AddWithValue("@c", categoryId);
+                    cmd.Parameters.AddWithValue("@p", price);
+                    cmd.Parameters.AddWithValue("@s", status);
+                    cmd.Parameters.AddWithValue("@d", (object)description ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@img", (object)imagePath ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@stock", stockQuantity);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }

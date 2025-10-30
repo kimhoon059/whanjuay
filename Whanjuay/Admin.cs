@@ -22,46 +22,42 @@ namespace Whanjuay
             base.OnLoad(e);
             this.Text = "Admin Dashboard";
 
-            // ********** ต้องแน่ใจว่าได้แก้ไข Admin.Designer.cs เป็น protected แล้ว **********
             contentHost = this.guna2CustomGradientPanel1;
 
             if (contentHost == null)
             {
-                // หากโค้ดมาถึงตรงนี้ แสดงว่า Admin.Designer.cs ยังไม่ถูกแก้ไข
                 MessageBox.Show("Configuration Error: พื้นที่แสดงผลหลัก (guna2CustomGradientPanel1) ไม่ถูกนิยามใน Designer.cs", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            // ********** ลบโค้ดป้ายต้อนรับทิ้งแล้ว **********
-
-            // ********** ลบ WireProductButton ออก เพื่อให้พื้นที่ว่างเปล่าเมื่อเปิด **********
-            // เราจะใช้ Event ของ Designer แทนการผูกเอง
-            // WireProductButton(); // ลบการเรียกเมธอดนี้
-
-            // ShowProductList(); // คอมเมนต์ไว้เพื่อให้พื้นที่ว่างเปล่าตอนเปิดโปรแกรม
         }
 
-        // ********** ลบเมธอด WireProductButton() และ AllChildren() ทิ้งทั้งหมด **********
-        // (เราจะใช้ Designer Event แทน)
-
         // ====== สลับหน้า ======
-
-        // ********** ลบเมธอด BtnProduct_Click ทิ้ง **********
 
         private void ShowProductList()
         {
             var list = new ProductListView();
             list.AddRequested += ShowAddProduct;
+            list.EditRequested += ShowEditProduct;
             ShowView(list);
         }
 
         private void ShowAddProduct()
         {
-            var add = new ProductAddView();
-            // เมื่อกดปุ่มย้อนกลับ/บันทึก จะกลับมาหน้า List
+            // ใช้ 0 เป็นค่าเริ่มต้นสำหรับการเพิ่มสินค้าใหม่
+            var add = new ProductAddView(0);
             add.Saved += ShowProductList;
             ShowView(add);
         }
+
+        // เมธอดสำหรับแก้ไขสินค้า
+        private void ShowEditProduct(int productId)
+        {
+            // ใช้ productId เพื่อระบุว่าเป็นการแก้ไข
+            var edit = new ProductAddView(productId);
+            edit.Saved += ShowProductList;
+            ShowView(edit);
+        }
+
 
         private void ShowView(Control view)
         {
@@ -80,11 +76,10 @@ namespace Whanjuay
             currentView = view;
         }
 
-        // ====== อีเวนต์ที่ถูกสร้างโดย Designer (ใช้ Event นี้แทน BtnProduct_Click) ======
         // Event นี้ถูกผูกกับปุ่ม PRODUCT ใน Designer.cs
         private void guna2Button1_Click_1(object sender, EventArgs e)
         {
-            ShowProductList(); // ********** ให้เรียก ShowProductList() ตรงนี้ **********
+            ShowProductList();
         }
 
         // ... (อีเวนต์อื่นๆ ที่ไม่เกี่ยวปล่อยว่างไว้) ...

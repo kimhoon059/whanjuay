@@ -4,8 +4,6 @@
     {
         private System.ComponentModel.IContainer components = null;
 
-        // ********** ส่วนนี้ถูกปล่อยว่างเพื่อป้องกัน Ambiguity **********
-
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -35,18 +33,17 @@
             this.btnAddProduct.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(175)))), ((int)(((byte)(100)))));
             this.btnAddProduct.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnAddProduct.ForeColor = System.Drawing.Color.White;
-            this.btnAddProduct.Location = new System.Drawing.Point(685, 20);
+            this.btnAddProduct.Location = new System.Drawing.Point(735, 20);
             this.btnAddProduct.Name = "btnAddProduct";
-            this.btnAddProduct.Size = new System.Drawing.Size(150, 40);
+            this.btnAddProduct.Size = new System.Drawing.Size(120, 40);
             this.btnAddProduct.TabIndex = 0;
             this.btnAddProduct.Text = "+ เพิ่มสินค้าใหม่";
-            // *** REMOVED: this.btnAddProduct.Click += new System.EventHandler(this.BtnAddProduct_Click); ***
             // 
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.Location = new System.Drawing.Point(20, 20);
+            this.lblTitle.Location = new System.Drawing.Point(15, 20); // 👈 FIX: เริ่มจากขอบซ้ายของ UserControl
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(143, 32);
             this.lblTitle.TabIndex = 1;
@@ -56,27 +53,28 @@
             // 
             this.productGrid.AllowUserToAddRows = false;
             this.productGrid.AllowUserToDeleteRows = false;
+            this.productGrid.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(210)))));
+            // ********** FIX (Item 1): กำหนด Border Radius และ Border Color/Style **********
+            // Note: บรรทัดนี้อาจขึ้น Error (active) แต่ถ้า Designer.cs ของคุณมีโค้ดเดิมซ่อนอยู่มันอาจทำงานได้
+            //this.productGrid.BorderRadius = 10; 
             // ... (Style and other properties omitted for brevity, use your existing ones) ...
-            this.productGrid.Location = new System.Drawing.Point(20, 132);
+            this.productGrid.Location = new System.Drawing.Point(15, 120); // 👈 FIX (Item 1): จัดตำแหน่งให้ตารางอยู่กึ่งกลาง (โดยรวมพื้นที่ 820)
             this.productGrid.Name = "productGrid";
             this.productGrid.ReadOnly = true;
             this.productGrid.RowHeadersVisible = false;
             this.productGrid.RowTemplate.Height = 80;
-            this.productGrid.Size = new System.Drawing.Size(815, 408);
+            this.productGrid.Size = new System.Drawing.Size(830, 420); // 👈 FIX (Item 1): ขยายขนาดให้เต็มพื้นที่
             this.productGrid.TabIndex = 2;
-            // *** REMOVED: this.productGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ProductGrid_CellContentClick); ***
-            // *** REMOVED: this.productGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.ProductGrid_CellFormatting); ***
             // 
             // txtSearch
             // 
             this.txtSearch.BorderRadius = 15;
             // ... (properties omitted for brevity) ...
-            this.txtSearch.Location = new System.Drawing.Point(20, 73);
+            this.txtSearch.Location = new System.Drawing.Point(15, 70); // 👈 FIX: ปรับ Location 
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.PlaceholderText = "ค้นหาสินค้า...";
             this.txtSearch.Size = new System.Drawing.Size(328, 36);
             this.txtSearch.TabIndex = 3;
-            // *** REMOVED: this.txtSearch.TextChanged += new System.EventHandler(this.TxtSearch_TextChanged); ***
             // 
             // btnSearch
             // 
@@ -84,25 +82,24 @@
             this.btnSearch.FillColor = System.Drawing.Color.Transparent;
             this.btnSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnSearch.ForeColor = System.Drawing.Color.Black;
-            this.btnSearch.Location = new System.Drawing.Point(354, 73);
+            this.btnSearch.Location = new System.Drawing.Point(349, 70); // 👈 FIX: ปรับ Location 
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(36, 36);
             this.btnSearch.TabIndex = 4;
-            this.btnSearch.Text = "🔍"; 
-            // *** REMOVED: this.btnSearch.Click += new System.EventHandler(this.BtnSearch_Click); ***
+            this.btnSearch.Text = "🔍";
             // 
             // ProductListView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
-            this.Controls.Add(this.btnSearch); 
+            this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.productGrid);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btnAddProduct);
             this.Name = "ProductListView";
-            this.Size = new System.Drawing.Size(855, 560);
+            this.Size = new System.Drawing.Size(870, 560); // 👈 FIX: ขยาย UserControl เล็กน้อยเพื่อรองรับตารางที่กว้างขึ้น
             ((System.ComponentModel.ISupportInitialize)(this.productGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -111,8 +108,6 @@
 
         #endregion
 
-        // ********** 2. ประกาศตัวแปรคอนโทรลทั้งหมดเป็น internal **********
-        // นี่คือการประกาศที่ถูกต้องและจะถูกใช้โดย ProductListView.cs
         internal Guna.UI2.WinForms.Guna2Button btnAddProduct;
         internal System.Windows.Forms.Label lblTitle;
         internal Guna.UI2.WinForms.Guna2DataGridView productGrid;

@@ -13,11 +13,16 @@ namespace Whanjuay
     {
         public event ProductSavedEventHandler Saved;
 
+        // currentImagePath: เก็บ path ของรูปภาพที่ถูกโหลด/เลือก: 
+        // 1. Full Path จาก OpenFileDialog (ก่อนบันทึก)
+        // 2. Relative Path (Images/...) จากฐานข้อมูล (เมื่อโหลดเพื่อแก้ไข)
         private string currentImagePath = null;
+        private int _productId;
 
-        public ProductAddView()
+        public ProductAddView(int productId = 0)
         {
             InitializeComponent();
+            _productId = productId;
             this.Load += ProductAddView_Load;
             this.BackColor = System.Drawing.Color.Transparent;
         }
@@ -26,7 +31,65 @@ namespace Whanjuay
         {
             InitializeAddProductUI();
             LoadCategories();
+
+            if (_productId > 0)
+            {
+                lblTitle.Text = "แก้ไขสินค้า (ID: " + _productId + ")";
+                btnSave.Text = "บันทึกการแก้ไข";
+                LoadProductData(_productId); // เรียกเมธอดโหลดข้อมูล
+            }
+            else
+            {
+                lblTitle.Text = "เพิ่มสินค้าใหม่";
+                btnSave.Text = "บันทึกสินค้า";
+            }
         }
+
+        // เมธอดสำหรับโหลดข้อมูลสินค้า (Item 5)
+        private void LoadProductData(int productId)
+        {
+            try
+            {
+                DataTable dt = Db.GetProductById(productId);
+                if (dt.Rows.Count > 0)
+                {
+                    DataRow row = dt.Rows[0];
+                    txtName.Text = row["name"].ToString();
+
+                    // ตั้งค่า ComboBox (ต้องแน่ใจว่า LoadCategories() ทำงานเสร็จก่อน)
+                    cmbCategory.SelectedValue = row["category_id"];
+
+                    // แสดงราคาและ Stock 
+                    txtPrice.Text = Convert.ToDecimal(row["price"]).ToString();
+                    txtStock.Text = Convert.ToInt32(row["stock_quantity"]).ToString();
+
+                    txtDescription.Text = row["description"]?.ToString() ?? string.Empty;
+
+                    // โหลดรูปภาพ
+                    string imagePathFromDb = row["image_path"]?.ToString();
+                    if (!string.IsNullOrEmpty(imagePathFromDb))
+                    {
+                        // Path.Combine จะจัดการเรื่องเครื่องหมาย / และ \ ให้ถูกต้อง
+                        string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, imagePathFromDb.Replace('/', Path.DirectorySeparatorChar));
+                        if (File.Exists(fullPath))
+                        {
+                            // ใช้ FileStream เพื่อป้องกันการล็อคไฟล์
+                            using (var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read))
+                            {
+                                pbImage.Image = Image.FromStream(stream);
+                            }
+                            // เก็บ path เดิม (Images/...) เพื่อส่งกลับไป DB หากไม่ได้เปลี่ยนรูป
+                            currentImagePath = imagePathFromDb;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"เกิดข้อผิดพลาดในการโหลดข้อมูลสินค้า:\n{ex.Message}", "ข้อผิดพลาด", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
         private void InitializeAddProductUI()
         {
@@ -42,10 +105,9 @@ namespace Whanjuay
             btnBack.BorderRadius = 10;
 
             // 3. ปรับ Style 
-            lblTitle.Text = "เพิ่มสินค้าใหม่";
             btnBack.Text = "ย้อนกลับ";
 
-            // FIX: สั่งให้ปุ่มเปลี่ยนรูปภาพอยู่ด้านหน้าเสมอ
+            // สั่งให้ปุ่มเปลี่ยนรูปภาพอยู่ด้านหน้าเสมอ
             if (pnlImage.Controls.Contains(btnChangeImage))
             {
                 btnChangeImage.BringToFront();
@@ -91,7 +153,6 @@ namespace Whanjuay
                 cmbCategory.DataSource = dt;
                 cmbCategory.DisplayMember = "name";
                 cmbCategory.ValueMember = "category_id";
-                cmbCategory.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
@@ -123,7 +184,15 @@ namespace Whanjuay
                 {
                     try
                     {
-                        pbImage.Image = Image.FromFile(ofd.FileName);
+                        // ปลดล็อคไฟล์เดิมก่อนเปลี่ยนรูปภาพ
+                        pbImage.Image?.Dispose();
+
+                        // อ่านเป็น MemoryStream เพื่อปลดล็อคไฟล์ต้นฉบับทันที
+                        using (var stream = new MemoryStream(File.ReadAllBytes(ofd.FileName)))
+                        {
+                            pbImage.Image = Image.FromStream(stream);
+                        }
+                        // เก็บ Full Path ของไฟล์ต้นฉบับ
                         currentImagePath = ofd.FileName;
                     }
                     catch (Exception ex)
@@ -154,7 +223,7 @@ namespace Whanjuay
                 return;
             }
 
-            string savedImagePath = null;
+            string finalImagePath = currentImagePath;
 
             try
             {
@@ -163,8 +232,9 @@ namespace Whanjuay
                 string description = txtDescription.Text;
                 string status = (stockQuantity > 0) ? "มีสินค้า" : "หมด";
 
-                // --- 1. จัดการการคัดลอกไฟล์รูปภาพ ---
-                if (!string.IsNullOrEmpty(currentImagePath))
+                // --- 1. จัดการการคัดลอกไฟล์รูปภาพ (ถ้ามีการเลือกรูปใหม่) ---
+                // ตรวจสอบว่าเป็น Full Path (จาก OFD) หรือไม่
+                if (!string.IsNullOrEmpty(currentImagePath) && !currentImagePath.Contains("Images" + Path.DirectorySeparatorChar))
                 {
                     string destFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images");
                     if (!Directory.Exists(destFolder))
@@ -176,15 +246,25 @@ namespace Whanjuay
                     string fileName = Guid.NewGuid().ToString() + extension;
                     string destPath = Path.Combine(destFolder, fileName);
 
+                    // คัดลอก
                     File.Copy(currentImagePath, destPath, true);
 
-                    savedImagePath = $"Images/{fileName}";
+                    finalImagePath = $"Images/{fileName}";
                 }
 
-                // --- 2. บันทึกข้อมูลลงฐานข้อมูล ---
-                int newId = Db.InsertProduct(name, categoryId, price, status, description, savedImagePath, stockQuantity);
-
-                MessageBox.Show($"บันทึกสินค้าใหม่เรียบร้อยแล้ว (ID: {newId})", "สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // --- 2. บันทึก/แก้ไขข้อมูลลงฐานข้อมูล ---
+                if (_productId > 0)
+                {
+                    // Update
+                    Db.UpdateProduct(_productId, name, categoryId, price, status, description, finalImagePath, stockQuantity);
+                    MessageBox.Show($"บันทึกการแก้ไขสินค้า ID: {_productId} เรียบร้อยแล้ว", "สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    // Insert
+                    int newId = Db.InsertProduct(name, categoryId, price, status, description, finalImagePath, stockQuantity);
+                    MessageBox.Show($"บันทึกสินค้าใหม่เรียบร้อยแล้ว (ID: {newId})", "สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
 
                 Saved?.Invoke();
             }
@@ -203,6 +283,5 @@ namespace Whanjuay
         private void btnBack_Click_1(object sender, EventArgs e) { /* Do Nothing */ }
         private void lblStock_Click(object sender, EventArgs e) { /* Do Nothing */ }
         private void txtDescription_TextChanged(object sender, EventArgs e) { /* Do Nothing */ }
-        // เพิ่มเมธอดอื่นๆ ที่ Designer.cs อาจจะอ้างถึงแต่คุณได้ลบทิ้งไปแล้ว
     }
 }
