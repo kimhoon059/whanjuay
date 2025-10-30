@@ -29,8 +29,8 @@ namespace Whanjuay
             }
         }
 
-        // ---------- Products: list for grid ----------
-        public static DataTable GetProductsForList()
+        // ---------- Products: list for grid (รวม stock_quantity) ----------
+        public static DataTable GetProductsForListWithStock() // 👈 FIX: เปลี่ยนชื่อเมธอดและเพิ่ม stock_quantity
         {
             using (var conn = CreateConn())
             {
@@ -42,6 +42,7 @@ SELECT p.product_id,
        p.status,
        p.image_path,
        p.is_hot_sale,  
+       p.stock_quantity,     -- 👈 NEW: เพิ่มคอลัมน์ Stock
        c.name AS category_name
 FROM products p
 LEFT JOIN categories c ON c.category_id = p.category_id
@@ -55,7 +56,7 @@ ORDER BY p.is_hot_sale DESC, p.created_at DESC, p.product_id DESC;", conn))
             }
         }
 
-        // ---------- NEW: เมธอดสำหรับโหลดข้อมูลสินค้าตาม ID (Item 5) ----------
+        // ---------- Products: Get by ID ----------
         public static DataTable GetProductById(int productId)
         {
             using (var conn = CreateConn())
@@ -104,7 +105,7 @@ SELECT LAST_INSERT_ID();", conn))
             }
         }
 
-        // ---------- NEW: เมธอดสำหรับอัปเดตข้อมูลสินค้า (Item 5) ----------
+        // ---------- Update product ----------
         public static void UpdateProduct(int productId, string name, int categoryId, decimal price,
                                          string status, string description, string imagePath,
                                          int stockQuantity)
@@ -137,7 +138,7 @@ WHERE product_id = @id;", conn))
             }
         }
 
-        // ---------- (ทางเลือก) ลบสินค้า ----------
+        // ---------- Delete product ----------
         public static void DeleteProduct(int productId)
         {
             using (var conn = CreateConn())
@@ -151,7 +152,7 @@ WHERE product_id = @id;", conn))
             }
         }
 
-        // ---------- Update Hot Sale Status (จำเป็นสำหรับ ProductListView) ----------
+        // ---------- Update Hot Sale Status ----------
         public static void UpdateHotSaleStatus(int productId, bool isHotSale)
         {
             using (var conn = CreateConn())

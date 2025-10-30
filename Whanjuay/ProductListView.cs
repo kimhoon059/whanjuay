@@ -109,7 +109,7 @@ namespace Whanjuay
             try
             {
                 ConfigureGridColumns();
-                DataTable dt = Db.GetProductsForList();
+                DataTable dt = Db.GetProductsForListWithStock();
                 productGrid.DataSource = dt;
             }
             catch (Exception ex)
@@ -121,7 +121,7 @@ namespace Whanjuay
         private void ConfigureGridColumns()
         {
             productGrid.Columns.Clear();
-            // Total Width: 80 + 50 + 30 + 100 + 30 + 390 + 150 = 830 (เท่ากับขนาดตารางใน Designer.cs)
+            // Total Width = 80 + 80 + 50 + 100 + 50 + 345 + 120 + 70 = 895 (ตารางกว้าง 835)
 
             // 1. คอลัมน์รูปภาพ
             productGrid.Columns.Add(new DataGridViewImageColumn
@@ -140,7 +140,7 @@ namespace Whanjuay
                 Name = "HotSaleToggleCol",
                 DataPropertyName = "is_hot_sale",
                 UseColumnTextForButtonValue = false,
-                Width = 50, // 👈 FIX (Item 3): เล็กลงตามมาร์กเกอร์สีแดง
+                Width = 80, // 👈 FIX (Item 3): เล็กลง
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
@@ -152,7 +152,7 @@ namespace Whanjuay
                 Name = "EditCol",
                 UseColumnTextForButtonValue = true,
                 Text = "✏️",
-                Width = 30, // 👈 FIX (Item 3): เล็กลงตามมาร์กเกอร์สีแดง
+                Width = 50, // 👈 FIX (Item 3): เล็กลง
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
@@ -168,21 +168,26 @@ namespace Whanjuay
                 Name = "DeleteCol",
                 UseColumnTextForButtonValue = true,
                 Text = "🗑️",
-                Width = 30, // 👈 FIX (Item 3): เล็กลงตามมาร์กเกอร์สีแดง
+                Width = 50, // 👈 FIX (Item 3): เล็กลง
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
 
             // 6. ชื่อสินค้า
-            AddTextColumn("name", "ชื่อสินค้า", 390, DataGridViewContentAlignment.MiddleLeft) // 👈 FIX (Item 4): จัดข้อมูลให้อยู่ชิดซ้าย (ดูจากภาพประกอบ)
+            AddTextColumn("name", "ชื่อสินค้า", 355, DataGridViewContentAlignment.MiddleCenter) // 👈 FIX (Item 4): จัดข้อมูลให้อยู่กึ่งกลาง
                 .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
 
             // 7. ราคา
-            // ใช้ความกว้าง 150 และจัดชิดขวา โดยตัวเลขจะถูกจัด MiddleRight (Item 2)
-            var priceCol = AddTextColumn("price", "ราคา (บาท)", 150, DataGridViewContentAlignment.MiddleRight); // 👈 FIX (Item 2): เพิ่มความกว้างเป็น 150
+            // ใช้ความกว้าง 120 และจัดชิดขวา เพื่อให้ตัวเลขห่างจากขอบขวาของคอลัมน์ (Item 2)
+            var priceCol = AddTextColumn("price", "ราคา (บาท)", 120, DataGridViewContentAlignment.MiddleRight); // 👈 FIX (Item 2): ใช้ MiddleRight และความกว้าง 120
             priceCol.DefaultCellStyle.Format = "N2";
             priceCol.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            // 8. จำนวนสินค้า
+            var stockCol = AddTextColumn("stock_quantity", "จำนวนสินค้า", 100, DataGridViewContentAlignment.MiddleCenter);
+            stockCol.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            stockCol.DefaultCellStyle.ForeColor = Color.DarkGreen;
 
             // ซ่อนคอลัมน์ที่ไม่จำเป็น
             AddTextColumn("is_hot_sale", "IsHotSale", 0).Visible = false;
@@ -252,6 +257,24 @@ namespace Whanjuay
                     e.CellStyle.ForeColor = Color.Black;
                 }
                 e.FormattingApplied = true;
+            }
+            // 3. จัดการสีสำหรับคอลัมน์จำนวนสินค้า (เตือนเมื่อเหลือน้อย)
+            else if (productGrid.Columns[e.ColumnIndex].Name == "stock_quantity")
+            {
+                if (e.Value != null && int.TryParse(e.Value.ToString(), out int stock))
+                {
+                    if (stock <= 5) // กำหนดเกณฑ์เตือนสต็อกเหลือน้อย
+                    {
+                        e.CellStyle.BackColor = Color.LightYellow;
+                        e.CellStyle.ForeColor = Color.Red;
+                    }
+                    else
+                    {
+                        // กำหนดสีพื้นหลังปกติให้สอดคล้องกับแถวอื่นๆ
+                        e.CellStyle.BackColor = productGrid.DefaultCellStyle.BackColor;
+                        e.CellStyle.ForeColor = Color.DarkGreen;
+                    }
+                }
             }
         }
 
