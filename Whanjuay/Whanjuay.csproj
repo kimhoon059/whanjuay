@@ -125,6 +125,12 @@
     <Compile Include="Loginpage.Designer.cs">
       <DependentUpon>Loginpage.cs</DependentUpon>
     </Compile>
+    <Compile Include="mainpagewj.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mainpagewj.Designer.cs">
+      <DependentUpon>mainpagewj.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProductAddView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -165,6 +171,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Loginpage.resx">
       <DependentUpon>Loginpage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mainpagewj.resx">
+      <DependentUpon>mainpagewj.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProductAddView.resx">
       <DependentUpon>ProductAddView.cs</DependentUpon>
@@ -255,6 +264,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\admin3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Mainpage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Mainpage2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

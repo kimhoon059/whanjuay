@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient; // ต้องมี MySql
+using System.Configuration; // ต้องมี ConfigurationManager
 
 namespace Whanjuay
 {
@@ -52,41 +54,122 @@ namespace Whanjuay
             }
         }
 
-        // ====== ล็อกอิน: เช็คแอดมินก่อน (ไม่สนตัวพิมพ์เล็ก-ใหญ่) ======
+        // ====== ล็อกอิน: เช็คแอดมิน/ผู้ใช้ทั่วไป ======
         private void Login_Click(object sender, EventArgs e)
         {
             string user = (this.USERNAME.Text ?? "").Trim();
             string pass = (this.PASSWORD.Text ?? "").Trim();
 
+            // 1. ตรวจสอบแอดมิน (ใช้ค่า hard-coded เดิม)
             bool isAdmin =
                 string.Equals(user, "a", StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(pass, "a1", StringComparison.OrdinalIgnoreCase);
 
             if (isAdmin)
             {
-                // เข้าหน้าแอดมิน (ฟอร์มชื่อ Admin ตามที่คุณสร้าง)
-                var admin = new Admin();
-                admin.StartPosition = FormStartPosition.CenterScreen;
-
-                // เมื่อปิดหน้า Admin แล้ว ให้เคลียร์ฟอร์ม + โชว์หน้า Login กลับมา
-                admin.FormClosed += (s, ea) =>
-                {
-                    if (!this.IsDisposed)
-                    {
-                        ResetLoginForm();
-                        this.Show();
-                    }
-                };
-
-                this.Hide();    // ❗อย่า Close() ฟอร์มหลัก ไม่งั้นแอปจะปิดหมด
-                admin.Show();
+                // เข้าหน้าแอดมิน (ฟอร์มชื่อ Admin)
+                OpenAdminForm();
                 return;
             }
 
-            // (ยังไม่ทำล็อกอินผู้ใช้ทั่วไปในจุดนี้)
-            MessageBox.Show("บัญชีนี้ไม่ใช่แอดมิน หรือรหัสผ่านไม่ถูกต้อง",
+            // 2. ตรวจสอบผู้ใช้ทั่วไป (ถ้าไม่ใช่แอดมิน)
+            string authenticatedUser = CheckUserLogin(user, pass);
+
+            if (!string.IsNullOrEmpty(authenticatedUser))
+            {
+                // Success: Show welcome message, then open mainpagewj
+                // ❗ แสดงข้อความต้อนรับ
+                MessageBox.Show($"ยินดีต้อนรับ {authenticatedUser}",
+                    "เข้าสู่ระบบสำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                OpenMainUserForm();
+                return;
+            }
+
+            // 3. ถ้าไม่ผ่านทั้งคู่
+            MessageBox.Show("Username หรือ Password ไม่ถูกต้อง",
                 "เข้าสู่ระบบไม่สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
+
+        // ====== Helper: ตรวจสอบ Login ผู้ใช้ทั่วไป และคืนค่า Username หากสำเร็จ ======
+        private string CheckUserLogin(string username, string password)
+        {
+            try
+            {
+                // ตรวจสอบว่ามีค่า Connection String หรือไม่
+                if (ConfigurationManager.ConnectionStrings["MyDb"] == null)
+                {
+                    MessageBox.Show("ไม่พบ Connection String ชื่อ MyDb", "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+
+                string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+                using (var conn = new MySqlConnection(cs))
+                {
+                    conn.Open();
+                    using (var cmd = new MySqlCommand(@"
+                        SELECT username
+                        FROM users
+                        WHERE username = @u AND password = @p;", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@u", username);
+                        cmd.Parameters.AddWithValue("@p", password); // **คำเตือน: ในระบบจริงควรใช้ Password Hashing**
+
+                        object scalar = cmd.ExecuteScalar();
+
+                        if (scalar != null)
+                        {
+                            return scalar.ToString();
+                        }
+                        return null; // ไม่พบบัญชี
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("เกิดข้อผิดพลาดในการตรวจสอบฐานข้อมูล:\n" + ex.Message,
+                    "ข้อผิดพลาด", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        private void OpenAdminForm()
+        {
+            var admin = new Admin();
+            admin.StartPosition = FormStartPosition.CenterScreen;
+
+            admin.FormClosed += (s, ea) =>
+            {
+                if (!this.IsDisposed)
+                {
+                    ResetLoginForm();
+                    this.Show();
+                }
+            };
+
+            this.Hide();    // ❗ซ่อนฟอร์มหลัก ไม่งั้นแอปจะปิดหมด
+            admin.Show();
+        }
+
+        private void OpenMainUserForm()
+        {
+            // ใช้ชื่อฟอร์มใหม่ที่ผู้ใช้กำหนด
+            var mainForm = new mainpagewj();
+            mainForm.StartPosition = FormStartPosition.CenterScreen;
+
+            mainForm.FormClosed += (s, ea) =>
+            {
+                if (!this.IsDisposed)
+                {
+                    ResetLoginForm();
+                    this.Show();
+                }
+            };
+
+            this.Hide();
+            mainForm.Show();
+        }
+
 
         // ====== ค้นหาแล้วผูกคลิกกับคอนโทรล Forget Password ======
         private void WireForgetPassword()

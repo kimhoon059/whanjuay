@@ -37,7 +37,9 @@
             this.btnAddProduct.Name = "btnAddProduct";
             this.btnAddProduct.Size = new System.Drawing.Size(120, 40);
             this.btnAddProduct.TabIndex = 0;
-            this.btnAddProduct.Text = "+ เพิ่มสินค้าใหม่";
+            this.btnAddProduct.Text = "+ เพิ่มสินค้า"; // <--- เปลี่ยนข้อความให้สั้นลงเพื่อช่วยให้จัดวางง่าย
+            this.btnAddProduct.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit; // FIX: เพิ่มการตั้งค่า Render Text
+            this.btnAddProduct.TextOffset = new System.Drawing.Point(0, 0); // FIX: กำหนด offset เป็น 0 (ตามค่าเริ่มต้นที่ควรจะเป็น)
             // 
             // lblTitle
             // 

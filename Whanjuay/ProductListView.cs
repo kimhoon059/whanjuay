@@ -121,7 +121,7 @@ namespace Whanjuay
         private void ConfigureGridColumns()
         {
             productGrid.Columns.Clear();
-            // Total Width = 80 + 80 + 50 + 100 + 50 + 345 + 120 + 70 = 895 (ตารางกว้าง 835)
+            // Total Width (New) = 80 + 20 + 15 + 100 + 15 + 355 + 120 + 100 = 805 (พอดีกับขนาดตาราง 845)
 
             // 1. คอลัมน์รูปภาพ
             productGrid.Columns.Add(new DataGridViewImageColumn
@@ -140,7 +140,7 @@ namespace Whanjuay
                 Name = "HotSaleToggleCol",
                 DataPropertyName = "is_hot_sale",
                 UseColumnTextForButtonValue = false,
-                Width = 80, // 👈 FIX (Item 3): เล็กลง
+                Width = 20, // 👈 FIX: ลดเหลือ 20
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
@@ -152,13 +152,13 @@ namespace Whanjuay
                 Name = "EditCol",
                 UseColumnTextForButtonValue = true,
                 Text = "✏️",
-                Width = 50, // 👈 FIX (Item 3): เล็กลง
+                Width = 15, // 👈 FIX: ลดเหลือ 15
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
 
             // 4. หมวดหมู่
-            AddTextColumn("category_name", "หมวดหมู่", 100, DataGridViewContentAlignment.MiddleCenter) // 👈 FIX (Item 4): จัดข้อมูลให้อยู่กึ่งกลาง
+            AddTextColumn("category_name", "หมวดหมู่", 100, DataGridViewContentAlignment.MiddleCenter)
                 .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             // 5. คอลัมน์ ACTIONS (ลบ)
@@ -168,21 +168,22 @@ namespace Whanjuay
                 Name = "DeleteCol",
                 UseColumnTextForButtonValue = true,
                 Text = "🗑️",
-                Width = 50, // 👈 FIX (Item 3): เล็กลง
+                Width = 15, // 👈 FIX: ลดเหลือ 15
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
 
             // 6. ชื่อสินค้า
-            AddTextColumn("name", "ชื่อสินค้า", 355, DataGridViewContentAlignment.MiddleCenter) // 👈 FIX (Item 4): จัดข้อมูลให้อยู่กึ่งกลาง
+            AddTextColumn("name", "ชื่อสินค้า", 355, DataGridViewContentAlignment.MiddleCenter)
                 .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
 
             // 7. ราคา
-            // ใช้ความกว้าง 120 และจัดชิดขวา เพื่อให้ตัวเลขห่างจากขอบขวาของคอลัมน์ (Item 2)
-            var priceCol = AddTextColumn("price", "ราคา (บาท)", 120, DataGridViewContentAlignment.MiddleRight); // 👈 FIX (Item 2): ใช้ MiddleRight และความกว้าง 120
+            // ใช้ความกว้าง 120 และจัดกึ่งกลาง
+            var priceCol = AddTextColumn("price", "ราคา (บาท)", 120, DataGridViewContentAlignment.MiddleCenter);
             priceCol.DefaultCellStyle.Format = "N2";
-            priceCol.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+            priceCol.DefaultCellStyle.ForeColor = Color.DarkGreen; // <--- FIX 1: ตั้งค่าสีตัวอักษรเป็นสีเขียว
+            priceCol.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             // 8. จำนวนสินค้า
             var stockCol = AddTextColumn("stock_quantity", "จำนวนสินค้า", 100, DataGridViewContentAlignment.MiddleCenter);
@@ -214,10 +215,34 @@ namespace Whanjuay
             if (e.RowIndex < 0 || e.RowIndex >= productGrid.Rows.Count) return;
 
             var row = productGrid.Rows[e.RowIndex];
+            DataGridViewRow currentRow = productGrid.Rows[e.RowIndex];
+
+            // 1. ตรวจสอบสถานะ Hot Sale และตั้งค่าสีพื้นหลังแถว
+            bool isHotSale = false;
+
+            // ตรวจสอบว่า Grid มีข้อมูลแล้วหรือไม่
+            if (productGrid.DataSource is DataTable dt && dt.Rows.Count > e.RowIndex)
+            {
+                // เข้าถึงค่าจาก DataRow โดยตรง ซึ่งปลอดภัยกว่า
+                isHotSale = Convert.ToBoolean(dt.Rows[e.RowIndex]["is_hot_sale"]);
+            }
+
+            if (isHotSale)
+            {
+                // กำหนดสีส้มอ่อน (คล้ายกับแถวแรกในรูป)
+                currentRow.DefaultCellStyle.BackColor = Color.FromArgb(255, 240, 230); // <--- FIX 2: ใช้สีส้มอ่อนเดียวกันสำหรับทุกแถว Hot Sale
+            }
+            else
+            {
+                // กำหนดสีพื้นหลังแถวกลับเป็นค่าเริ่มต้น (เพื่อให้แถว NORMAL เป็นสีขาวหรือสีอ่อนของตาราง)
+                currentRow.DefaultCellStyle.BackColor = productGrid.DefaultCellStyle.BackColor;
+            }
+
 
             // 1. จัดการคอลัมน์รูปภาพ
             if (productGrid.Columns[e.ColumnIndex].Name == "image_path")
             {
+                // ... (Code โหลดรูปภาพเดิม)
                 string imagePathFromDb = row.Cells["image_path"].Value?.ToString();
                 if (!string.IsNullOrEmpty(imagePathFromDb))
                 {
@@ -242,11 +267,11 @@ namespace Whanjuay
             // 2. จัดการคอลัมน์ สถานะสินค้า (Hot Sale)
             else if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
             {
-                bool isHotSale = Convert.ToBoolean(row.Cells["is_hot_sale"].Value);
-
+                // ใช้ค่า isHotSale ที่คำนวณไว้แล้ว
                 if (isHotSale)
                 {
                     e.Value = "🔥 HOT SALE";
+                    // กำหนดสีพื้นหลังเฉพาะ cell ให้โดดเด่นกว่าแถว (ถ้าต้องการ)
                     e.CellStyle.BackColor = Color.IndianRed;
                     e.CellStyle.ForeColor = Color.White;
                 }
@@ -270,8 +295,8 @@ namespace Whanjuay
                     }
                     else
                     {
-                        // กำหนดสีพื้นหลังปกติให้สอดคล้องกับแถวอื่นๆ
-                        e.CellStyle.BackColor = productGrid.DefaultCellStyle.BackColor;
+                        // ใช้สีพื้นหลังของแถวที่กำหนดไว้แล้ว
+                        e.CellStyle.BackColor = currentRow.DefaultCellStyle.BackColor;
                         e.CellStyle.ForeColor = Color.DarkGreen;
                     }
                 }
