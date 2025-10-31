@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.LOmainButton = new Guna.UI2.WinForms.Guna2Button();
             this.HotcrepeButton = new Guna.UI2.WinForms.Guna2Button();
             this.DessertsButton = new Guna.UI2.WinForms.Guna2Button();
             this.coldcrepeButton = new Guna.UI2.WinForms.Guna2Button();
@@ -39,9 +40,10 @@
             // 
             // guna2Panel1
             // 
-            this.guna2Panel1.BackgroundImage = global::Whanjuay.Properties.Resources.Mainpage2;
+            this.guna2Panel1.BackgroundImage = global::Whanjuay.Properties.Resources.Mainpage3;
             this.guna2Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.guna2Panel1.Controls.Add(this.guna2Button1);
+            this.guna2Panel1.Controls.Add(this.LOmainButton);
             this.guna2Panel1.Controls.Add(this.HotcrepeButton);
             this.guna2Panel1.Controls.Add(this.DessertsButton);
             this.guna2Panel1.Controls.Add(this.coldcrepeButton);
@@ -52,6 +54,22 @@
             this.guna2Panel1.Name = "guna2Panel1";
             this.guna2Panel1.Size = new System.Drawing.Size(1540, 845);
             this.guna2Panel1.TabIndex = 0;
+            // 
+            // LOmainButton
+            // 
+            this.LOmainButton.BackColor = System.Drawing.Color.Transparent;
+            this.LOmainButton.BorderRadius = 42;
+            this.LOmainButton.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.LOmainButton.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.LOmainButton.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.LOmainButton.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.LOmainButton.FillColor = System.Drawing.Color.Transparent;
+            this.LOmainButton.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.LOmainButton.ForeColor = System.Drawing.Color.White;
+            this.LOmainButton.Location = new System.Drawing.Point(1211, 157);
+            this.LOmainButton.Name = "LOmainButton";
+            this.LOmainButton.Size = new System.Drawing.Size(291, 109);
+            this.LOmainButton.TabIndex = 4;
             // 
             // HotcrepeButton
             // 
@@ -123,7 +141,7 @@
             // guna2Button1
             // 
             this.guna2Button1.BackColor = System.Drawing.Color.Transparent;
-            this.guna2Button1.BorderRadius = 42;
+            this.guna2Button1.BorderRadius = 35;
             this.guna2Button1.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
             this.guna2Button1.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.guna2Button1.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
@@ -131,10 +149,10 @@
             this.guna2Button1.FillColor = System.Drawing.Color.Transparent;
             this.guna2Button1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.guna2Button1.ForeColor = System.Drawing.Color.White;
-            this.guna2Button1.Location = new System.Drawing.Point(1211, 157);
+            this.guna2Button1.Location = new System.Drawing.Point(1248, 744);
             this.guna2Button1.Name = "guna2Button1";
-            this.guna2Button1.Size = new System.Drawing.Size(291, 111);
-            this.guna2Button1.TabIndex = 4;
+            this.guna2Button1.Size = new System.Drawing.Size(254, 74);
+            this.guna2Button1.TabIndex = 5;
             // 
             // mainpagewj
             // 
@@ -160,6 +178,7 @@
         private Guna.UI2.WinForms.Guna2Button DrinksButton;
         private Guna.UI2.WinForms.Guna2Button HotcrepeButton;
         private Guna.UI2.WinForms.Guna2Button DessertsButton;
+        private Guna.UI2.WinForms.Guna2Button LOmainButton;
         private Guna.UI2.WinForms.Guna2Button guna2Button1;
     }
 }

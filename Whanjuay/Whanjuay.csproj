@@ -106,6 +106,18 @@
     <Compile Include="Admin.Designer.cs">
       <DependentUpon>Admin.cs</DependentUpon>
     </Compile>
+    <Compile Include="CartPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CartPage.Designer.cs">
+      <DependentUpon>CartPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ColdCrepeMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ColdCrepeMenu.Designer.cs">
+      <DependentUpon>ColdCrepeMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="DashboardView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -113,11 +125,29 @@
       <DependentUpon>DashboardView.cs</DependentUpon>
     </Compile>
     <Compile Include="Db.cs" />
+    <Compile Include="DessertsMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DessertsMenu.Designer.cs">
+      <DependentUpon>DessertsMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DrinksMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DrinksMenu.Designer.cs">
+      <DependentUpon>DrinksMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="ForgetPassword.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ForgetPassword.Designer.cs">
       <DependentUpon>ForgetPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HotCrepeMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HotCrepeMenu.Designer.cs">
+      <DependentUpon>HotCrepeMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="Loginpage.cs">
       <SubType>Form</SubType>
@@ -270,6 +300,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Mainpage2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Mainpage3.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
