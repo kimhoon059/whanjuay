@@ -12,7 +12,7 @@ namespace Whanjuay
 
         private static MySqlConnection CreateConn() => new MySqlConnection(ConnStr);
 
-        // ---------- Categories ----------
+        // (GetCategories - โค้ดเดิมถูกต้อง)
         public static DataTable GetCategories()
         {
             using (var conn = CreateConn())
@@ -29,23 +29,38 @@ namespace Whanjuay
             }
         }
 
-        // ---------- Products: list for grid (รวม stock_quantity) ----------
-        public static DataTable GetProductsForListWithStock() // 👈 FIX: เปลี่ยนชื่อเมธอดและเพิ่ม stock_quantity
+        // [แก้] ดึงประเภทวัตถุดิบย่อย (เรียงตาม sort_order)
+        public static DataTable GetIngredientCategories(int mainCategoryId)
+        {
+            using (var conn = CreateConn())
+            {
+                conn.Open();
+                // [แก้] เพิ่ม ORDER BY sort_order
+                using (var cmd = new MySqlCommand(
+                    "SELECT ing_category_id, name FROM ingredient_categories WHERE category_id = @MainCatID ORDER BY sort_order, name;", conn))
+                {
+                    cmd.Parameters.AddWithValue("@MainCatID", mainCategoryId);
+                    using (var da = new MySqlDataAdapter(cmd))
+                    {
+                        var dt = new DataTable();
+                        da.Fill(dt);
+                        return dt;
+                    }
+                }
+            }
+        }
+
+        // (GetProductsForListWithStock - โค้ดเดิมถูกต้อง)
+        public static DataTable GetProductsForListWithStock()
         {
             using (var conn = CreateConn())
             {
                 conn.Open();
                 using (var cmd = new MySqlCommand(@"
-SELECT p.product_id,
-       p.name,
-       p.price,
-       p.status,
-       p.image_path,
-       p.is_hot_sale,  
-       p.stock_quantity,     -- 👈 NEW: เพิ่มคอลัมน์ Stock
-       c.name AS category_name
+SELECT p.product_id, p.name, p.price, p.status, p.image_path, p.is_hot_sale, p.stock_quantity,
+       ic.name AS category_name
 FROM products p
-LEFT JOIN categories c ON c.category_id = p.category_id
+LEFT JOIN ingredient_categories ic ON p.ing_category_id = ic.ing_category_id
 ORDER BY p.is_hot_sale DESC, p.created_at DESC, p.product_id DESC;", conn))
                 using (var da = new MySqlDataAdapter(cmd))
                 {
@@ -56,16 +71,19 @@ ORDER BY p.is_hot_sale DESC, p.created_at DESC, p.product_id DESC;", conn))
             }
         }
 
-        // ---------- Products: Get by ID ----------
+        // (GetProductById - โค้ดเดิมถูกต้อง)
         public static DataTable GetProductById(int productId)
         {
             using (var conn = CreateConn())
             {
                 conn.Open();
                 using (var cmd = new MySqlCommand(@"
-SELECT product_id, name, category_id, price, status, description, image_path, stock_quantity, is_hot_sale
-FROM products 
-WHERE product_id = @id;", conn))
+SELECT p.product_id, p.name, p.price, p.status, p.image_path, p.stock_quantity, p.is_hot_sale,
+       ic.ing_category_id,
+       ic.category_id
+FROM products p
+LEFT JOIN ingredient_categories ic ON p.ing_category_id = ic.ing_category_id
+WHERE p.product_id = @id;", conn))
                 {
                     cmd.Parameters.AddWithValue("@id", productId);
                     using (var da = new MySqlDataAdapter(cmd))
@@ -78,24 +96,23 @@ WHERE product_id = @id;", conn))
             }
         }
 
-        // ---------- Insert product -> return new ID ----------
-        public static int InsertProduct(string name, int categoryId, decimal price,
-                                        string status, string description, string imagePath,
+        // (InsertProduct - โค้ดเดิมถูกต้อง)
+        public static int InsertProduct(string name, int ingCategoryId, decimal price,
+                                        string status, string imagePath,
                                         int stockQuantity)
         {
             using (var conn = CreateConn())
             {
                 conn.Open();
                 using (var cmd = new MySqlCommand(@"
-INSERT INTO products (name, category_id, price, status, description, image_path, stock_quantity, is_hot_sale, created_at)
-VALUES (@n, @c, @p, @s, @d, @img, @stock, 0, NOW());
+INSERT INTO products (name, ing_category_id, price, status, image_path, stock_quantity, is_hot_sale, created_at)
+VALUES (@n, @c, @p, @s, @img, @stock, 0, NOW());
 SELECT LAST_INSERT_ID();", conn))
                 {
                     cmd.Parameters.AddWithValue("@n", name);
-                    cmd.Parameters.AddWithValue("@c", categoryId);
+                    cmd.Parameters.AddWithValue("@c", ingCategoryId);
                     cmd.Parameters.AddWithValue("@p", price);
                     cmd.Parameters.AddWithValue("@s", status);
-                    cmd.Parameters.AddWithValue("@d", (object)description ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@img", (object)imagePath ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@stock", stockQuantity);
 
@@ -105,9 +122,9 @@ SELECT LAST_INSERT_ID();", conn))
             }
         }
 
-        // ---------- Update product ----------
-        public static void UpdateProduct(int productId, string name, int categoryId, decimal price,
-                                         string status, string description, string imagePath,
+        // (UpdateProduct - โค้ดเดิมถูกต้อง)
+        public static void UpdateProduct(int productId, string name, int ingCategoryId, decimal price,
+                                         string status, string imagePath,
                                          int stockQuantity)
         {
             using (var conn = CreateConn())
@@ -116,20 +133,18 @@ SELECT LAST_INSERT_ID();", conn))
                 using (var cmd = new MySqlCommand(@"
 UPDATE products SET 
     name = @n, 
-    category_id = @c, 
+    ing_category_id = @c,
     price = @p, 
     status = @s, 
-    description = @d, 
     image_path = @img, 
     stock_quantity = @stock
 WHERE product_id = @id;", conn))
                 {
                     cmd.Parameters.AddWithValue("@id", productId);
                     cmd.Parameters.AddWithValue("@n", name);
-                    cmd.Parameters.AddWithValue("@c", categoryId);
+                    cmd.Parameters.AddWithValue("@c", ingCategoryId);
                     cmd.Parameters.AddWithValue("@p", price);
                     cmd.Parameters.AddWithValue("@s", status);
-                    cmd.Parameters.AddWithValue("@d", (object)description ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@img", (object)imagePath ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@stock", stockQuantity);
 
@@ -138,7 +153,31 @@ WHERE product_id = @id;", conn))
             }
         }
 
-        // ---------- Delete product ----------
+        // (GetProductsByIngredientCategory - โค้ดเดิมถูกต้อง)
+        public static DataTable GetProductsByIngredientCategory(int ingCategoryId)
+        {
+            using (var conn = CreateConn())
+            {
+                conn.Open();
+                using (var cmd = new MySqlCommand(@"
+SELECT product_id, name, price, image_path, stock_quantity 
+FROM products 
+WHERE ing_category_id = @IngCatID 
+  AND stock_quantity > 0 
+ORDER BY name;", conn)) // (เรียงตามชื่อวัตถุดิบในกลุ่ม)
+                {
+                    cmd.Parameters.AddWithValue("@IngCatID", ingCategoryId);
+                    using (var da = new MySqlDataAdapter(cmd))
+                    {
+                        var dt = new DataTable();
+                        da.Fill(dt);
+                        return dt;
+                    }
+                }
+            }
+        }
+
+        // (DeleteProduct - โค้ดเดิมถูกต้อง)
         public static void DeleteProduct(int productId)
         {
             using (var conn = CreateConn())
@@ -152,7 +191,7 @@ WHERE product_id = @id;", conn))
             }
         }
 
-        // ---------- Update Hot Sale Status ----------
+        // (UpdateHotSaleStatus - โค้ดเดิมถูกต้อง)
         public static void UpdateHotSaleStatus(int productId, bool isHotSale)
         {
             using (var conn = CreateConn())

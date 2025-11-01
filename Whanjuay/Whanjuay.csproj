@@ -106,12 +106,19 @@
     <Compile Include="Admin.Designer.cs">
       <DependentUpon>Admin.cs</DependentUpon>
     </Compile>
+    <Compile Include="CartItemControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CartItemControl.Designer.cs">
+      <DependentUpon>CartItemControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="CartPage.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CartPage.Designer.cs">
       <DependentUpon>CartPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CartService.cs" />
     <Compile Include="ColdCrepeMenu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +155,12 @@
     </Compile>
     <Compile Include="HotCrepeMenu.Designer.cs">
       <DependentUpon>HotCrepeMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IngredientControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IngredientControl.Designer.cs">
+      <DependentUpon>IngredientControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Loginpage.cs">
       <SubType>Form</SubType>
@@ -198,6 +211,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ForgetPassword.resx">
       <DependentUpon>ForgetPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HotCrepeMenu.resx">
+      <DependentUpon>HotCrepeMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IngredientControl.resx">
+      <DependentUpon>IngredientControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Loginpage.resx">
       <DependentUpon>Loginpage.cs</DependentUpon>
@@ -303,6 +322,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Mainpage3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Selectmenu.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\selectmenu2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

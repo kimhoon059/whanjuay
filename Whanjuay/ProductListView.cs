@@ -7,6 +7,7 @@ using System.IO;
 
 namespace Whanjuay
 {
+    // (Delegates ต้องอยู่นอกคลาส)
     public delegate void AddProductEventHandler();
     public delegate void EditProductEventHandler(int productId);
 
@@ -30,14 +31,14 @@ namespace Whanjuay
             {
                 return;
             }
-            InitializeProductListUI();
+            InitializeProductListUI(); // [แก้] ตอนนี้ฟังก์ชันนี้อยู่ภายในคลาสแล้ว
             LoadProducts();
         }
 
+        // [แก้] ฟังก์ชันที่ Error แจ้งว่าหาไม่เจอ
         private void InitializeProductListUI()
         {
-            // กำหนด Style Header ของ DataGrid 
-            productGrid.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
+            productGrid.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
                 BackColor = Color.FromArgb(249, 243, 237),
                 ForeColor = Color.SaddleBrown,
@@ -47,33 +48,27 @@ namespace Whanjuay
                 WrapMode = DataGridViewTriState.True
             };
 
-            // กำหนด Style Cell ทั่วไป (เพื่อควบคุมการเลือกแถว)
             productGrid.RowsDefaultCellStyle = new DataGridViewCellStyle
             {
                 SelectionBackColor = Color.FromArgb(255, 230, 210),
                 SelectionForeColor = Color.SaddleBrown,
             };
 
-            // กำหนดความมนของขอบปุ่ม
             btnAddProduct.BorderRadius = 10;
             txtSearch.BorderRadius = 15;
             btnSearch.BorderRadius = 15;
 
-            // ผูก Event Clicks
-            productGrid.CellContentClick -= ProductGrid_CellContentClick;
+            productGrid.CellContentClick -= ProductGrid_CellContentClick;
             productGrid.CellContentClick += ProductGrid_CellContentClick;
             productGrid.CellFormatting -= ProductGrid_CellFormatting;
             productGrid.CellFormatting += ProductGrid_CellFormatting;
             btnAddProduct.Click -= BtnAddProduct_Click;
             btnAddProduct.Click += BtnAddProduct_Click;
 
-            // ผูก Event Search
-            txtSearch.TextChanged -= TxtSearch_TextChanged;
+            txtSearch.TextChanged -= TxtSearch_TextChanged;
             txtSearch.TextChanged += TxtSearch_TextChanged;
             btnSearch.Click -= BtnSearch_Click;
             btnSearch.Click += BtnSearch_Click;
-
-            ConfigureGridColumns();
         }
 
         private void TxtSearch_TextChanged(object sender, EventArgs e)
@@ -108,7 +103,7 @@ namespace Whanjuay
         {
             try
             {
-                ConfigureGridColumns();
+                ConfigureGridColumns(); // [แก้] เรียกใช้ที่นี่
                 DataTable dt = Db.GetProductsForListWithStock();
                 productGrid.DataSource = dt;
             }
@@ -118,13 +113,12 @@ namespace Whanjuay
             }
         }
 
+        // [แก้] ฟังก์ชันที่ Error แจ้งว่าหาไม่เจอ
         private void ConfigureGridColumns()
         {
             productGrid.Columns.Clear();
-            // Total Width (New) = 80 + 20 + 15 + 100 + 15 + 355 + 120 + 100 = 805 (พอดีกับขนาดตาราง 845)
 
-            // 1. คอลัมน์รูปภาพ
-            productGrid.Columns.Add(new DataGridViewImageColumn
+            productGrid.Columns.Add(new DataGridViewImageColumn
             {
                 HeaderText = "รูปภาพ",
                 Name = "image_path",
@@ -133,64 +127,54 @@ namespace Whanjuay
                 Width = 80
             });
 
-            // 2. คอลัมน์ สถานะสินค้า (Hot Sale)
-            productGrid.Columns.Add(new DataGridViewButtonColumn
+            productGrid.Columns.Add(new DataGridViewButtonColumn
             {
                 HeaderText = "สถานะสินค้า",
                 Name = "HotSaleToggleCol",
                 DataPropertyName = "is_hot_sale",
                 UseColumnTextForButtonValue = false,
-                Width = 20, // 👈 FIX: ลดเหลือ 20
+                Width = 100,
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
 
-            // 3. คอลัมน์ ACTIONS (แก้ไข)
-            productGrid.Columns.Add(new DataGridViewButtonColumn
+            productGrid.Columns.Add(new DataGridViewButtonColumn
             {
                 HeaderText = "แก้ไข",
                 Name = "EditCol",
                 UseColumnTextForButtonValue = true,
                 Text = "✏️",
-                Width = 15, // 👈 FIX: ลดเหลือ 15
+                Width = 40,
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
 
-            // 4. หมวดหมู่
-            AddTextColumn("category_name", "หมวดหมู่", 100, DataGridViewContentAlignment.MiddleCenter)
+            AddTextColumn("category_name", "หมวดหมู่", 120, DataGridViewContentAlignment.MiddleCenter)
                 .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            // 5. คอลัมน์ ACTIONS (ลบ)
             productGrid.Columns.Add(new DataGridViewButtonColumn
             {
                 HeaderText = "ลบ",
                 Name = "DeleteCol",
                 UseColumnTextForButtonValue = true,
                 Text = "🗑️",
-                Width = 15, // 👈 FIX: ลดเหลือ 15
+                Width = 40,
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
 
-            // 6. ชื่อสินค้า
-            AddTextColumn("name", "ชื่อสินค้า", 355, DataGridViewContentAlignment.MiddleCenter)
+            AddTextColumn("name", "ชื่อสินค้า", 250, DataGridViewContentAlignment.MiddleCenter)
                 .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-
-            // 7. ราคา
-            // ใช้ความกว้าง 120 และจัดกึ่งกลาง
-            var priceCol = AddTextColumn("price", "ราคา (บาท)", 120, DataGridViewContentAlignment.MiddleCenter);
+            var priceCol = AddTextColumn("price", "ราคา (บาท)", 100, DataGridViewContentAlignment.MiddleCenter);
             priceCol.DefaultCellStyle.Format = "N2";
-            priceCol.DefaultCellStyle.ForeColor = Color.DarkGreen; // <--- FIX 1: ตั้งค่าสีตัวอักษรเป็นสีเขียว
+            priceCol.DefaultCellStyle.ForeColor = Color.DarkGreen;
             priceCol.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            // 8. จำนวนสินค้า
             var stockCol = AddTextColumn("stock_quantity", "จำนวนสินค้า", 100, DataGridViewContentAlignment.MiddleCenter);
             stockCol.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             stockCol.DefaultCellStyle.ForeColor = Color.DarkGreen;
 
-            // ซ่อนคอลัมน์ที่ไม่จำเป็น
             AddTextColumn("is_hot_sale", "IsHotSale", 0).Visible = false;
             AddTextColumn("status", "Status", 0).Visible = false;
             AddTextColumn("product_id", "ID", 0).Visible = false;
@@ -217,32 +201,23 @@ namespace Whanjuay
             var row = productGrid.Rows[e.RowIndex];
             DataGridViewRow currentRow = productGrid.Rows[e.RowIndex];
 
-            // 1. ตรวจสอบสถานะ Hot Sale และตั้งค่าสีพื้นหลังแถว
             bool isHotSale = false;
-
-            // ตรวจสอบว่า Grid มีข้อมูลแล้วหรือไม่
             if (productGrid.DataSource is DataTable dt && dt.Rows.Count > e.RowIndex)
             {
-                // เข้าถึงค่าจาก DataRow โดยตรง ซึ่งปลอดภัยกว่า
                 isHotSale = Convert.ToBoolean(dt.Rows[e.RowIndex]["is_hot_sale"]);
             }
 
             if (isHotSale)
             {
-                // กำหนดสีส้มอ่อน (คล้ายกับแถวแรกในรูป)
-                currentRow.DefaultCellStyle.BackColor = Color.FromArgb(255, 240, 230); // <--- FIX 2: ใช้สีส้มอ่อนเดียวกันสำหรับทุกแถว Hot Sale
+                currentRow.DefaultCellStyle.BackColor = Color.FromArgb(255, 240, 230);
             }
             else
             {
-                // กำหนดสีพื้นหลังแถวกลับเป็นค่าเริ่มต้น (เพื่อให้แถว NORMAL เป็นสีขาวหรือสีอ่อนของตาราง)
                 currentRow.DefaultCellStyle.BackColor = productGrid.DefaultCellStyle.BackColor;
             }
 
-
-            // 1. จัดการคอลัมน์รูปภาพ
-            if (productGrid.Columns[e.ColumnIndex].Name == "image_path")
+            if (productGrid.Columns[e.ColumnIndex].Name == "image_path")
             {
-                // ... (Code โหลดรูปภาพเดิม)
                 string imagePathFromDb = row.Cells["image_path"].Value?.ToString();
                 if (!string.IsNullOrEmpty(imagePathFromDb))
                 {
@@ -252,7 +227,6 @@ namespace Whanjuay
                     {
                         try
                         {
-                            // ใช้วิธีอ่านเป็น MemoryStream เพื่อปลดล็อคไฟล์
                             using (var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read))
                             {
                                 e.Value = Image.FromStream(stream);
@@ -263,15 +237,11 @@ namespace Whanjuay
                     else { e.Value = null; }
                 }
             }
-
-            // 2. จัดการคอลัมน์ สถานะสินค้า (Hot Sale)
-            else if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
+            else if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
             {
-                // ใช้ค่า isHotSale ที่คำนวณไว้แล้ว
                 if (isHotSale)
                 {
                     e.Value = "🔥 HOT SALE";
-                    // กำหนดสีพื้นหลังเฉพาะ cell ให้โดดเด่นกว่าแถว (ถ้าต้องการ)
                     e.CellStyle.BackColor = Color.IndianRed;
                     e.CellStyle.ForeColor = Color.White;
                 }
@@ -283,19 +253,17 @@ namespace Whanjuay
                 }
                 e.FormattingApplied = true;
             }
-            // 3. จัดการสีสำหรับคอลัมน์จำนวนสินค้า (เตือนเมื่อเหลือน้อย)
             else if (productGrid.Columns[e.ColumnIndex].Name == "stock_quantity")
             {
                 if (e.Value != null && int.TryParse(e.Value.ToString(), out int stock))
                 {
-                    if (stock <= 5) // กำหนดเกณฑ์เตือนสต็อกเหลือน้อย
+                    if (stock <= 5)
                     {
                         e.CellStyle.BackColor = Color.LightYellow;
                         e.CellStyle.ForeColor = Color.Red;
                     }
                     else
                     {
-                        // ใช้สีพื้นหลังของแถวที่กำหนดไว้แล้ว
                         e.CellStyle.BackColor = currentRow.DefaultCellStyle.BackColor;
                         e.CellStyle.ForeColor = Color.DarkGreen;
                     }
@@ -310,8 +278,7 @@ namespace Whanjuay
 
             int productId = Convert.ToInt32(productGrid.Rows[e.RowIndex].Cells["product_id"].Value);
 
-            // 1. Logic สำหรับ Hot Sale Toggle
-            if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
+            if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
             {
                 bool currentStatus = Convert.ToBoolean(productGrid.Rows[e.RowIndex].Cells["is_hot_sale"].Value);
                 bool newStatus = !currentStatus;
@@ -326,22 +293,18 @@ namespace Whanjuay
                     MessageBox.Show($"Error updating Hot Sale status: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            // 2. Logic สำหรับ Edit
-            else if (productGrid.Columns[e.ColumnIndex].Name == "EditCol")
+            else if (productGrid.Columns[e.ColumnIndex].Name == "EditCol")
             {
                 EditRequested?.Invoke(productId);
             }
-            // 3. Logic สำหรับ Delete
-            else if (productGrid.Columns[e.ColumnIndex].Name == "DeleteCol")
+            else if (productGrid.Columns[e.ColumnIndex].Name == "DeleteCol")
             {
                 if (MessageBox.Show($"ยืนยันการลบสินค้า ID: {productId}?", "ยืนยัน", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     try
                     {
                         string imagePathFromDb = productGrid.Rows[e.RowIndex].Cells["image_path"].Value?.ToString();
-
                         Db.DeleteProduct(productId);
-
                         if (!string.IsNullOrEmpty(imagePathFromDb))
                         {
                             string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, imagePathFromDb.Replace('/', Path.DirectorySeparatorChar));
@@ -350,7 +313,6 @@ namespace Whanjuay
                                 try { File.Delete(fullPath); } catch { /* ละเว้นข้อผิดพลาดในการลบไฟล์ */ }
                             }
                         }
-
                         LoadProducts();
                     }
                     catch (Exception ex)
@@ -360,7 +322,6 @@ namespace Whanjuay
                 }
             }
         }
-
 
         private void BtnAddProduct_Click(object sender, EventArgs e)
         {

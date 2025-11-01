@@ -13,11 +13,9 @@ namespace Whanjuay
     {
         public event ProductSavedEventHandler Saved;
 
-        // currentImagePath: เก็บ path ของรูปภาพที่ถูกโหลด/เลือก: 
-        // 1. Full Path จาก OpenFileDialog (ก่อนบันทึก)
-        // 2. Relative Path (Images/...) จากฐานข้อมูล (เมื่อโหลดเพื่อแก้ไข)
         private string currentImagePath = null;
         private int _productId;
+        private bool _isDataLoading = false;
 
         public ProductAddView(int productId = 0)
         {
@@ -29,23 +27,26 @@ namespace Whanjuay
 
         private void ProductAddView_Load(object sender, EventArgs e)
         {
+            _isDataLoading = true;
+
             InitializeAddProductUI();
-            LoadCategories();
+            LoadMainCategories();
 
             if (_productId > 0)
             {
                 lblTitle.Text = "แก้ไขสินค้า (ID: " + _productId + ")";
                 btnSave.Text = "บันทึกการแก้ไข";
-                LoadProductData(_productId); // เรียกเมธอดโหลดข้อมูล
+                LoadProductData(_productId);
             }
             else
             {
                 lblTitle.Text = "เพิ่มสินค้าใหม่";
                 btnSave.Text = "บันทึกสินค้า";
+                _isDataLoading = false;
             }
         }
 
-        // เมธอดสำหรับโหลดข้อมูลสินค้า (Item 5)
+        // [แก้] ลบ Logic การโหลด txtDescription
         private void LoadProductData(int productId)
         {
             try
@@ -55,30 +56,24 @@ namespace Whanjuay
                 {
                     DataRow row = dt.Rows[0];
                     txtName.Text = row["name"].ToString();
-
-                    // ตั้งค่า ComboBox (ต้องแน่ใจว่า LoadCategories() ทำงานเสร็จก่อน)
-                    cmbCategory.SelectedValue = row["category_id"];
-
-                    // แสดงราคาและ Stock 
                     txtPrice.Text = Convert.ToDecimal(row["price"]).ToString();
                     txtStock.Text = Convert.ToInt32(row["stock_quantity"]).ToString();
+                    // txtDescription.Text = row["description"]?.ToString() ?? string.Empty; // [แก้] ลบออก
 
-                    txtDescription.Text = row["description"]?.ToString() ?? string.Empty;
+                    cmbCategoriesMain.SelectedValue = row["category_id"];
+                    LoadSubCategories(Convert.ToInt32(row["category_id"]));
+                    cmbIngredientCategoriesSub.SelectedValue = row["ing_category_id"];
 
-                    // โหลดรูปภาพ
                     string imagePathFromDb = row["image_path"]?.ToString();
                     if (!string.IsNullOrEmpty(imagePathFromDb))
                     {
-                        // Path.Combine จะจัดการเรื่องเครื่องหมาย / และ \ ให้ถูกต้อง
                         string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, imagePathFromDb.Replace('/', Path.DirectorySeparatorChar));
                         if (File.Exists(fullPath))
                         {
-                            // ใช้ FileStream เพื่อป้องกันการล็อคไฟล์
                             using (var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read))
                             {
                                 pbImage.Image = Image.FromStream(stream);
                             }
-                            // เก็บ path เดิม (Images/...) เพื่อส่งกลับไป DB หากไม่ได้เปลี่ยนรูป
                             currentImagePath = imagePathFromDb;
                         }
                     }
@@ -88,32 +83,36 @@ namespace Whanjuay
             {
                 MessageBox.Show($"เกิดข้อผิดพลาดในการโหลดข้อมูลสินค้า:\n{ex.Message}", "ข้อผิดพลาด", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                _isDataLoading = false;
+            }
         }
 
 
         private void InitializeAddProductUI()
         {
-            // 1. ตั้งค่า BorderRadius (ความมนของขอบ)
             txtName.BorderRadius = 10;
-            cmbCategory.BorderRadius = 10;
+            cmbCategoriesMain.BorderRadius = 10;
+            cmbIngredientCategoriesSub.BorderRadius = 10;
             txtPrice.BorderRadius = 10;
             txtStock.BorderRadius = 10;
-            txtDescription.BorderRadius = 10;
+            // txtDescription.BorderRadius = 10; // [แก้] ลบออก
             pnlImage.BorderRadius = 10;
             btnChangeImage.BorderRadius = 10;
             btnSave.BorderRadius = 10;
             btnBack.BorderRadius = 10;
 
-            // 3. ปรับ Style 
             btnBack.Text = "ย้อนกลับ";
 
-            // สั่งให้ปุ่มเปลี่ยนรูปภาพอยู่ด้านหน้าเสมอ
             if (pnlImage.Controls.Contains(btnChangeImage))
             {
                 btnChangeImage.BringToFront();
             }
 
-            // 2. ผูก Event Handler
+            cmbCategoriesMain.SelectedIndexChanged -= CmbCategoriesMain_SelectedIndexChanged;
+            cmbCategoriesMain.SelectedIndexChanged += CmbCategoriesMain_SelectedIndexChanged;
+
             txtPrice.KeyPress -= TxtPrice_KeyPress;
             txtPrice.KeyPress += TxtPrice_KeyPress;
 
@@ -130,6 +129,70 @@ namespace Whanjuay
             btnBack.Click += BtnBack_Click;
         }
 
+        private void LoadMainCategories()
+        {
+            try
+            {
+                if (cmbCategoriesMain == null) throw new Exception("cmbCategoriesMain control not initialized.");
+
+                DataTable dt = Db.GetCategories();
+
+                DataRow dr = dt.NewRow();
+                dr["name"] = "--- เลือกประเภทหลัก ---";
+                dr["category_id"] = 0;
+                dt.Rows.InsertAt(dr, 0);
+
+                cmbCategoriesMain.DataSource = dt;
+                cmbCategoriesMain.DisplayMember = "name";
+                cmbCategoriesMain.ValueMember = "category_id";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading categories: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CmbCategoriesMain_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_isDataLoading)
+            {
+                if (cmbCategoriesMain.SelectedIndex > 0)
+                {
+                    int selectedMainCategoryId = Convert.ToInt32(cmbCategoriesMain.SelectedValue);
+                    LoadSubCategories(selectedMainCategoryId);
+                }
+                else
+                {
+                    cmbIngredientCategoriesSub.DataSource = null;
+                }
+            }
+        }
+
+        private void LoadSubCategories(int mainCategoryId)
+        {
+            try
+            {
+                if (cmbIngredientCategoriesSub == null) throw new Exception("cmbIngredientCategoriesSub control not initialized.");
+
+                DataTable dt = Db.GetIngredientCategories(mainCategoryId);
+
+                if (dt.Rows.Count > 0)
+                {
+                    cmbIngredientCategoriesSub.DataSource = dt;
+                    cmbIngredientCategoriesSub.DisplayMember = "name";
+                    cmbIngredientCategoriesSub.ValueMember = "ing_category_id";
+                }
+                else
+                {
+                    cmbIngredientCategoriesSub.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading sub-categories: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void TxtStock_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -141,23 +204,6 @@ namespace Whanjuay
         private void BtnBack_Click(object sender, EventArgs e)
         {
             Saved?.Invoke();
-        }
-
-        private void LoadCategories()
-        {
-            try
-            {
-                if (cmbCategory == null) throw new Exception("cmbCategory control not initialized.");
-
-                DataTable dt = Db.GetCategories();
-                cmbCategory.DataSource = dt;
-                cmbCategory.DisplayMember = "name";
-                cmbCategory.ValueMember = "category_id";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading categories: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void TxtPrice_KeyPress(object sender, KeyPressEventArgs e)
@@ -184,15 +230,11 @@ namespace Whanjuay
                 {
                     try
                     {
-                        // ปลดล็อคไฟล์เดิมก่อนเปลี่ยนรูปภาพ
                         pbImage.Image?.Dispose();
-
-                        // อ่านเป็น MemoryStream เพื่อปลดล็อคไฟล์ต้นฉบับทันที
                         using (var stream = new MemoryStream(File.ReadAllBytes(ofd.FileName)))
                         {
                             pbImage.Image = Image.FromStream(stream);
                         }
-                        // เก็บ Full Path ของไฟล์ต้นฉบับ
                         currentImagePath = ofd.FileName;
                     }
                     catch (Exception ex)
@@ -203,21 +245,25 @@ namespace Whanjuay
             }
         }
 
+        // [แก้] ลบ Logic ของ description ออกจากปุ่ม Save
         private void BtnSave_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtName.Text) || cmbCategory.SelectedValue == null || string.IsNullOrWhiteSpace(txtPrice.Text) || string.IsNullOrWhiteSpace(txtStock.Text))
+            decimal price;
+            int stockQuantity;
+
+            if (string.IsNullOrWhiteSpace(txtName.Text) || cmbIngredientCategoriesSub.SelectedValue == null || string.IsNullOrWhiteSpace(txtPrice.Text) || string.IsNullOrWhiteSpace(txtStock.Text))
             {
-                MessageBox.Show("กรุณากรอกข้อมูลให้ครบถ้วน: ชื่อสินค้า, หมวดหมู่, ราคา, และจำนวนสินค้า", "ข้อมูลไม่สมบูรณ์", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("กรุณากรอกข้อมูลให้ครบถ้วน: ชื่อสินค้า, ประเภท (ทั้ง 2 ช่อง), ราคา, และจำนวนสินค้า", "ข้อมูลไม่สมบูรณ์", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (!decimal.TryParse(txtPrice.Text, out decimal price))
+            if (!decimal.TryParse(txtPrice.Text, out price))
             {
                 MessageBox.Show("รูปแบบราคาไม่ถูกต้อง", "ข้อมูลไม่สมบูรณ์", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (!int.TryParse(txtStock.Text, out int stockQuantity))
+            if (!int.TryParse(txtStock.Text, out stockQuantity))
             {
                 MessageBox.Show("จำนวนสินค้าต้องเป็นตัวเลขจำนวนเต็ม", "ข้อมูลไม่สมบูรณ์", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -228,12 +274,11 @@ namespace Whanjuay
             try
             {
                 string name = txtName.Text;
-                int categoryId = Convert.ToInt32(cmbCategory.SelectedValue);
-                string description = txtDescription.Text;
+                int ingCategoryId = Convert.ToInt32(cmbIngredientCategoriesSub.SelectedValue);
+                // string description = txtDescription.Text; // [แก้] ลบออก
                 string status = (stockQuantity > 0) ? "มีสินค้า" : "หมด";
 
-                // --- 1. จัดการการคัดลอกไฟล์รูปภาพ (ถ้ามีการเลือกรูปใหม่) ---
-                // ตรวจสอบว่าเป็น Full Path (จาก OFD) หรือไม่
+                // --- 1. จัดการการคัดลอกไฟล์รูปภาพ ---
                 if (!string.IsNullOrEmpty(currentImagePath) && !currentImagePath.Contains("Images" + Path.DirectorySeparatorChar))
                 {
                     string destFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images");
@@ -246,23 +291,19 @@ namespace Whanjuay
                     string fileName = Guid.NewGuid().ToString() + extension;
                     string destPath = Path.Combine(destFolder, fileName);
 
-                    // คัดลอก
                     File.Copy(currentImagePath, destPath, true);
-
                     finalImagePath = $"Images/{fileName}";
                 }
 
                 // --- 2. บันทึก/แก้ไขข้อมูลลงฐานข้อมูล ---
                 if (_productId > 0)
                 {
-                    // Update
-                    Db.UpdateProduct(_productId, name, categoryId, price, status, description, finalImagePath, stockQuantity);
+                    Db.UpdateProduct(_productId, name, ingCategoryId, price, status, finalImagePath, stockQuantity); // [แก้]
                     MessageBox.Show($"บันทึกการแก้ไขสินค้า ID: {_productId} เรียบร้อยแล้ว", "สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    // Insert
-                    int newId = Db.InsertProduct(name, categoryId, price, status, description, finalImagePath, stockQuantity);
+                    int newId = Db.InsertProduct(name, ingCategoryId, price, status, finalImagePath, stockQuantity); // [แก้]
                     MessageBox.Show($"บันทึกสินค้าใหม่เรียบร้อยแล้ว (ID: {newId})", "สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
@@ -274,14 +315,13 @@ namespace Whanjuay
             }
         }
 
-        // ********** Event Handler ว่างเปล่าที่ Designer.cs อ้างถึง (ต้องมีเพื่อแก้ Error) **********
-
+        // [แก้] ลบฟังก์ชันว่างของ txtDescription_TextChanged
         private void txtPrice_TextChanged(object sender, EventArgs e) { /* Do Nothing */ }
         private void txtStock_TextChanged(object sender, EventArgs e) { /* Do Nothing */ }
         private void btnSave_Click_1(object sender, EventArgs e) { /* Do Nothing */ }
         private void btnChangeImage_Click_1(object sender, EventArgs e) { /* Do Nothing */ }
         private void btnBack_Click_1(object sender, EventArgs e) { /* Do Nothing */ }
         private void lblStock_Click(object sender, EventArgs e) { /* Do Nothing */ }
-        private void txtDescription_TextChanged(object sender, EventArgs e) { /* Do Nothing */ }
+        // private void txtDescription_TextChanged(object sender, EventArgs e) { /* Do Nothing */ } // [แก้] ลบออก
     }
 }

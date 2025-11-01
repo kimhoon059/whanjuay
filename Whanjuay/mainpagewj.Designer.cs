@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
-            this.LOmainButton = new Guna.UI2.WinForms.Guna2Button();
+            this.CartmainButton = new Guna.UI2.WinForms.Guna2Button(); // [แก้] เปลี่ยนชื่อจาก LOmainButton
             this.HotcrepeButton = new Guna.UI2.WinForms.Guna2Button();
             this.DessertsButton = new Guna.UI2.WinForms.Guna2Button();
             this.coldcrepeButton = new Guna.UI2.WinForms.Guna2Button();
             this.DrinksButton = new Guna.UI2.WinForms.Guna2Button();
-            this.guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
+            this.LOmainButton = new Guna.UI2.WinForms.Guna2Button(); // [แก้] เปลี่ยนชื่อจาก guna2Button1
             this.guna2Panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -42,8 +42,8 @@
             // 
             this.guna2Panel1.BackgroundImage = global::Whanjuay.Properties.Resources.Mainpage3;
             this.guna2Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.guna2Panel1.Controls.Add(this.guna2Button1);
-            this.guna2Panel1.Controls.Add(this.LOmainButton);
+            this.guna2Panel1.Controls.Add(this.LOmainButton); // [แก้]
+            this.guna2Panel1.Controls.Add(this.CartmainButton); // [แก้]
             this.guna2Panel1.Controls.Add(this.HotcrepeButton);
             this.guna2Panel1.Controls.Add(this.DessertsButton);
             this.guna2Panel1.Controls.Add(this.coldcrepeButton);
@@ -55,21 +55,21 @@
             this.guna2Panel1.Size = new System.Drawing.Size(1540, 845);
             this.guna2Panel1.TabIndex = 0;
             // 
-            // LOmainButton
+            // CartmainButton
             // 
-            this.LOmainButton.BackColor = System.Drawing.Color.Transparent;
-            this.LOmainButton.BorderRadius = 42;
-            this.LOmainButton.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.LOmainButton.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.LOmainButton.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.LOmainButton.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.LOmainButton.FillColor = System.Drawing.Color.Transparent;
-            this.LOmainButton.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.LOmainButton.ForeColor = System.Drawing.Color.White;
-            this.LOmainButton.Location = new System.Drawing.Point(1211, 157);
-            this.LOmainButton.Name = "LOmainButton";
-            this.LOmainButton.Size = new System.Drawing.Size(291, 109);
-            this.LOmainButton.TabIndex = 4;
+            this.CartmainButton.BackColor = System.Drawing.Color.Transparent;
+            this.CartmainButton.BorderRadius = 42;
+            this.CartmainButton.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.CartmainButton.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.CartmainButton.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.CartmainButton.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.CartmainButton.FillColor = System.Drawing.Color.Transparent;
+            this.CartmainButton.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.CartmainButton.ForeColor = System.Drawing.Color.White;
+            this.CartmainButton.Location = new System.Drawing.Point(1211, 157);
+            this.CartmainButton.Name = "CartmainButton"; // [แก้]
+            this.CartmainButton.Size = new System.Drawing.Size(291, 109);
+            this.CartmainButton.TabIndex = 4;
             // 
             // HotcrepeButton
             // 
@@ -138,21 +138,21 @@
             this.DrinksButton.TabIndex = 0;
             this.DrinksButton.Click += new System.EventHandler(this.guna2Button1_Click);
             // 
-            // guna2Button1
+            // LOmainButton
             // 
-            this.guna2Button1.BackColor = System.Drawing.Color.Transparent;
-            this.guna2Button1.BorderRadius = 35;
-            this.guna2Button1.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.guna2Button1.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.guna2Button1.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.guna2Button1.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.guna2Button1.FillColor = System.Drawing.Color.Transparent;
-            this.guna2Button1.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.guna2Button1.ForeColor = System.Drawing.Color.White;
-            this.guna2Button1.Location = new System.Drawing.Point(1248, 744);
-            this.guna2Button1.Name = "guna2Button1";
-            this.guna2Button1.Size = new System.Drawing.Size(254, 74);
-            this.guna2Button1.TabIndex = 5;
+            this.LOmainButton.BackColor = System.Drawing.Color.Transparent;
+            this.LOmainButton.BorderRadius = 35;
+            this.LOmainButton.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.LOmainButton.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.LOmainButton.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.LOmainButton.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.LOmainButton.FillColor = System.Drawing.Color.Transparent;
+            this.LOmainButton.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.LOmainButton.ForeColor = System.Drawing.Color.White;
+            this.LOmainButton.Location = new System.Drawing.Point(1248, 744);
+            this.LOmainButton.Name = "LOmainButton"; // [แก้]
+            this.LOmainButton.Size = new System.Drawing.Size(254, 74);
+            this.LOmainButton.TabIndex = 5;
             // 
             // mainpagewj
             // 
@@ -173,12 +173,13 @@
 
         #endregion
 
-        private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
-        private Guna.UI2.WinForms.Guna2Button coldcrepeButton;
-        private Guna.UI2.WinForms.Guna2Button DrinksButton;
-        private Guna.UI2.WinForms.Guna2Button HotcrepeButton;
-        private Guna.UI2.WinForms.Guna2Button DessertsButton;
-        private Guna.UI2.WinForms.Guna2Button LOmainButton;
-        private Guna.UI2.WinForms.Guna2Button guna2Button1;
+        // [แก้] เปลี่ยนปุ่มทั้งหมดเป็น internal และเปลี่ยนชื่อ
+        internal Guna.UI2.WinForms.Guna2Panel guna2Panel1;
+        internal Guna.UI2.WinForms.Guna2Button coldcrepeButton;
+        internal Guna.UI2.WinForms.Guna2Button DrinksButton;
+        internal Guna.UI2.WinForms.Guna2Button HotcrepeButton;
+        internal Guna.UI2.WinForms.Guna2Button DessertsButton;
+        internal Guna.UI2.WinForms.Guna2Button CartmainButton; // [แก้]
+        internal Guna.UI2.WinForms.Guna2Button LOmainButton; // [แก้]
     }
 }
