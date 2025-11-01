@@ -21,6 +21,13 @@ namespace Whanjuay
             InitializeComponent();
         }
 
+        // [เพิ่มใหม่] ฟังก์ชันสำหรับให้ฟอร์มแม่ (HotCrepeMenu) สั่งล้างค่า
+        public void Reset()
+        {
+            chkSelect.Checked = false;
+            chkExtra.Checked = false; // chkSelect_CheckedChanged จะซ่อนปุ่มนี้อัตโนมัติ
+        }
+
         public void SetData(int productId, string name, decimal price, string imagePath, string groupName)
         {
             this.ProductId = productId;
@@ -29,7 +36,7 @@ namespace Whanjuay
             this.GroupName = groupName;
 
             chkSelect.Text = name;
-            lblPrice.Text = $"(+{price:N2} บาท)"; // [แก้]
+            lblPrice.Text = $"(+{price:N2} บาท)";
 
             if (groupName.Contains("แป้ง"))
             {
@@ -43,7 +50,7 @@ namespace Whanjuay
             {
                 this.ExtraPrice = 0;
             }
-            chkExtra.Text = $"เพิ่มพิเศษ (+{this.ExtraPrice:N2} บาท)"; // [แก้]
+            chkExtra.Text = $"เพิ่มพิเศษ (+{this.ExtraPrice:N2} บาท)";
 
             LoadImage(imagePath);
         }

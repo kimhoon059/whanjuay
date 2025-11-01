@@ -14,6 +14,7 @@ namespace Whanjuay
     public partial class HotCrepeMenu : Form
     {
         private const int HOT_CREPE_CATEGORY_ID = 2;
+        private string _categoryIconPath;
 
         public HotCrepeMenu()
         {
@@ -23,6 +24,16 @@ namespace Whanjuay
         private void HotCrepeMenu_Load(object sender, EventArgs e)
         {
             LoadIngredientGroups();
+
+            try
+            {
+                _categoryIconPath = Db.GetCategoryIconPath(HOT_CREPE_CATEGORY_ID);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ไม่สามารถโหลด Icon Path: " + ex.Message);
+                _categoryIconPath = null;
+            }
         }
 
         private void LoadIngredientGroups()
@@ -95,20 +106,37 @@ namespace Whanjuay
             }
         }
 
+        private void ResetAllSelections()
+        {
+            foreach (Control control in flowMainPanel.Controls)
+            {
+                if (control is FlowLayoutPanel itemPanel)
+                {
+                    foreach (IngredientControl ingredientControl in itemPanel.Controls.OfType<IngredientControl>())
+                    {
+                        ingredientControl.Reset();
+                    }
+                }
+            }
+            flowMainPanel.AutoScrollPosition = new Point(0, 0);
+        }
+
         private void btnBack_Click(object sender, EventArgs e)
         {
+            ResetAllSelections();
             mainpagewj mainForm = Application.OpenForms.OfType<mainpagewj>().FirstOrDefault();
             if (mainForm != null)
             {
                 mainForm.Show();
             }
-            this.Close();
+            this.Hide();
         }
 
         private void btnCart_Click(object sender, EventArgs e)
         {
-            CartPage cartForm = new CartPage();
-            cartForm.Show();
+            ResetAllSelections();
+            mainpagewj mainForm = Application.OpenForms.OfType<mainpagewj>().FirstOrDefault();
+            mainForm?.btnCart_Click(sender, e);
             this.Hide();
         }
 
@@ -133,9 +161,7 @@ namespace Whanjuay
                                 IsExtra = ingredient.IsExtra,
                                 ExtraPrice = ingredient.IsExtra ? ingredient.ExtraPrice : 0
                             };
-
                             selectedIngredients.Add(ingredientItem);
-
                             totalPrice += ingredient.BasePrice;
                             if (ingredient.IsExtra)
                             {
@@ -159,14 +185,26 @@ namespace Whanjuay
                 Quantity = 1,
                 IsCustomCrepe = true,
                 CategoryName = "เครปร้อน",
-                Ingredients = selectedIngredients
+                Ingredients = selectedIngredients,
+                IconPath = _categoryIconPath,
+                ProductImagePath = null
             };
 
             CartService.AddItem(customCrepe);
 
+            // [อัปเดต] ย้าย Focus ไปที่ Panel หลัก (pnlMain)
+            if (this.pnlMain != null)
+            {
+                this.pnlMain.Focus();
+            }
+            else
+            {
+                this.Focus(); // ถ้าหา pnlMain ไม่เจอ ให้ Focus ที่ฟอร์มแทน
+            }
+
             MessageBox.Show($"เพิ่ม 'เครปร้อน (สั่งทำ)' ราคา {totalPrice:N2} บาท ลงในตะกร้าแล้ว!", "เพิ่มสินค้าสำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            btnBack_Click(sender, e);
+            ResetAllSelections();
         }
     }
 }

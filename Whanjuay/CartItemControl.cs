@@ -6,12 +6,10 @@ using System.Windows.Forms;
 namespace Whanjuay
 {
     public delegate void CartUpdatedEventHandler();
-    // [แก้] ลบ EditItemEventHandler
 
     public partial class CartItemControl : UserControl
     {
         public event CartUpdatedEventHandler CartUpdated;
-        // [แก้] ลบ EditRequested
         private CartItem _item;
 
         public CartItemControl()
@@ -28,72 +26,112 @@ namespace Whanjuay
 
             UpdatePrice();
 
-            if (item.IsCustomCrepe && item.Ingredients != null)
-            {
-                pnlIngredients.Visible = true;
-                pnlIngredients.Controls.Clear();
+            pnlIngredients.Controls.Clear();
+            bool hasSubItems = false;
 
+            if (item.IsCustomCrepe && item.Ingredients != null && item.Ingredients.Count > 0)
+            {
                 foreach (var ingredient in item.Ingredients)
                 {
-                    string extraText = "";
-                    if (ingredient.IsExtra)
+                    string extraText = ingredient.IsExtra ? $" (เพิ่มพิเศษ +{ingredient.ExtraPrice:N2} บาท)" : "";
+                    Label lbl = new Label
                     {
-                        extraText = $" (เพิ่มพิเศษ +{ingredient.ExtraPrice:N2} บาท)";
-                    }
-
-                    Label lbl = new Label();
-                    lbl.Text = $"• {ingredient.Name} (+{ingredient.BasePrice:N2} บาท){extraText}";
-                    lbl.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
-                    lbl.ForeColor = Color.Gray;
-                    lbl.AutoSize = true;
+                        Text = $"• {ingredient.Name} (+{ingredient.BasePrice:N2} บาท){extraText}",
+                        Font = new Font("Segoe UI", 9F, FontStyle.Regular),
+                        ForeColor = Color.Gray,
+                        AutoSize = true
+                    };
                     pnlIngredients.Controls.Add(lbl);
                 }
+                hasSubItems = true;
             }
-            else
+            else if (!item.IsCustomCrepe && item.Options != null && item.Options.Count > 0)
             {
-                pnlIngredients.Visible = false;
+                foreach (var option in item.Options)
+                {
+                    Label lbl = new Label
+                    {
+                        Text = $"• {option}",
+                        Font = new Font("Segoe UI", 9F, FontStyle.Regular),
+                        ForeColor = Color.Gray,
+                        AutoSize = true
+                    };
+                    pnlIngredients.Controls.Add(lbl);
+                }
+                hasSubItems = true;
             }
 
-            // [ใหม่] โหลดรูปภาพหมวดหมู่
-            LoadCategoryImage(item.CategoryName);
+            pnlIngredients.Visible = hasSubItems;
+
+            pnlIngredients.PerformLayout();
+
+            int newYPosition = pnlIngredients.Bottom + 10;
+            if (!pnlIngredients.Visible)
+            {
+                newYPosition = pnlIngredients.Top + 10;
+            }
+
+            btnDecrease.Top = newYPosition;
+            txtQuantity.Top = newYPosition;
+            btnIncrease.Top = newYPosition;
+            btnDelete.Top = newYPosition;
+
+            int requiredHeight = newYPosition + btnDelete.Height + 15;
+            if (requiredHeight < this.MinimumSize.Height)
+            {
+                requiredHeight = this.MinimumSize.Height;
+            }
+            this.Height = requiredHeight;
+            this.pnlBackground.Height = requiredHeight;
+
+            // [อัปเดต] เรียกใช้ Logic ใหม่ในการโหลดรูป
+            LoadCorrectImage(item);
         }
 
-        // [ใหม่] ฟังก์ชันโหลดรูปภาพหมวดหมู่
-        private void LoadCategoryImage(string categoryName)
+        // [อัปเดต] เปลี่ยนชื่อเมธอด
+        private void LoadCorrectImage(CartItem item)
         {
+            string pathToLoad = null;
+
+            // 1. ตรวจสอบว่ามี "รูปสินค้าจริง" หรือไม่ (เช่น รูปโกโก้)
+            if (!string.IsNullOrEmpty(item.ProductImagePath)) // <--- นี่คือบรรทัดที่เคย Error
+            {
+                pathToLoad = item.ProductImagePath; // <--- นี่คือบรรทัดที่เคย Error
+            }
+            // 2. ถ้าไม่มี ให้ใช้ "ไอคอนหมวดหมู่" (เช่น รูปเครป, รูป Drinks)
+            else if (!string.IsNullOrEmpty(item.IconPath))
+            {
+                pathToLoad = item.IconPath;
+            }
+
+            // 3. โหลดรูปจาก Path ที่เลือก
+            if (string.IsNullOrEmpty(pathToLoad))
+            {
+                pbImage.Image = null;
+                return;
+            }
+
             try
             {
-                // คุณต้องเพิ่มรูปภาพเหล่านี้ลงใน Resources ของโปรเจกต์ก่อน
-                // และตั้งชื่อให้ตรงกับ CategoryName
-                // เช่น "เครปร้อน.png", "เครื่องดื่ม.png"
-
-                if (categoryName == "เครปร้อน")
+                string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pathToLoad.Replace('/', Path.DirectorySeparatorChar));
+                if (File.Exists(fullPath))
                 {
-                    // (ตัวอย่าง) อ้างอิงจาก Resource ของคุณ
-                    pbImage.Image = Properties.Resources.K_PRA__8_;
-                }
-                else if (categoryName == "เครปเย็น")
-                {
-                    // (ตัวอย่าง) (คุณต้องเพิ่มรูป icon เครปเย็น ลงใน Resources)
-                    // pbImage.Image = Properties.Resources.Icon_ColdCrepe; 
-                }
-                else if (categoryName == "เครื่องดื่ม")
-                {
-                    // (ตัวอย่าง) (คุณต้องเพิ่มรูป icon เครื่องดื่ม ลงใน Resources)
-                    // pbImage.Image = Properties.Resources.Icon_Drink;
+                    byte[] imageBytes = File.ReadAllBytes(fullPath);
+                    using (var stream = new MemoryStream(imageBytes))
+                    {
+                        pbImage.Image = Image.FromStream(stream);
+                    }
                 }
                 else
                 {
-                    // รูปภาพเริ่มต้น (ถ้ามี)
+                    pbImage.Image = null;
                 }
             }
             catch (Exception)
             {
-                // ถ้าหารูปไม่เจอ ให้ปล่อยว่างไว้
                 pbImage.Image = null;
             }
         }
-
 
         private void UpdatePrice()
         {
@@ -124,8 +162,6 @@ namespace Whanjuay
             CartService.RemoveItem(_item.ItemId);
             CartUpdated?.Invoke();
         }
-
-        // [แก้] ลบ btnEdit_Click
 
         private void txtQuantity_TextChanged(object sender, EventArgs e)
         {

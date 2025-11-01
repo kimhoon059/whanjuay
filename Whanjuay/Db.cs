@@ -12,7 +12,7 @@ namespace Whanjuay
 
         private static MySqlConnection CreateConn() => new MySqlConnection(ConnStr);
 
-        // (GetCategories - โค้ดเดิมถูกต้อง)
+        // (GetCategories - โค้ดเดิม)
         public static DataTable GetCategories()
         {
             using (var conn = CreateConn())
@@ -28,6 +28,28 @@ namespace Whanjuay
                 }
             }
         }
+
+        // [เพิ่มใหม่] ฟังก์ชันสำหรับดึง Path ไอคอนจากตาราง Categories
+        public static string GetCategoryIconPath(int categoryId)
+        {
+            using (var conn = CreateConn())
+            {
+                conn.Open();
+                using (var cmd = new MySqlCommand(
+                    "SELECT cart_icon_path FROM categories WHERE category_id = @id;", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", categoryId);
+                    object result = cmd.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return result.ToString();
+                    }
+                    return null; // ไม่พบ Path
+                }
+            }
+        }
+
 
         // [แก้] ดึงประเภทวัตถุดิบย่อย (เรียงตาม sort_order)
         public static DataTable GetIngredientCategories(int mainCategoryId)
@@ -50,7 +72,7 @@ namespace Whanjuay
             }
         }
 
-        // (GetProductsForListWithStock - โค้ดเดิมถูกต้อง)
+        // (GetProductsForListWithStock - โค้ดเดิม)
         public static DataTable GetProductsForListWithStock()
         {
             using (var conn = CreateConn())
@@ -71,7 +93,7 @@ ORDER BY p.is_hot_sale DESC, p.created_at DESC, p.product_id DESC;", conn))
             }
         }
 
-        // (GetProductById - โค้ดเดิมถูกต้อง)
+        // (GetProductById - โค้ดเดิม)
         public static DataTable GetProductById(int productId)
         {
             using (var conn = CreateConn())
@@ -96,7 +118,7 @@ WHERE p.product_id = @id;", conn))
             }
         }
 
-        // (InsertProduct - โค้ดเดิมถูกต้อง)
+        // (InsertProduct - โค้ดเดิม)
         public static int InsertProduct(string name, int ingCategoryId, decimal price,
                                         string status, string imagePath,
                                         int stockQuantity)
@@ -122,7 +144,7 @@ SELECT LAST_INSERT_ID();", conn))
             }
         }
 
-        // (UpdateProduct - โค้ดเดิมถูกต้อง)
+        // (UpdateProduct - โค้ดเดิม)
         public static void UpdateProduct(int productId, string name, int ingCategoryId, decimal price,
                                          string status, string imagePath,
                                          int stockQuantity)
@@ -153,7 +175,7 @@ WHERE product_id = @id;", conn))
             }
         }
 
-        // (GetProductsByIngredientCategory - โค้ดเดิมถูกต้อง)
+        // (GetProductsByIngredientCategory - โค้ดเดิม)
         public static DataTable GetProductsByIngredientCategory(int ingCategoryId)
         {
             using (var conn = CreateConn())
@@ -177,7 +199,7 @@ ORDER BY name;", conn)) // (เรียงตามชื่อวัตถุ�
             }
         }
 
-        // (DeleteProduct - โค้ดเดิมถูกต้อง)
+        // (DeleteProduct - โค้ดเดิม)
         public static void DeleteProduct(int productId)
         {
             using (var conn = CreateConn())
@@ -191,7 +213,7 @@ ORDER BY name;", conn)) // (เรียงตามชื่อวัตถุ�
             }
         }
 
-        // (UpdateHotSaleStatus - โค้ดเดิมถูกต้อง)
+        // (UpdateHotSaleStatus - โค้ดเดิม)
         public static void UpdateHotSaleStatus(int productId, bool isHotSale)
         {
             using (var conn = CreateConn())

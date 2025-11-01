@@ -3,37 +3,60 @@ using System.Linq;
 
 namespace Whanjuay
 {
-    // [แก้] คลาสสำหรับเก็บรายการวัตถุดิบ (มีสถานะ "เพิ่มพิเศษ")
     public class CartIngredient
     {
         public int ProductId { get; set; }
         public string Name { get; set; }
-        public decimal BasePrice { get; set; } // ราคาปกติ
-        public decimal ExtraPrice { get; set; } // ราคาที่บวกเพิ่ม (ถ้ามี)
-        public bool IsExtra { get; set; } // ติ๊ก "เพิ่มพิเศษ" หรือไม่
+        public decimal BasePrice { get; set; }
+        public decimal ExtraPrice { get; set; }
+        public bool IsExtra { get; set; }
     }
 
-    // คลาสสำหรับเก็บรายการสินค้าในตะกร้า
     public class CartItem
     {
-        public int ItemId { get; set; } // ID ของตะกร้า (ไม่ซ้ำกัน)
-        public string DisplayName { get; set; } // "เครปร้อน (สั่งทำ)" หรือ "โกโก้"
-        public decimal TotalPrice { get; set; } // ราคารวมของรายการนี้
+        public int ItemId { get; set; }
+        public string DisplayName { get; set; }
+        public decimal TotalPrice { get; set; }
         public int Quantity { get; set; }
         public bool IsCustomCrepe { get; set; }
-        public string CategoryName { get; set; } // "เครปร้อน", "เครื่องดื่ม"
-        public List<CartIngredient> Ingredients { get; set; } // รายการวัตถุดิบที่เลือก
+        public string CategoryName { get; set; }
+        public string IconPath { get; set; }
+        public string ProductImagePath { get; set; }
+        public List<string> Options { get; set; }
+        public List<CartIngredient> Ingredients { get; set; }
     }
 
-    // คลาส static สำหรับจัดการตะกร้าสินค้า (ส่วนกลาง)
     public static class CartService
     {
         private static List<CartItem> _items = new List<CartItem>();
-        private static int _nextItemId = 1; // ใช้นับ ID ตะกร้า
+        private static int _nextItemId = 1;
 
+        // [เพิ่มใหม่] เพิ่มตัวนับสำหรับเครปแต่ละชนิด
+        private static int _hotCrepeCounter = 1;
+        private static int _coldCrepeCounter = 1;
+
+
+        // [อัปเดต] แก้ไขเมธอดนี้
         public static void AddItem(CartItem item)
         {
-            item.ItemId = _nextItemId++; // กำหนด ID ที่ไม่ซ้ำกัน
+            item.ItemId = _nextItemId++;
+
+            // [อัปเดต] Logic การเพิ่มหมายเลขต่อท้าย
+            // เราจะเช็ค 'IsCustomCrepe' เพราะทั้งเครปร้อนและเย็นจะตั้งค่านี้เป็น true
+            if (item.IsCustomCrepe)
+            {
+                if (item.CategoryName == "เครปร้อน")
+                {
+                    item.DisplayName += $" #{_hotCrepeCounter}"; // เช่น เครปร้อน (สั่งทำ) #1
+                    _hotCrepeCounter++; // เพิ่มค่านับสำหรับชิ้นต่อไป
+                }
+                else if (item.CategoryName == "เครปเย็น")
+                {
+                    item.DisplayName += $" #{_coldCrepeCounter}"; // เช่น เครปเย็น (สั่งทำ) #1
+                    _coldCrepeCounter++; // เพิ่มค่านับสำหรับชิ้นต่อไป
+                }
+            }
+
             _items.Add(item);
         }
 
@@ -49,6 +72,10 @@ namespace Whanjuay
             {
                 _items.Remove(item);
             }
+
+            // หมายเหตุ: การลบของออกอาจทำให้เลขไม่เรียงกัน (เช่น มี #1, #3)
+            // แต่นี่คือวิธีที่ตรงตามคำสั่ง "นับตามลำดับที่กด" ที่สุดครับ
+            // หากต้องการให้เลขเรียงใหม่ทุกครั้งที่ลบ (Re-index) จะต้องแก้ไข Logic ซับซ้อนกว่านี้
         }
 
         public static void UpdateQuantity(int itemId, int newQuantity)
@@ -60,15 +87,19 @@ namespace Whanjuay
             }
         }
 
+        // [อัปเดต] แก้ไขเมธอดนี้
         public static void ClearCart()
         {
             _items.Clear();
             _nextItemId = 1;
+
+            // [อัปเดต] รีเซ็ตตัวนับกลับไปเป็น 1
+            _hotCrepeCounter = 1;
+            _coldCrepeCounter = 1;
         }
 
         public static decimal GetTotalPrice()
         {
-            // คำนวณราคารวมทั้งหมด
             return _items.Sum(item => item.TotalPrice * item.Quantity);
         }
     }

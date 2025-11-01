@@ -12,6 +12,13 @@ namespace Whanjuay
 {
     public partial class mainpagewj : Form
     {
+        // [อัปเดต] สร้างตัวแปรสำหรับเก็บฟอร์มเมนูต่างๆ
+        private HotCrepeMenu hotCrepeForm;
+        private ColdCrepeMenu coldCrepeForm;
+        private DessertsMenu dessertsForm;
+        private DrinksMenu drinksForm;
+        private CartPage cartForm;
+
         public mainpagewj()
         {
             InitializeComponent();
@@ -29,59 +36,80 @@ namespace Whanjuay
             this.DrinksButton.Click -= DrinksButton_Click;
             this.DrinksButton.Click += DrinksButton_Click;
 
-            // 2. ปุ่ม CART (CartmainButton) - (อิงตามชื่อที่แก้ไขล่าสุด)
+            // 2. ปุ่ม CART (CartmainButton)
             this.CartmainButton.Click -= btnCart_Click;
             this.CartmainButton.Click += btnCart_Click;
 
-            // 3. ปุ่ม LOG OUT (LOmainButton) - (อิงตามชื่อที่แก้ไขล่าสุด)
+            // 3. ปุ่ม LOG OUT (LOmainButton)
             this.LOmainButton.Click -= btnLogOut_Click;
             this.LOmainButton.Click += btnLogOut_Click;
         }
 
-        // --- 1. Event Handlers สำหรับปุ่มเมนู 4 ปุ่ม ---
+        // --- [อัปเดต] 1. Event Handlers สำหรับปุ่มเมนู 4 ปุ่ม (แบบ Caching) ---
 
         private void HotcrepeButton_Click(object sender, EventArgs e)
         {
-            HotCrepeMenu hotCrepeForm = new HotCrepeMenu();
-            hotCrepeForm.WindowState = FormWindowState.Maximized; // [แก้]
-            hotCrepeForm.Show();
+            // ตรวจสอบว่าฟอร์มยังไม่เคยถูกสร้าง หรือถูกปิดไปแล้ว (IsDisposed)
+            if (hotCrepeForm == null || hotCrepeForm.IsDisposed)
+            {
+                hotCrepeForm = new HotCrepeMenu();
+                hotCrepeForm.WindowState = FormWindowState.Maximized;
+            }
+            hotCrepeForm.Show(); // แสดงฟอร์มที่เก็บไว้
             this.Hide();
         }
 
         private void coldcrepeButton_Click(object sender, EventArgs e)
         {
-            ColdCrepeMenu coldCrepeForm = new ColdCrepeMenu();
-            coldCrepeForm.WindowState = FormWindowState.Maximized; // [แก้]
+            if (coldCrepeForm == null || coldCrepeForm.IsDisposed)
+            {
+                coldCrepeForm = new ColdCrepeMenu();
+                coldCrepeForm.WindowState = FormWindowState.Maximized;
+            }
             coldCrepeForm.Show();
             this.Hide();
         }
 
         private void DessertsButton_Click(object sender, EventArgs e)
         {
-            DessertsMenu dessertsForm = new DessertsMenu();
-            dessertsForm.WindowState = FormWindowState.Maximized; // [แก้]
+            if (dessertsForm == null || dessertsForm.IsDisposed)
+            {
+                dessertsForm = new DessertsMenu();
+                dessertsForm.WindowState = FormWindowState.Maximized;
+            }
             dessertsForm.Show();
             this.Hide();
         }
 
         private void DrinksButton_Click(object sender, EventArgs e)
         {
-            DrinksMenu drinksForm = new DrinksMenu();
-            drinksForm.WindowState = FormWindowState.Maximized; // [แก้]
+            if (drinksForm == null || drinksForm.IsDisposed)
+            {
+                drinksForm = new DrinksMenu();
+                drinksForm.WindowState = FormWindowState.Maximized;
+            }
             drinksForm.Show();
             this.Hide();
         }
 
-        // --- 2. Event Handlers สำหรับปุ่ม CART ---
-        private void btnCart_Click(object sender, EventArgs e)
+        // --- [อัปเดต] 2. Event Handlers สำหรับปุ่ม CART (แบบ Caching) ---
+        // [แก้ไข Error CS0122] เปลี่ยนจาก 'private' เป็น 'internal'
+        internal void btnCart_Click(object sender, EventArgs e)
         {
-            CartPage cartForm = new CartPage();
-            cartForm.WindowState = FormWindowState.Maximized; // [แก้]
+            if (cartForm == null || cartForm.IsDisposed)
+            {
+                cartForm = new CartPage();
+                cartForm.WindowState = FormWindowState.Maximized;
+            }
+
+            // [สำคัญ] สั่งให้หน้า Cart โหลดข้อมูลใหม่ทุกครั้งที่เปิด
+            cartForm.LoadCartItems();
+
             cartForm.Show();
             this.Hide();
         }
 
-        // --- 3. Event Handlers สำหรับปุ่ม LOG OUT ---
+        // --- [อัปเดต] 3. Event Handlers สำหรับปุ่ม LOG OUT ---
         private void btnLogOut_Click(object sender, EventArgs e)
         {
             var login = Application.OpenForms.OfType<Loginpage>().FirstOrDefault();
@@ -94,7 +122,15 @@ namespace Whanjuay
                 Loginpage newLogin = new Loginpage();
                 newLogin.Show();
             }
-            this.Close();
+
+            // [อัปเดต] สั่งปิดฟอร์มที่ Caching ไว้ออกจากหน่วยความจำ
+            hotCrepeForm?.Close();
+            coldCrepeForm?.Close();
+            dessertsForm?.Close();
+            drinksForm?.Close();
+            cartForm?.Close();
+
+            this.Close(); // ปิดหน้าหลักนี้
         }
 
         // --- (ฟังก์ชันว่างเปล่าที่ Designer.cs อ้างถึง) ---

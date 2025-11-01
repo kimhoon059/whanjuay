@@ -25,9 +25,9 @@
             this.btnIncrease = new Guna.UI2.WinForms.Guna2Button();
             this.txtQuantity = new Guna.UI2.WinForms.Guna2TextBox();
             this.pnlBackground = new Guna.UI2.WinForms.Guna2Panel();
-            this.pbImage = new Guna.UI2.WinForms.Guna2PictureBox(); // [ใหม่]
+            this.pbImage = new Guna.UI2.WinForms.Guna2PictureBox();
             this.pnlBackground.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit(); // [ใหม่]
+            ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             this.SuspendLayout();
             // 
             // lblName
@@ -53,39 +53,39 @@
             // 
             // btnDelete
             // 
-            this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDelete.BorderRadius = 5;
             this.btnDelete.FillColor = System.Drawing.Color.Transparent;
-            this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnDelete.ForeColor = System.Drawing.Color.Red;
-            this.btnDelete.Location = new System.Drawing.Point(525, 85);
+            this.btnDelete.Location = new System.Drawing.Point(485, 85);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(40, 30);
+            this.btnDelete.Size = new System.Drawing.Size(80, 30);
             this.btnDelete.TabIndex = 4;
-            this.btnDelete.Text = "🗑️";
+            this.btnDelete.Text = "Delete";
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // pnlIngredients
             // 
-            this.pnlIngredients.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlIngredients.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)))); // [อัปเดต] เอา Right ออก
             this.pnlIngredients.AutoSize = true;
             this.pnlIngredients.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.pnlIngredients.Location = new System.Drawing.Point(144, 50);
             this.pnlIngredients.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
-            this.pnlIngredients.MaximumSize = new System.Drawing.Size(250, 0);
+            // [อัปเดต] ขยายความกว้างสูงสุดจาก 250 เป็น 340
+            this.pnlIngredients.MaximumSize = new System.Drawing.Size(340, 0);
             this.pnlIngredients.Name = "pnlIngredients";
             this.pnlIngredients.Size = new System.Drawing.Size(0, 0);
             this.pnlIngredients.TabIndex = 5;
             // 
             // btnDecrease
             // 
-            this.btnDecrease.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDecrease.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDecrease.BorderRadius = 5;
             this.btnDecrease.FillColor = System.Drawing.Color.Gainsboro;
             this.btnDecrease.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.btnDecrease.ForeColor = System.Drawing.Color.Black;
-            this.btnDecrease.Location = new System.Drawing.Point(380, 85);
+            this.btnDecrease.Location = new System.Drawing.Point(144, 85);
             this.btnDecrease.Name = "btnDecrease";
             this.btnDecrease.Size = new System.Drawing.Size(30, 30);
             this.btnDecrease.TabIndex = 6;
@@ -94,12 +94,12 @@
             // 
             // btnIncrease
             // 
-            this.btnIncrease.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnIncrease.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
             this.btnIncrease.BorderRadius = 5;
             this.btnIncrease.FillColor = System.Drawing.Color.Gainsboro;
             this.btnIncrease.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.btnIncrease.ForeColor = System.Drawing.Color.Black;
-            this.btnIncrease.Location = new System.Drawing.Point(472, 85);
+            this.btnIncrease.Location = new System.Drawing.Point(236, 85);
             this.btnIncrease.Name = "btnIncrease";
             this.btnIncrease.Size = new System.Drawing.Size(30, 30);
             this.btnIncrease.TabIndex = 7;
@@ -108,7 +108,7 @@
             // 
             // txtQuantity
             // 
-            this.txtQuantity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtQuantity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
             this.txtQuantity.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtQuantity.DefaultText = "1";
             this.txtQuantity.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
@@ -118,7 +118,7 @@
             this.txtQuantity.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtQuantity.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.txtQuantity.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtQuantity.Location = new System.Drawing.Point(416, 85);
+            this.txtQuantity.Location = new System.Drawing.Point(180, 85);
             this.txtQuantity.Name = "txtQuantity";
             this.txtQuantity.PasswordChar = '\0';
             this.txtQuantity.PlaceholderText = "";

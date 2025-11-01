@@ -41,10 +41,12 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(1264, 681);
             this.pnlMain.TabIndex = 0;
+            this.pnlMain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMain_Paint); // [อัปเดต] เพิ่ม Event Handler
             // 
             // pnlSummary
             // 
-            this.pnlSummary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            // [อัปเดต] แก้ไข Anchor จาก (Top | Right) เป็น (Top | Left)
+            this.pnlSummary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
             this.pnlSummary.BackColor = System.Drawing.Color.Transparent;
             this.pnlSummary.BorderRadius = 20;
             this.pnlSummary.Controls.Add(this.lblTotal);
@@ -54,7 +56,7 @@
             this.pnlSummary.Location = new System.Drawing.Point(824, 110);
             this.pnlSummary.Name = "pnlSummary";
             this.pnlSummary.ShadowDecoration.BorderRadius = 20;
-            this.pnlSummary.ShadowDecoration.Enabled = false; // [แก้] ปิดเงาสีเทา
+            this.pnlSummary.ShadowDecoration.Enabled = false;
             this.pnlSummary.Size = new System.Drawing.Size(400, 200);
             this.pnlSummary.TabIndex = 3;
             // 
@@ -94,11 +96,11 @@
             // 
             // flowCartItems
             // 
-            this.flowCartItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
+            // [อัปเดต] แก้ไข Anchor เอา (Right) ออก
+            this.flowCartItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.flowCartItems.AutoScroll = true;
-            this.flowCartItems.BackColor = System.Drawing.Color.Transparent; // [แก้]
+            this.flowCartItems.BackColor = System.Drawing.Color.Transparent;
             this.flowCartItems.Location = new System.Drawing.Point(40, 110);
             this.flowCartItems.Name = "flowCartItems";
             this.flowCartItems.Size = new System.Drawing.Size(760, 531);

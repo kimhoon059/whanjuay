@@ -132,11 +132,23 @@
       <DependentUpon>DashboardView.cs</DependentUpon>
     </Compile>
     <Compile Include="Db.cs" />
+    <Compile Include="DessertItemControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DessertItemControl.Designer.cs">
+      <DependentUpon>DessertItemControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DessertsMenu.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DessertsMenu.Designer.cs">
       <DependentUpon>DessertsMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DrinkItemControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DrinkItemControl.Designer.cs">
+      <DependentUpon>DrinkItemControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DrinksMenu.cs">
       <SubType>Form</SubType>
@@ -208,6 +220,15 @@
     </Compile>
     <EmbeddedResource Include="Admin.resx">
       <DependentUpon>Admin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CartItemControl.resx">
+      <DependentUpon>CartItemControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CartPage.resx">
+      <DependentUpon>CartPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DrinkItemControl.resx">
+      <DependentUpon>DrinkItemControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ForgetPassword.resx">
       <DependentUpon>ForgetPassword.cs</DependentUpon>
@@ -328,6 +349,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\selectmenu2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon\iconcoldcrepe.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="icon\icondesserts.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="icon\icondrinks.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="icon\iconhotcrepe.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

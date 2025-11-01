@@ -22,7 +22,8 @@ namespace Whanjuay
             LoadCartItems();
         }
 
-        private void LoadCartItems()
+        // [อัปเดต] เปลี่ยนจาก private เป็น public
+        public void LoadCartItems()
         {
             flowCartItems.Controls.Clear();
             List<CartItem> items = CartService.GetItems();
@@ -66,6 +67,7 @@ namespace Whanjuay
             lblTotal.Text = $"{total:N2} บาท";
         }
 
+        // [อัปเดต] แก้ไขปุ่ม Back ให้ซ่อน (Hide) แทนการปิด (Close)
         private void btnBack_Click(object sender, EventArgs e)
         {
             mainpagewj mainForm = Application.OpenForms.OfType<mainpagewj>().FirstOrDefault();
@@ -73,7 +75,13 @@ namespace Whanjuay
             {
                 mainForm.Show();
             }
-            this.Close();
+            this.Hide(); // เปลี่ยนจาก this.Close() เป็น this.Hide()
+        }
+
+        // [แก้ไข Error CS1061] เพิ่มเมธอดที่ Designer อ้างถึงกลับเข้ามา
+        private void pnlMain_Paint(object sender, PaintEventArgs e)
+        {
+            // ปล่อยว่างไว้
         }
     }
 }
