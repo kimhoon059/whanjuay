@@ -107,7 +107,7 @@
             this.ORER.FillColor = System.Drawing.Color.Transparent;
             this.ORER.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
             this.ORER.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.ORER.Location = new System.Drawing.Point(43, 478);
+            this.ORER.Location = new System.Drawing.Point(43, 480);
             this.ORER.Name = "ORER";
             this.ORER.Size = new System.Drawing.Size(220, 50);
             this.ORER.TabIndex = 7;

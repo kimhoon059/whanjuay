@@ -16,7 +16,7 @@ namespace Whanjuay
         private static MySqlConnection CreateConn() => new MySqlConnection(ConnStr);
 
         // =================================================================
-        // [ปรับปรุงใหม่] เมธอดสำหรับหน้า Product (Pagination + Filter)
+        // เมธอดสำหรับหน้า Product (Pagination + Filter)
         // =================================================================
 
         public static int GetProductCount(int mainCategoryId, int subCategoryId, string searchQuery)
@@ -76,15 +76,11 @@ namespace Whanjuay
             return count;
         }
 
-        // =================================================================
-        // [แก้ไข] เอาระบบคำนวณ/เรียงลำดับ Hot Sale ออก
-        // =================================================================
         public static DataTable GetProductsPaginated(int pageNumber, int pageSize, int mainCategoryId, int subCategoryId, string searchQuery)
         {
             var dt = new DataTable();
             var whereClauses = new List<string>();
 
-            // [แก้ไข] กลับไปใช้ SQL แบบง่าย ไม่ต้อง Join หายอดขาย
             string sqlQuery = @"
                 SELECT p.product_id, p.name, p.price, p.status, p.image_path, p.stock_quantity,
                        ic.name AS category_name
@@ -93,7 +89,6 @@ namespace Whanjuay
                 LEFT JOIN categories c ON ic.category_id = c.category_id
             ";
 
-            // [แก้ไข] เรียงตาม ID (ใหม่สุดไปเก่าสุด)
             string paginationSql = " ORDER BY p.product_id DESC LIMIT @PageSize OFFSET @Offset";
 
             using (var conn = CreateConn())
@@ -221,9 +216,10 @@ namespace Whanjuay
 
 
         // =================================================================
-        // [โค้ดเดิมทั้งหมดของคุณ] (เมธอดสำหรับ Dashboard, Orders, Products ฯลฯ)
+        // เมธอดสำหรับ Dashboard, Orders, Reports
         // =================================================================
 
+        // [แก้ไข] กรองเฉพาะออเดอร์ที่ "Completed" แล้ว
         public static DataTable GetDashboardData(string startDate, string endDate)
         {
             DataTable dt = new DataTable();
@@ -232,7 +228,8 @@ namespace Whanjuay
                     SUM(total_amount) AS TotalSales, 
                     COUNT(order_id) AS TotalOrders 
                 FROM orders 
-                WHERE order_date >= @start_date AND order_date < @end_date_plus_one";
+                WHERE order_date >= @start_date AND order_date < @end_date_plus_one
+                  AND order_status = 'Completed'"; // <-- [แก้ไข]
             try
             {
                 using (var conn = CreateConn())
@@ -255,7 +252,8 @@ namespace Whanjuay
             }
             return dt;
         }
-        public static int GetLowStockCount(int lowStockThreshold = 5)
+
+        public static int GetLowStockCount(int lowStockThreshold = 10) // [แก้] เพิ่ม Threshold เป็น 10
         {
             int count = 0;
             string query = "SELECT COUNT(product_id) FROM products WHERE stock_quantity <= @threshold";
@@ -281,17 +279,21 @@ namespace Whanjuay
             }
             return count;
         }
-        public static DataTable GetRecentOrders(int limit = 10)
+
+        // [เพิ่มใหม่] เมธอดสำหรับ "ออเดอร์ยอดรวมสูงสุด" (แทน GetRecentOrders)
+        public static DataTable GetTopOrdersByTotal(string startDate, string endDate, int limit = 5)
         {
             DataTable dt = new DataTable();
             string query = @"
                 SELECT 
                     order_code AS 'รหัสออเดอร์', 
+                    username AS 'User',
                     total_amount AS 'ยอดรวม', 
-                    order_date AS 'วันที่สั่งซื้อ', 
-                    slip_path AS 'สลิป' 
+                    order_date AS 'วันที่สั่งซื้อ'
                 FROM orders 
-                ORDER BY order_date DESC 
+                WHERE order_date >= @start_date AND order_date < @end_date_plus_one
+                  AND order_status = 'Completed'
+                ORDER BY total_amount DESC 
                 LIMIT @limit";
             try
             {
@@ -300,6 +302,8 @@ namespace Whanjuay
                     conn.Open();
                     using (MySqlCommand cmd = new MySqlCommand(query, conn))
                     {
+                        cmd.Parameters.AddWithValue("@start_date", DateTime.Parse(startDate).Date);
+                        cmd.Parameters.AddWithValue("@end_date_plus_one", DateTime.Parse(endDate).Date.AddDays(1));
                         cmd.Parameters.AddWithValue("@limit", limit);
                         using (var da = new MySqlDataAdapter(cmd))
                         {
@@ -310,10 +314,12 @@ namespace Whanjuay
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error loading recent orders: " + ex.Message);
+                MessageBox.Show("Error loading top orders: " + ex.Message);
             }
             return dt;
         }
+
+        // [แก้ไข] กรองเฉพาะออเดอร์ที่ "Completed" แล้ว
         public static DataTable GetTopSellingProducts(string startDate, string endDate, int limit = 5)
         {
             DataTable dt = new DataTable();
@@ -325,6 +331,7 @@ namespace Whanjuay
                 FROM order_items oi
                 JOIN orders o ON oi.order_id = o.order_id
                 WHERE o.order_date >= @start_date AND o.order_date < @end_date_plus_one
+                  AND o.order_status = 'Completed'  -- <-- [แก้ไข]
                 GROUP BY oi.display_name
                 ORDER BY SUM(oi.quantity) DESC
                 LIMIT @limit";
@@ -351,6 +358,88 @@ namespace Whanjuay
             }
             return dt;
         }
+
+        // [เพิ่มใหม่] เมธอดสำหรับหน้า "Order"
+        public static DataTable GetPendingOrders()
+        {
+            DataTable dt = new DataTable();
+            string query = @"
+                SELECT order_id, order_code, username, total_amount, slip_path, receipt_pdf_path 
+                FROM orders 
+                WHERE order_status = 'Pending' 
+                ORDER BY order_date ASC";
+            try
+            {
+                using (var conn = CreateConn())
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    using (var da = new MySqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading pending orders: " + ex.Message);
+            }
+            return dt;
+        }
+
+        // [แก้ไข] เมธอดสำหรับหน้า "Report" (เพิ่ม order_id)
+        public static DataTable GetCompletedOrdersReport(int year, int month, int day)
+        {
+            DataTable dt = new DataTable();
+
+            // [แก้ไข] เพิ่ม "order_id" เข้ามาใน SELECT
+            var query = new StringBuilder("SELECT order_id, order_date AS 'วันที่', order_code AS 'Order ID', username AS 'ผู้ใช้', total_amount AS 'ยอดรวม' FROM orders WHERE order_status = 'Completed'");
+
+            var parameters = new List<MySqlParameter>();
+
+            if (year > 0)
+            {
+                query.Append(" AND YEAR(order_date) = @Year");
+                parameters.Add(new MySqlParameter("@Year", year));
+            }
+            if (month > 0)
+            {
+                query.Append(" AND MONTH(order_date) = @Month");
+                parameters.Add(new MySqlParameter("@Month", month));
+            }
+            if (day > 0)
+            {
+                query.Append(" AND DAY(order_date) = @Day");
+                parameters.Add(new MySqlParameter("@Day", day));
+            }
+            query.Append(" ORDER BY order_date DESC");
+
+            try
+            {
+                using (var conn = CreateConn())
+                {
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand(query.ToString(), conn))
+                    {
+                        if (parameters.Count > 0)
+                        {
+                            cmd.Parameters.AddRange(parameters.ToArray());
+                        }
+                        using (var da = new MySqlDataAdapter(cmd))
+                        {
+                            da.Fill(dt);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading report data: " + ex.Message);
+            }
+            return dt;
+        }
+
+        // [แก้ไข] เมธอด CreateOrder (เพิ่ม status 'Pending')
         public static string CreateOrder(string username, decimal totalAmount, List<CartItem> items)
         {
             using (var conn = CreateConn())
@@ -361,18 +450,20 @@ namespace Whanjuay
                     try
                     {
                         var cmdOrder = new MySqlCommand(
-                            "INSERT INTO orders (username, total_amount, order_date, order_code) VALUES (@user, @total, NOW(), @code); SELECT LAST_INSERT_ID();",
+                            "INSERT INTO orders (username, total_amount, order_date, order_code, order_status) VALUES (@user, @total, NOW(), @code, 'Pending'); SELECT LAST_INSERT_ID();",
                             conn, trans);
                         cmdOrder.Parameters.AddWithValue("@user", username);
                         cmdOrder.Parameters.AddWithValue("@total", totalAmount);
                         cmdOrder.Parameters.AddWithValue("@code", "");
                         long newOrderId = Convert.ToInt64(cmdOrder.ExecuteScalar());
+
                         string orderCode = "WJ" + newOrderId.ToString("D6");
                         var cmdUpdateCode = new MySqlCommand(
                             "UPDATE orders SET order_code = @code WHERE order_id = @id", conn, trans);
                         cmdUpdateCode.Parameters.AddWithValue("@code", orderCode);
                         cmdUpdateCode.Parameters.AddWithValue("@id", newOrderId);
                         cmdUpdateCode.ExecuteNonQuery();
+
                         foreach (var item in items)
                         {
                             var cmdItem = new MySqlCommand(
@@ -386,6 +477,7 @@ namespace Whanjuay
                             cmdItem.Parameters.AddWithValue("@details", FormatItemDetails(item));
                             cmdItem.ExecuteNonQuery();
                         }
+
                         trans.Commit();
                         return orderCode;
                     }
@@ -420,6 +512,30 @@ namespace Whanjuay
             }
             return details.Length > 0 ? details.ToString() : null;
         }
+
+        // [เพิ่มใหม่] เมธอดสำหรับปุ่ม "Complete"
+        public static void UpdateOrderStatus(int orderId, string newStatus)
+        {
+            try
+            {
+                using (var conn = CreateConn())
+                {
+                    conn.Open();
+                    using (var cmd = new MySqlCommand(
+                        "UPDATE orders SET order_status = @status WHERE order_id = @id", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@status", newStatus);
+                        cmd.Parameters.AddWithValue("@id", orderId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error updating order status: " + ex.Message);
+            }
+        }
+
         public static void UpdateOrderSlipPath(string orderCode, string slipPath)
         {
             try
@@ -653,7 +769,5 @@ namespace Whanjuay
                 }
             }
         }
-
-        // [ลบออก] เมธอด UpdateHotSaleStatus ถูกลบออก
     }
 }

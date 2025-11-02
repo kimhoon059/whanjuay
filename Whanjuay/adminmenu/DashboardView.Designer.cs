@@ -28,13 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.label1 = new System.Windows.Forms.Label();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlSales = new Guna.UI2.WinForms.Guna2Panel();
             this.lblTotalSales = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -44,31 +43,24 @@
             this.pnlLowStock = new Guna.UI2.WinForms.Guna2Panel();
             this.lblLowStockCount = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.lblRecentOrders = new System.Windows.Forms.Label();
-            this.dgvRecentOrders = new Guna.UI2.WinForms.Guna2DataGridView();
-            this.dtpStartDate = new Guna.UI2.WinForms.Guna2DateTimePicker();
-            this.dtpEndDate = new Guna.UI2.WinForms.Guna2DateTimePicker();
-            this.label2 = new System.Windows.Forms.Label();
-            this.btnLoadData = new Guna.UI2.WinForms.Guna2Button();
+            this.lblTopOrders = new System.Windows.Forms.Label();
+            this.dgvTopOrders = new Guna.UI2.WinForms.Guna2DataGridView();
             this.dgvTopSelling = new Guna.UI2.WinForms.Guna2DataGridView();
             this.label3 = new System.Windows.Forms.Label();
+            this.lblYear = new System.Windows.Forms.Label();
+            this.cmbYear = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.btnGoToReport = new Guna.UI2.WinForms.Guna2Button();
+            this.cmbMonth = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.lblMonth = new System.Windows.Forms.Label();
+            this.btnLoadData = new Guna.UI2.WinForms.Guna2Button();
+            this.pnlContainer = new Guna.UI2.WinForms.Guna2Panel();
             this.pnlSales.SuspendLayout();
             this.pnlOrders.SuspendLayout();
             this.pnlLowStock.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvRecentOrders)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTopOrders)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTopSelling)).BeginInit();
+            this.pnlContainer.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label1.Location = new System.Drawing.Point(13, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 17);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "จากวันที่:";
             // 
             // pnlSales
             // 
@@ -77,7 +69,7 @@
             this.pnlSales.Controls.Add(this.lblTotalSales);
             this.pnlSales.Controls.Add(this.label4);
             this.pnlSales.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.pnlSales.Location = new System.Drawing.Point(16, 46);
+            this.pnlSales.Location = new System.Drawing.Point(41, 61);
             this.pnlSales.Name = "pnlSales";
             this.pnlSales.Size = new System.Drawing.Size(220, 100);
             this.pnlSales.TabIndex = 5;
@@ -111,7 +103,7 @@
             this.pnlOrders.Controls.Add(this.lblTotalOrders);
             this.pnlOrders.Controls.Add(this.label5);
             this.pnlOrders.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(240)))), ((int)(((byte)(255)))));
-            this.pnlOrders.Location = new System.Drawing.Point(242, 46);
+            this.pnlOrders.Location = new System.Drawing.Point(339, 61);
             this.pnlOrders.Name = "pnlOrders";
             this.pnlOrders.Size = new System.Drawing.Size(220, 100);
             this.pnlOrders.TabIndex = 6;
@@ -140,12 +132,13 @@
             // 
             // pnlLowStock
             // 
+            this.pnlLowStock.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlLowStock.BackColor = System.Drawing.Color.Transparent;
             this.pnlLowStock.BorderRadius = 10;
             this.pnlLowStock.Controls.Add(this.lblLowStockCount);
             this.pnlLowStock.Controls.Add(this.label6);
             this.pnlLowStock.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(250)))), ((int)(((byte)(230)))));
-            this.pnlLowStock.Location = new System.Drawing.Point(468, 46);
+            this.pnlLowStock.Location = new System.Drawing.Point(639, 61);
             this.pnlLowStock.Name = "pnlLowStock";
             this.pnlLowStock.Size = new System.Drawing.Size(220, 100);
             this.pnlLowStock.TabIndex = 7;
@@ -172,163 +165,115 @@
             this.label6.TabIndex = 2;
             this.label6.Text = "สินค้าใกล้หมดสต็อก";
             // 
-            // lblRecentOrders
+            // lblTopOrders
             // 
-            this.lblRecentOrders.AutoSize = true;
-            this.lblRecentOrders.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecentOrders.Location = new System.Drawing.Point(12, 160);
-            this.lblRecentOrders.Name = "lblRecentOrders";
-            this.lblRecentOrders.Size = new System.Drawing.Size(144, 21);
-            this.lblRecentOrders.TabIndex = 8;
-            this.lblRecentOrders.Text = "รายการออเดอร์ล่าสุด";
+            this.lblTopOrders.AutoSize = true;
+            this.lblTopOrders.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTopOrders.Location = new System.Drawing.Point(111, 200);
+            this.lblTopOrders.Name = "lblTopOrders";
+            this.lblTopOrders.Size = new System.Drawing.Size(228, 21);
+            this.lblTopOrders.TabIndex = 8;
+            this.lblTopOrders.Text = "ออเดอร์ยอดรวมสูงสุด 10 อันดับ";
             // 
-            // dgvRecentOrders
+            // dgvTopOrders
             // 
-            this.dgvRecentOrders.AllowUserToAddRows = false;
-            this.dgvRecentOrders.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            this.dgvRecentOrders.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dgvRecentOrders.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.SaddleBrown;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.SaddleBrown;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvRecentOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.dgvRecentOrders.ColumnHeadersHeight = 30;
-            this.dgvRecentOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(210)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvRecentOrders.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dgvRecentOrders.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.dgvRecentOrders.Location = new System.Drawing.Point(16, 184);
-            this.dgvRecentOrders.Name = "dgvRecentOrders";
-            this.dgvRecentOrders.ReadOnly = true;
-            this.dgvRecentOrders.RowHeadersVisible = false;
-            this.dgvRecentOrders.RowTemplate.Height = 28;
-            this.dgvRecentOrders.Size = new System.Drawing.Size(446, 303);
-            this.dgvRecentOrders.TabIndex = 9;
-            this.dgvRecentOrders.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
-            this.dgvRecentOrders.ThemeStyle.AlternatingRowsStyle.Font = null;
-            this.dgvRecentOrders.ThemeStyle.AlternatingRowsStyle.ForeColor = System.Drawing.Color.Empty;
-            this.dgvRecentOrders.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = System.Drawing.Color.Empty;
-            this.dgvRecentOrders.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = System.Drawing.Color.Empty;
-            this.dgvRecentOrders.ThemeStyle.BackColor = System.Drawing.Color.White;
-            this.dgvRecentOrders.ThemeStyle.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.dgvRecentOrders.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
-            this.dgvRecentOrders.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.dgvRecentOrders.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dgvRecentOrders.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.dgvRecentOrders.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            this.dgvRecentOrders.ThemeStyle.HeaderStyle.Height = 30;
-            this.dgvRecentOrders.ThemeStyle.ReadOnly = true;
-            this.dgvRecentOrders.ThemeStyle.RowsStyle.BackColor = System.Drawing.Color.White;
-            this.dgvRecentOrders.ThemeStyle.RowsStyle.BorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvRecentOrders.ThemeStyle.RowsStyle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dgvRecentOrders.ThemeStyle.RowsStyle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            this.dgvRecentOrders.ThemeStyle.RowsStyle.Height = 28;
-            this.dgvRecentOrders.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(210)))));
-            this.dgvRecentOrders.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            // 
-            // dtpStartDate
-            // 
-            this.dtpStartDate.BorderRadius = 5;
-            this.dtpStartDate.Checked = true;
-            this.dtpStartDate.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.dtpStartDate.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.dtpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpStartDate.Location = new System.Drawing.Point(67, 7);
-            this.dtpStartDate.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
-            this.dtpStartDate.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
-            this.dtpStartDate.Name = "dtpStartDate";
-            this.dtpStartDate.Size = new System.Drawing.Size(125, 26);
-            this.dtpStartDate.TabIndex = 10;
-            this.dtpStartDate.Value = new System.DateTime(2025, 11, 3, 1, 25, 4, 301);
-            // 
-            // dtpEndDate
-            // 
-            this.dtpEndDate.BorderRadius = 5;
-            this.dtpEndDate.Checked = true;
-            this.dtpEndDate.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.dtpEndDate.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.dtpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpEndDate.Location = new System.Drawing.Point(232, 7);
-            this.dtpEndDate.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
-            this.dtpEndDate.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
-            this.dtpEndDate.Name = "dtpEndDate";
-            this.dtpEndDate.Size = new System.Drawing.Size(125, 26);
-            this.dtpEndDate.TabIndex = 12;
-            this.dtpEndDate.Value = new System.DateTime(2025, 11, 3, 1, 25, 7, 715);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label2.Location = new System.Drawing.Point(198, 10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(28, 17);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "ถึง:";
-            // 
-            // btnLoadData
-            // 
-            this.btnLoadData.BorderRadius = 5;
-            this.btnLoadData.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnLoadData.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnLoadData.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnLoadData.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnLoadData.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(175)))), ((int)(((byte)(100)))));
-            this.btnLoadData.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLoadData.ForeColor = System.Drawing.Color.White;
-            this.btnLoadData.Location = new System.Drawing.Point(363, 7);
-            this.btnLoadData.Name = "btnLoadData";
-            this.btnLoadData.Size = new System.Drawing.Size(99, 26);
-            this.btnLoadData.TabIndex = 13;
-            this.btnLoadData.Text = "แสดงข้อมูล";
-            this.btnLoadData.Click += new System.EventHandler(this.btnLoadData_Click);
+            this.dgvTopOrders.AllowUserToAddRows = false;
+            this.dgvTopOrders.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.White;
+            this.dgvTopOrders.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            this.dgvTopOrders.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)));
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.SaddleBrown;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.SaddleBrown;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvTopOrders.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            this.dgvTopOrders.ColumnHeadersHeight = 30;
+            this.dgvTopOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+
+            // ==================================================
+            // --- [แก้ไข] จัดกลางข้อมูลในแถว (Default) ---
+            // ==================================================
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(210)))));
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvTopOrders.DefaultCellStyle = dataGridViewCellStyle9;
+            this.dgvTopOrders.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            this.dgvTopOrders.Location = new System.Drawing.Point(15, 234);
+            this.dgvTopOrders.Name = "dgvTopOrders";
+            this.dgvTopOrders.ReadOnly = true;
+            this.dgvTopOrders.RowHeadersVisible = false;
+            this.dgvTopOrders.RowTemplate.Height = 28;
+            this.dgvTopOrders.Size = new System.Drawing.Size(446, 323);
+            this.dgvTopOrders.TabIndex = 9;
+            this.dgvTopOrders.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
+            this.dgvTopOrders.ThemeStyle.AlternatingRowsStyle.Font = null;
+            this.dgvTopOrders.ThemeStyle.AlternatingRowsStyle.ForeColor = System.Drawing.Color.Empty;
+            this.dgvTopOrders.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = System.Drawing.Color.Empty;
+            this.dgvTopOrders.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = System.Drawing.Color.Empty;
+            this.dgvTopOrders.ThemeStyle.BackColor = System.Drawing.Color.White;
+            this.dgvTopOrders.ThemeStyle.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            // [แก้ไข] คืนค่าสีหัวตาราง
+            this.dgvTopOrders.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
+            this.dgvTopOrders.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dgvTopOrders.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dgvTopOrders.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.SaddleBrown;
+            this.dgvTopOrders.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+            this.dgvTopOrders.ThemeStyle.HeaderStyle.Height = 30;
+            this.dgvTopOrders.ThemeStyle.ReadOnly = true;
+            this.dgvTopOrders.ThemeStyle.RowsStyle.BackColor = System.Drawing.Color.White;
+            this.dgvTopOrders.ThemeStyle.RowsStyle.BorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgvTopOrders.ThemeStyle.RowsStyle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dgvTopOrders.ThemeStyle.RowsStyle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            this.dgvTopOrders.ThemeStyle.RowsStyle.Height = 28;
+            this.dgvTopOrders.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(210)))));
+            this.dgvTopOrders.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
             // 
             // dgvTopSelling
             // 
             this.dgvTopSelling.AllowUserToAddRows = false;
             this.dgvTopSelling.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
-            this.dgvTopSelling.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
-            this.dgvTopSelling.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.White;
+            this.dgvTopSelling.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle10;
+            this.dgvTopSelling.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.SaddleBrown;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.SaddleBrown;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvTopSelling.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.SaddleBrown;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.SaddleBrown;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvTopSelling.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
             this.dgvTopSelling.ColumnHeadersHeight = 30;
             this.dgvTopSelling.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(210)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvTopSelling.DefaultCellStyle = dataGridViewCellStyle6;
+
+            // ==================================================
+            // --- [แก้ไข] จัดกลางข้อมูลในแถว (Default) ---
+            // ==================================================
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle12.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(230)))), ((int)(((byte)(210)))));
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvTopSelling.DefaultCellStyle = dataGridViewCellStyle12;
             this.dgvTopSelling.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.dgvTopSelling.Location = new System.Drawing.Point(468, 184);
+            this.dgvTopSelling.Location = new System.Drawing.Point(467, 234);
             this.dgvTopSelling.Name = "dgvTopSelling";
             this.dgvTopSelling.ReadOnly = true;
             this.dgvTopSelling.RowHeadersVisible = false;
             this.dgvTopSelling.RowTemplate.Height = 28;
-            this.dgvTopSelling.Size = new System.Drawing.Size(410, 303);
+            this.dgvTopSelling.Size = new System.Drawing.Size(403, 323);
             this.dgvTopSelling.TabIndex = 15;
             this.dgvTopSelling.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
             this.dgvTopSelling.ThemeStyle.AlternatingRowsStyle.Font = null;
@@ -337,6 +282,7 @@
             this.dgvTopSelling.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = System.Drawing.Color.Empty;
             this.dgvTopSelling.ThemeStyle.BackColor = System.Drawing.Color.White;
             this.dgvTopSelling.ThemeStyle.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            // [แก้ไข] คืนค่าสีหัวตาราง
             this.dgvTopSelling.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(243)))), ((int)(((byte)(237)))));
             this.dgvTopSelling.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dgvTopSelling.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -356,31 +302,122 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(464, 160);
+            this.label3.Location = new System.Drawing.Point(525, 200);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(126, 21);
+            this.label3.Size = new System.Drawing.Size(256, 21);
             this.label3.TabIndex = 14;
-            this.label3.Text = "สินค้าขายดี 5 อันดับ";
+            this.label3.Text = "สินค้าขายดี 10 อันดับ (จากที่ยืนยันแล้ว)";
+            // 
+            // lblYear
+            // 
+            this.lblYear.AutoSize = true;
+            this.lblYear.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblYear.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lblYear.Location = new System.Drawing.Point(15, 15);
+            this.lblYear.Name = "lblYear";
+            this.lblYear.Size = new System.Drawing.Size(20, 17);
+            this.lblYear.TabIndex = 0;
+            this.lblYear.Text = "ปี:";
+            // 
+            // cmbYear
+            // 
+            this.cmbYear.BackColor = System.Drawing.Color.Transparent;
+            this.cmbYear.BorderRadius = 5;
+            this.cmbYear.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cmbYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbYear.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cmbYear.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cmbYear.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.cmbYear.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cmbYear.ItemHeight = 20;
+            this.cmbYear.Location = new System.Drawing.Point(41, 12);
+            this.cmbYear.Name = "cmbYear";
+            this.cmbYear.Size = new System.Drawing.Size(140, 26);
+            this.cmbYear.TabIndex = 16;
+            // 
+            // btnGoToReport
+            // 
+            this.btnGoToReport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGoToReport.BorderRadius = 5;
+            this.btnGoToReport.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(175)))), ((int)(((byte)(100)))));
+            this.btnGoToReport.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGoToReport.ForeColor = System.Drawing.Color.White;
+            this.btnGoToReport.Location = new System.Drawing.Point(732, 18);
+            this.btnGoToReport.Name = "btnGoToReport";
+            this.btnGoToReport.Size = new System.Drawing.Size(150, 26);
+            this.btnGoToReport.TabIndex = 17;
+            this.btnGoToReport.Text = "ดู Report ทั้งหมด";
+            // 
+            // cmbMonth
+            // 
+            this.cmbMonth.BackColor = System.Drawing.Color.Transparent;
+            this.cmbMonth.BorderRadius = 5;
+            this.cmbMonth.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cmbMonth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbMonth.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cmbMonth.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.cmbMonth.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.cmbMonth.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.cmbMonth.ItemHeight = 20;
+            this.cmbMonth.Location = new System.Drawing.Point(234, 12);
+            this.cmbMonth.Name = "cmbMonth";
+            this.cmbMonth.Size = new System.Drawing.Size(140, 26);
+            this.cmbMonth.TabIndex = 19;
+            // 
+            // lblMonth
+            // 
+            this.lblMonth.AutoSize = true;
+            this.lblMonth.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMonth.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lblMonth.Location = new System.Drawing.Point(187, 15);
+            this.lblMonth.Name = "lblMonth";
+            this.lblMonth.Size = new System.Drawing.Size(41, 17);
+            this.lblMonth.TabIndex = 18;
+            this.lblMonth.Text = "เดือน:";
+            // 
+            // btnLoadData
+            // 
+            this.btnLoadData.BorderRadius = 5;
+            this.btnLoadData.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(175)))), ((int)(((byte)(100)))));
+            this.btnLoadData.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLoadData.ForeColor = System.Drawing.Color.White;
+            this.btnLoadData.Location = new System.Drawing.Point(391, 12);
+            this.btnLoadData.Name = "btnLoadData";
+            this.btnLoadData.Size = new System.Drawing.Size(100, 26);
+            this.btnLoadData.TabIndex = 20;
+            this.btnLoadData.Text = "แสดงข้อมูล";
+            // 
+            // pnlContainer
+            // 
+            this.pnlContainer.BackColor = System.Drawing.Color.Transparent;
+            this.pnlContainer.Controls.Add(this.btnLoadData);
+            this.pnlContainer.Controls.Add(this.cmbMonth);
+            this.pnlContainer.Controls.Add(this.lblMonth);
+            this.pnlContainer.Controls.Add(this.btnGoToReport);
+            this.pnlContainer.Controls.Add(this.cmbYear);
+            this.pnlContainer.Controls.Add(this.lblYear);
+            this.pnlContainer.Controls.Add(this.dgvTopSelling);
+            this.pnlContainer.Controls.Add(this.label3);
+            this.pnlContainer.Controls.Add(this.dgvTopOrders);
+            this.pnlContainer.Controls.Add(this.lblTopOrders);
+            this.pnlContainer.Controls.Add(this.pnlLowStock);
+            this.pnlContainer.Controls.Add(this.pnlOrders);
+            this.pnlContainer.Controls.Add(this.pnlSales);
+            this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlContainer.Location = new System.Drawing.Point(0, 0);
+            this.pnlContainer.Name = "pnlContainer";
+            this.pnlContainer.Padding = new System.Windows.Forms.Padding(15);
+            this.pnlContainer.Size = new System.Drawing.Size(900, 560);
+            this.pnlContainer.TabIndex = 21;
             // 
             // DashboardView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.dgvTopSelling);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.btnLoadData);
-            this.Controls.Add(this.dtpEndDate);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.dtpStartDate);
-            this.Controls.Add(this.dgvRecentOrders);
-            this.Controls.Add(this.lblRecentOrders);
-            this.Controls.Add(this.pnlLowStock);
-            this.Controls.Add(this.pnlOrders);
-            this.Controls.Add(this.pnlSales);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.pnlContainer);
             this.Name = "DashboardView";
-            this.Size = new System.Drawing.Size(900, 500);
+            this.Size = new System.Drawing.Size(900, 560);
             this.Load += new System.EventHandler(this.DashboardView_Load);
             this.pnlSales.ResumeLayout(false);
             this.pnlSales.PerformLayout();
@@ -388,16 +425,16 @@
             this.pnlOrders.PerformLayout();
             this.pnlLowStock.ResumeLayout(false);
             this.pnlLowStock.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvRecentOrders)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvTopOrders)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTopSelling)).EndInit();
+            this.pnlContainer.ResumeLayout(false);
+            this.pnlContainer.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
         private Guna.UI2.WinForms.Guna2Panel pnlSales;
         private System.Windows.Forms.Label lblTotalSales;
         private System.Windows.Forms.Label label4;
@@ -407,13 +444,16 @@
         private Guna.UI2.WinForms.Guna2Panel pnlLowStock;
         private System.Windows.Forms.Label lblLowStockCount;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label lblRecentOrders;
-        private Guna.UI2.WinForms.Guna2DataGridView dgvRecentOrders;
-        private Guna.UI2.WinForms.Guna2DateTimePicker dtpStartDate;
-        private Guna.UI2.WinForms.Guna2DateTimePicker dtpEndDate;
-        private System.Windows.Forms.Label label2;
-        private Guna.UI2.WinForms.Guna2Button btnLoadData;
+        private System.Windows.Forms.Label lblTopOrders;
+        private Guna.UI2.WinForms.Guna2DataGridView dgvTopOrders;
         private Guna.UI2.WinForms.Guna2DataGridView dgvTopSelling;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblYear;
+        private Guna.UI2.WinForms.Guna2ComboBox cmbYear;
+        private Guna.UI2.WinForms.Guna2Button btnGoToReport;
+        private Guna.UI2.WinForms.Guna2ComboBox cmbMonth;
+        private System.Windows.Forms.Label lblMonth;
+        private Guna.UI2.WinForms.Guna2Button btnLoadData;
+        private Guna.UI2.WinForms.Guna2Panel pnlContainer;
     }
 }

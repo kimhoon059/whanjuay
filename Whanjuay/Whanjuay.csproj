@@ -124,6 +124,12 @@
     <Compile Include="loginandregis\Admin.Designer.cs">
       <DependentUpon>Admin.cs</DependentUpon>
     </Compile>
+    <Compile Include="adminmenu\ReportView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="adminmenu\ReportView.Designer.cs">
+      <DependentUpon>ReportView.cs</DependentUpon>
+    </Compile>
     <Compile Include="payandcart\cartt\CartItemControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -249,6 +255,9 @@
     <Compile Include="adminmenu\Orderview.Designer.cs">
       <DependentUpon>Orderview.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="adminmenu\DashboardView.resx">
+      <DependentUpon>DashboardView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="loginandregis\Admin.resx">
       <DependentUpon>Admin.cs</DependentUpon>
     </EmbeddedResource>
