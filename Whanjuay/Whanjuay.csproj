@@ -243,11 +243,11 @@
     <Compile Include="loginandregis\pw\ResetPassword.Designer.cs">
       <DependentUpon>ResetPassword.cs</DependentUpon>
     </Compile>
-    <Compile Include="adminmenu\UsersView.cs">
+    <Compile Include="adminmenu\Orderview.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="adminmenu\UsersView.Designer.cs">
-      <DependentUpon>UsersView.cs</DependentUpon>
+    <Compile Include="adminmenu\Orderview.Designer.cs">
+      <DependentUpon>Orderview.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="loginandregis\Admin.resx">
       <DependentUpon>Admin.cs</DependentUpon>

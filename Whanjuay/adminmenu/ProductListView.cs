@@ -4,10 +4,10 @@ using System.Drawing;
 using System.Windows.Forms;
 using Guna.UI2.WinForms;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Whanjuay
 {
-    // (Delegates ต้องอยู่นอกคลาส)
     public delegate void AddProductEventHandler();
     public delegate void EditProductEventHandler(int productId);
 
@@ -18,10 +18,21 @@ namespace Whanjuay
 
         private readonly string ImageBaseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images");
 
+        private int currentPage = 1;
+        private int pageSize = 10;
+        private int totalPages = 0;
+        private int totalProducts = 0;
+        private string currentSearchQuery = "";
+        private int currentMainCategoryId = 0;
+        private int currentSubCategoryId = 0;
+        private bool _isFilterLoading = false;
+        private Dictionary<string, Image> imageCache = new Dictionary<string, Image>();
+
         public ProductListView()
         {
             InitializeComponent();
             this.BackColor = System.Drawing.Color.Transparent;
+            this.DoubleBuffered = true;
             this.Load += ProductListView_Load_Logic;
         }
 
@@ -31,71 +42,125 @@ namespace Whanjuay
             {
                 return;
             }
-            InitializeProductListUI(); // [แก้] ตอนนี้ฟังก์ชันนี้อยู่ภายในคลาสแล้ว
+
+            _isFilterLoading = true;
+            InitializeProductListUI();
+            LoadMainCategoryFilter();
+            LoadSubCategoryFilter(0);
+            _isFilterLoading = false;
             LoadProducts();
         }
 
-        // [แก้] ฟังก์ชันที่ Error แจ้งว่าหาไม่เจอ
+        private void LoadMainCategoryFilter()
+        {
+            try
+            {
+                DataTable dt = Db.GetMainCategoriesForFilter();
+                cmbMainCategoryFilter.DataSource = dt;
+                cmbMainCategoryFilter.DisplayMember = "name";
+                cmbMainCategoryFilter.ValueMember = "category_id";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading main categories: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LoadSubCategoryFilter(int mainCategoryId)
+        {
+            try
+            {
+                DataTable dt = Db.GetSubCategoriesForFilter(mainCategoryId);
+                cmbSubCategoryFilter.DataSource = dt;
+                cmbSubCategoryFilter.DisplayMember = "name";
+                cmbSubCategoryFilter.ValueMember = "ing_category_id";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading sub-categories: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void InitializeProductListUI()
         {
-            productGrid.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
-            {
-                BackColor = Color.FromArgb(249, 243, 237),
-                ForeColor = Color.SaddleBrown,
-                SelectionBackColor = Color.FromArgb(249, 243, 237),
-                SelectionForeColor = Color.SaddleBrown,
-                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
-                WrapMode = DataGridViewTriState.True
-            };
-
-            productGrid.RowsDefaultCellStyle = new DataGridViewCellStyle
-            {
-                SelectionBackColor = Color.FromArgb(255, 230, 210),
-                SelectionForeColor = Color.SaddleBrown,
-            };
-
-            btnAddProduct.BorderRadius = 10;
-            txtSearch.BorderRadius = 15;
-            btnSearch.BorderRadius = 15;
-
             productGrid.CellContentClick -= ProductGrid_CellContentClick;
             productGrid.CellContentClick += ProductGrid_CellContentClick;
             productGrid.CellFormatting -= ProductGrid_CellFormatting;
             productGrid.CellFormatting += ProductGrid_CellFormatting;
             btnAddProduct.Click -= BtnAddProduct_Click;
             btnAddProduct.Click += BtnAddProduct_Click;
-
-            txtSearch.TextChanged -= TxtSearch_TextChanged;
-            txtSearch.TextChanged += TxtSearch_TextChanged;
             btnSearch.Click -= BtnSearch_Click;
             btnSearch.Click += BtnSearch_Click;
+            cmbMainCategoryFilter.SelectedIndexChanged -= CmbMainCategoryFilter_SelectedIndexChanged;
+            cmbMainCategoryFilter.SelectedIndexChanged += CmbMainCategoryFilter_SelectedIndexChanged;
+            cmbSubCategoryFilter.SelectedIndexChanged -= CmbSubCategoryFilter_SelectedIndexChanged;
+            cmbSubCategoryFilter.SelectedIndexChanged += CmbSubCategoryFilter_SelectedIndexChanged;
+            btnNext.Click -= BtnNext_Click;
+            btnNext.Click += BtnNext_Click;
+            btnPrev.Click -= BtnPrev_Click;
+            btnPrev.Click += BtnPrev_Click;
         }
 
-        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        private int GetComboBoxValue(Guna2ComboBox cmb)
         {
-            FilterProducts(txtSearch.Text);
+            if (cmb.SelectedItem is DataRowView drv)
+            {
+                return Convert.ToInt32(drv[cmb.ValueMember]);
+            }
+            if (cmb.SelectedValue != null)
+            {
+                try
+                {
+                    return Convert.ToInt32(cmb.SelectedValue);
+                }
+                catch (Exception) { return 0; }
+            }
+            return 0;
         }
 
         private void BtnSearch_Click(object sender, EventArgs e)
         {
-            FilterProducts(txtSearch.Text);
+            currentSearchQuery = txtSearch.Text;
+            currentMainCategoryId = GetComboBoxValue(cmbMainCategoryFilter);
+            currentSubCategoryId = GetComboBoxValue(cmbSubCategoryFilter);
+            currentPage = 1;
+            LoadProducts();
         }
 
-        public void FilterProducts(string searchTerm)
+        private void CmbMainCategoryFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.productGrid.DataSource is DataTable dt)
-            {
-                string safeSearchTerm = searchTerm.Replace("'", "''");
+            if (_isFilterLoading) return;
+            int mainCatId = GetComboBoxValue(cmbMainCategoryFilter);
+            currentMainCategoryId = mainCatId;
 
-                if (string.IsNullOrWhiteSpace(safeSearchTerm))
-                {
-                    dt.DefaultView.RowFilter = string.Empty;
-                }
-                else
-                {
-                    string filter = $"name LIKE '%{safeSearchTerm}%' OR category_name LIKE '%{safeSearchTerm}%'";
-                    dt.DefaultView.RowFilter = filter;
-                }
+            _isFilterLoading = true;
+            LoadSubCategoryFilter(mainCatId);
+            _isFilterLoading = false;
+
+            currentSubCategoryId = 0;
+        }
+
+        private void CmbSubCategoryFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_isFilterLoading) return;
+            currentSubCategoryId = GetComboBoxValue(cmbSubCategoryFilter);
+        }
+
+        private void BtnNext_Click(object sender, EventArgs e)
+        {
+            if (currentPage < totalPages)
+            {
+                currentPage++;
+                LoadProducts();
+            }
+        }
+
+        private void BtnPrev_Click(object sender, EventArgs e)
+        {
+            if (currentPage > 1)
+            {
+                currentPage--;
+                LoadProducts();
             }
         }
 
@@ -103,9 +168,25 @@ namespace Whanjuay
         {
             try
             {
-                ConfigureGridColumns(); // [แก้] เรียกใช้ที่นี่
-                DataTable dt = Db.GetProductsForListWithStock();
+                this.imageCache.Clear();
+                totalProducts = Db.GetProductCount(currentMainCategoryId, currentSubCategoryId, currentSearchQuery);
+
+                if (totalProducts == 0)
+                {
+                    totalPages = 0;
+                    currentPage = 0;
+                }
+                else
+                {
+                    totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+                    if (currentPage == 0) currentPage = 1;
+                }
+
+                ConfigureGridColumns();
+                DataTable dt = Db.GetProductsPaginated(currentPage, pageSize, currentMainCategoryId, currentSubCategoryId, currentSearchQuery);
                 productGrid.DataSource = dt;
+
+                UpdatePaginationUI();
             }
             catch (Exception ex)
             {
@@ -113,7 +194,24 @@ namespace Whanjuay
             }
         }
 
-        // [แก้] ฟังก์ชันที่ Error แจ้งว่าหาไม่เจอ
+        private void UpdatePaginationUI()
+        {
+            if (totalPages > 0)
+            {
+                lblPageInfo.Text = $"หน้า {currentPage} / {totalPages} (สินค้าทั้งหมด {totalProducts} รายการ)";
+            }
+            else
+            {
+                lblPageInfo.Text = "ไม่พบสินค้าที่ตรงกัน";
+            }
+
+            btnPrev.Enabled = (currentPage > 1);
+            btnNext.Enabled = (currentPage < totalPages);
+        }
+
+        // =================================================================
+        // [แก้ไข] เอาคอลัมน์ Hot Sale ออก
+        // =================================================================
         private void ConfigureGridColumns()
         {
             productGrid.Columns.Clear();
@@ -127,16 +225,7 @@ namespace Whanjuay
                 Width = 80
             });
 
-            productGrid.Columns.Add(new DataGridViewButtonColumn
-            {
-                HeaderText = "สถานะสินค้า",
-                Name = "HotSaleToggleCol",
-                DataPropertyName = "is_hot_sale",
-                UseColumnTextForButtonValue = false,
-                Width = 100,
-                HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
-            });
+            // [ลบออก] ปุ่ม HotSaleToggleCol
 
             productGrid.Columns.Add(new DataGridViewButtonColumn
             {
@@ -144,12 +233,12 @@ namespace Whanjuay
                 Name = "EditCol",
                 UseColumnTextForButtonValue = true,
                 Text = "✏️",
-                Width = 40,
+                Width = 50, // ขยายเล็กน้อย
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
 
-            AddTextColumn("category_name", "หมวดหมู่", 120, DataGridViewContentAlignment.MiddleCenter)
+            AddTextColumn("category_name", "หมวดหมู่", 140, DataGridViewContentAlignment.MiddleCenter)
                 .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             productGrid.Columns.Add(new DataGridViewButtonColumn
@@ -158,12 +247,12 @@ namespace Whanjuay
                 Name = "DeleteCol",
                 UseColumnTextForButtonValue = true,
                 Text = "🗑️",
-                Width = 40,
+                Width = 50, // ขยายเล็กน้อย
                 HeaderCell = { Style = { Alignment = DataGridViewContentAlignment.MiddleCenter } },
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             });
 
-            AddTextColumn("name", "ชื่อสินค้า", 250, DataGridViewContentAlignment.MiddleCenter)
+            AddTextColumn("name", "ชื่อสินค้า", 280, DataGridViewContentAlignment.MiddleCenter)
                 .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             var priceCol = AddTextColumn("price", "ราคา (บาท)", 100, DataGridViewContentAlignment.MiddleCenter);
@@ -175,7 +264,7 @@ namespace Whanjuay
             stockCol.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             stockCol.DefaultCellStyle.ForeColor = Color.DarkGreen;
 
-            AddTextColumn("is_hot_sale", "IsHotSale", 0).Visible = false;
+            // [ลบออก] is_hot_sale
             AddTextColumn("status", "Status", 0).Visible = false;
             AddTextColumn("product_id", "ID", 0).Visible = false;
         }
@@ -194,42 +283,44 @@ namespace Whanjuay
             return col;
         }
 
+        // =================================================================
+        // [แก้ไข] เอา Logic การไฮไลท์สีแถว Hot Sale ออก
+        // =================================================================
         private void ProductGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.RowIndex >= productGrid.Rows.Count) return;
 
-            var row = productGrid.Rows[e.RowIndex];
             DataGridViewRow currentRow = productGrid.Rows[e.RowIndex];
+            DataRowView drv = (DataRowView)currentRow.DataBoundItem;
+            if (drv == null) return;
 
-            bool isHotSale = false;
-            if (productGrid.DataSource is DataTable dt && dt.Rows.Count > e.RowIndex)
-            {
-                isHotSale = Convert.ToBoolean(dt.Rows[e.RowIndex]["is_hot_sale"]);
-            }
+            // [ลบออก] การไฮไลท์แถว isHotSale
+            currentRow.DefaultCellStyle.BackColor = productGrid.DefaultCellStyle.BackColor; // สีขาว
 
-            if (isHotSale)
-            {
-                currentRow.DefaultCellStyle.BackColor = Color.FromArgb(255, 240, 230);
-            }
-            else
-            {
-                currentRow.DefaultCellStyle.BackColor = productGrid.DefaultCellStyle.BackColor;
-            }
+            string colName = productGrid.Columns[e.ColumnIndex].Name;
 
-            if (productGrid.Columns[e.ColumnIndex].Name == "image_path")
+            if (colName == "image_path")
             {
-                string imagePathFromDb = row.Cells["image_path"].Value?.ToString();
-                if (!string.IsNullOrEmpty(imagePathFromDb))
+                string imagePathFromDb = drv["image_path"]?.ToString();
+                if (string.IsNullOrEmpty(imagePathFromDb)) { e.Value = null; return; }
+
+                if (imageCache.ContainsKey(imagePathFromDb))
+                {
+                    e.Value = imageCache[imagePathFromDb];
+                }
+                else
                 {
                     string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, imagePathFromDb.Replace('/', Path.DirectorySeparatorChar));
-
                     if (File.Exists(fullPath))
                     {
                         try
                         {
-                            using (var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read))
+                            byte[] imageBytes = File.ReadAllBytes(fullPath);
+                            using (var stream = new MemoryStream(imageBytes))
                             {
-                                e.Value = Image.FromStream(stream);
+                                Image img = Image.FromStream(stream);
+                                imageCache[imagePathFromDb] = img;
+                                e.Value = img;
                             }
                         }
                         catch (Exception) { e.Value = null; }
@@ -237,23 +328,8 @@ namespace Whanjuay
                     else { e.Value = null; }
                 }
             }
-            else if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
-            {
-                if (isHotSale)
-                {
-                    e.Value = "🔥 HOT SALE";
-                    e.CellStyle.BackColor = Color.IndianRed;
-                    e.CellStyle.ForeColor = Color.White;
-                }
-                else
-                {
-                    e.Value = "NORMAL";
-                    e.CellStyle.BackColor = Color.LightGray;
-                    e.CellStyle.ForeColor = Color.Black;
-                }
-                e.FormattingApplied = true;
-            }
-            else if (productGrid.Columns[e.ColumnIndex].Name == "stock_quantity")
+            // [ลบออก] Logic ปุ่ม HotSaleToggleCol
+            else if (colName == "stock_quantity")
             {
                 if (e.Value != null && int.TryParse(e.Value.ToString(), out int stock))
                 {
@@ -271,46 +347,38 @@ namespace Whanjuay
             }
         }
 
+        // =================================================================
+        // [แก้ไข] เอา Logic การคลิกปุ่ม Hot Sale ออก
+        // =================================================================
         private void ProductGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
-            if (!(productGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn) && !(productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")) return;
+            if (!(productGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn)) return;
 
-            int productId = Convert.ToInt32(productGrid.Rows[e.RowIndex].Cells["product_id"].Value);
+            DataRowView drv = (DataRowView)productGrid.Rows[e.RowIndex].DataBoundItem;
+            int productId = Convert.ToInt32(drv["product_id"]);
+            string imagePathFromDb = drv["image_path"]?.ToString();
+            string colName = productGrid.Columns[e.ColumnIndex].Name;
 
-            if (productGrid.Columns[e.ColumnIndex].Name == "HotSaleToggleCol")
-            {
-                bool currentStatus = Convert.ToBoolean(productGrid.Rows[e.RowIndex].Cells["is_hot_sale"].Value);
-                bool newStatus = !currentStatus;
+            // [ลบออก] Logic ของ HotSaleToggleCol
 
-                try
-                {
-                    Db.UpdateHotSaleStatus(productId, newStatus);
-                    LoadProducts();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error updating Hot Sale status: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            else if (productGrid.Columns[e.ColumnIndex].Name == "EditCol")
+            if (colName == "EditCol")
             {
                 EditRequested?.Invoke(productId);
             }
-            else if (productGrid.Columns[e.ColumnIndex].Name == "DeleteCol")
+            else if (colName == "DeleteCol")
             {
                 if (MessageBox.Show($"ยืนยันการลบสินค้า ID: {productId}?", "ยืนยัน", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     try
                     {
-                        string imagePathFromDb = productGrid.Rows[e.RowIndex].Cells["image_path"].Value?.ToString();
                         Db.DeleteProduct(productId);
                         if (!string.IsNullOrEmpty(imagePathFromDb))
                         {
                             string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, imagePathFromDb.Replace('/', Path.DirectorySeparatorChar));
                             if (File.Exists(fullPath))
                             {
-                                try { File.Delete(fullPath); } catch { /* ละเว้นข้อผิดพลาดในการลบไฟล์ */ }
+                                try { File.Delete(fullPath); } catch { }
                             }
                         }
                         LoadProducts();

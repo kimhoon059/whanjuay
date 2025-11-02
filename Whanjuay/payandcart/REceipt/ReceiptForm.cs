@@ -206,6 +206,7 @@ namespace Whanjuay
                     {
                         DataRow orderRow = _dtOrder.Rows[0];
 
+                        // --- 1. สร้างไฟล์ PDF ไปที่ตำแหน่งที่ผู้ใช้เลือก (sfd.FileName) ---
                         using (FileStream stream = new FileStream(sfd.FileName, FileMode.Create))
                         {
                             Document pdfDoc = new Document(PageSize.A4, 25, 25, 30, 30);
@@ -242,19 +243,19 @@ namespace Whanjuay
                             Paragraph pUser = new Paragraph("ผู้ใช้งาน: " + orderRow["username"].ToString(), fontThai);
                             pUser.SpacingBefore = 10f;
                             pdfDoc.Add(pUser);
-                            // [แก้ไข 2] เปลี่ยนเป็น "คำสั่งซื้อ:"
+                            // [แก้ไข 2] เปลี่ยนเป็น "Order ID:" (ตาม PDF ใบเสร็จจริงที่แนบมา)
                             pdfDoc.Add(new Paragraph("Order ID: " + orderRow["order_code"].ToString(), fontThai));
                             pdfDoc.Add(new Paragraph("วันที่: " + Convert.ToDateTime(orderRow["order_date"]).ToString("yyyy-MM-dd HH:mm:ss"), fontThai));
 
                             // --- 4. ตารางรายการสินค้า ---
                             pdfDoc.Add(new Paragraph(" ", fontThai)); // เว้นวรรค
-                            PdfPTable table = new PdfPTable(3); // 3 คอลัมน์ (รายการ, จำนวน, ราคา)
+                            PdfPTable table = new PdfPTable(3); // 3 คอลัมน์ (รายการ, จํานวน, ราคา)
                             table.WidthPercentage = 100;
                             table.SetWidths(new float[] { 60f, 15f, 25f });
 
                             // หัวตาราง
                             table.AddCell(new PdfPCell(new Phrase("รายการ", fontThaiBold)) { Border = 0, PaddingBottom = 5f });
-                            table.AddCell(new PdfPCell(new Phrase("จำนวน", fontThaiBold)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingBottom = 5f });
+                            table.AddCell(new PdfPCell(new Phrase("จํานวน", fontThaiBold)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingBottom = 5f });
                             table.AddCell(new PdfPCell(new Phrase("ราคา", fontThaiBold)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingBottom = 5f });
 
                             // เส้นใต้หัวตาราง 
@@ -338,6 +339,35 @@ namespace Whanjuay
                             pdfDoc.Close();
                             writer.Close();
                         }
+
+                        // =========================================================================
+                        // [เพิ่มใหม่] คัดลอกไฟล์ PDF ที่สร้างแล้ว ไปเก็บในโฟลเดอร์ Receipts/ และบันทึก Path ลง DB
+                        // =========================================================================
+                        try
+                        {
+                            // 1. เตรียม Path สำหรับเก็บในระบบ (เช่น Whanjuay/Receipts/)
+                            string receiptFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Receipts");
+
+                            // 2. สร้างโฟลเดอร์ Receipts/ (ถ้ายังไม่มี)
+                            Directory.CreateDirectory(receiptFolder);
+
+                            // 3. ตั้งชื่อไฟล์ในระบบ และคัดลอกไฟล์
+                            string newReceiptFileName = $"Receipt-{_orderCode}.pdf";
+                            string destinationPath = Path.Combine(receiptFolder, newReceiptFileName);
+
+                            // คัดลอกไฟล์ที่เพิ่งสร้าง (sfd.FileName) ไปไว้ในโฟลเดอร์ Receipts/
+                            File.Copy(sfd.FileName, destinationPath, true);
+
+                            // 4. บันทึก Path สัมพัทธ์ลง DB
+                            string relativeReceiptPath = $"Receipts/{newReceiptFileName}";
+                            Db.UpdateOrderReceiptPath(_orderCode, relativeReceiptPath);
+                        }
+                        catch (Exception dbEx)
+                        {
+                            // แจ้งเตือนถ้าบันทึก Path ลง DB หรือคัดลอกไฟล์ล้มเหลว แต่ยังอนุญาตให้ผู้ใช้เห็นไฟล์ที่ SaveDialog
+                            MessageBox.Show("บันทึก Path ใบเสร็จลงฐานข้อมูลล้มเหลว: " + dbEx.Message, "คำเตือน (ข้อมูลบางส่วนไม่ถูกบันทึก)", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        // =========================================================================
 
                         MessageBox.Show("บันทึกไฟล์ PDF สำเร็จ!", "สำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }

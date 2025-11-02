@@ -29,9 +29,19 @@ namespace Whanjuay
                 MessageBox.Show("Configuration Error: พื้นที่แสดงผลหลัก (guna2CustomGradientPanel1) ไม่ถูกนิยามใน Designer.cs", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            // [เพิ่มใหม่] สั่งให้เปิดหน้า Dashboard เป็นหน้าแรก
+            ShowDashboard();
         }
 
         // ====== สลับหน้า ======
+
+        // [เพิ่มใหม่] เมธอดสำหรับเรียกหน้า Dashboard
+        private void ShowDashboard()
+        {
+            var dashboard = new DashboardView();
+            ShowView(dashboard);
+        }
 
         private void ShowProductList()
         {
@@ -82,22 +92,29 @@ namespace Whanjuay
             ShowProductList();
         }
 
+        // [แก้ไข] Event นี้ถูกผูกกับปุ่ม DASHBOARD
+        private void guna2Button3_Click_1(object sender, EventArgs e) // สำหรับ DASHBOARD
+        {
+            ShowDashboard(); // <--- แก้ไขจากเดิมที่ว่างเปล่า
+        }
+
+
         // ... (อีเวนต์อื่นๆ ที่ไม่เกี่ยวปล่อยว่างไว้) ...
         private void guna2Button1_Click(object sender, EventArgs e) { }
         private void guna2Button2_Click(object sender, EventArgs e) { }
         private void guna2Button3_Click(object sender, EventArgs e) { }
         private void guna2Button4_Click(object sender, EventArgs e) { }
         private void guna2Button5_Click(object sender, EventArgs e) { }
-        private void guna2Button6_Click(object sender, EventArgs e) { }
+        private void guna2Button6_Click(object sender, EventArgs e) { } // (ปุ่ม LOGOUT)
         private void guna2TextBox1_TextChanged(object sender, EventArgs e) { }
         private void guna2Panel1_Paint(object sender, PaintEventArgs e) { }
         private void MENU_Click(object sender, EventArgs e) { }
-        private void guna2Button3_Click_1(object sender, EventArgs e) { } // สำหรับ DASHBOARD
-        private void guna2CustomGradientPanel1_Paint(object sender, EventArgs e) { }
+        private void guna2CustomGradientPanel1_Paint(object sender, PaintEventArgs e) { }
 
-        private void guna2CustomGradientPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        // [แก้ไข] ลบ Event ที่ซ้ำซ้อนออก (ถ้ามี)
+        // private void guna2CustomGradientPanel1_Paint(object sender, PaintEventArgs e)
+        // {
+        // 
+        // }
     }
 }

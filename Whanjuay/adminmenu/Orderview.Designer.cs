@@ -1,6 +1,6 @@
 ﻿namespace Whanjuay
 {
-    partial class UsersView
+    partial class Orderview
     {
         /// <summary> 
         /// Required designer variable.
