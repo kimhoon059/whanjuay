@@ -192,19 +192,35 @@ namespace Whanjuay
 
             CartService.AddItem(customCrepe);
 
-            // [อัปเดต] ย้าย Focus ไปที่ Panel หลัก (pnlMain)
-            if (this.pnlMain != null)
+            // --- [FIX] แก้ปัญหาปุ่มยิง 2 รอบ ---
+            // 1. ปิดปุ่ม "เพิ่มลงตะกร้า" ชั่วคราว
+            if (this.btnAddToCart != null)
             {
-                this.pnlMain.Focus();
+                this.btnAddToCart.Enabled = false;
+            }
+
+            // 2. ย้าย Focus (ยังคงทำเหมือนเดิมเพื่อความชัวร์)
+            if (this.btnBack != null)
+            {
+                this.btnBack.Focus();
             }
             else
             {
-                this.Focus(); // ถ้าหา pnlMain ไม่เจอ ให้ Focus ที่ฟอร์มแทน
+                this.Focus();
             }
 
+            // 3. แสดง MessageBox
             MessageBox.Show($"เพิ่ม 'เครปร้อน (สั่งทำ)' ราคา {totalPrice:N2} บาท ลงในตะกร้าแล้ว!", "เพิ่มสินค้าสำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+            // 4. Reset ค่า
             ResetAllSelections();
+
+            // 5. เปิดปุ่ม "เพิ่มลงตะกร้า" กลับมา
+            if (this.btnAddToCart != null)
+            {
+                this.btnAddToCart.Enabled = true;
+            }
+            // --- [END FIX] ---
         }
     }
 }

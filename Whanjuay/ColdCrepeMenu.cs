@@ -21,12 +21,17 @@ namespace Whanjuay
             InitializeComponent();
             this.Load += ColdCrepeMenu_Load;
 
-            if (this.btnBack != null)
-                this.btnBack.Click += btnBack_Click;
-            if (this.btnCart != null)
-                this.btnCart.Click += btnCart_Click;
-            if (this.btnAddToCart != null)
-                this.btnAddToCart.Click += btnAddToCart_Click;
+            // [FIX] 
+            // ลบการผูก Event Click ซ้ำซ้อนของ
+            // btnBack, btnCart, และ btnAddToCart ออกจากตรงนี้
+            // เพราะไฟล์ .Designer.cs ผูกไว้ให้แล้ว
+
+            // if (this.btnBack != null)
+            //     this.btnBack.Click += btnBack_Click; // [ลบออก]
+            // if (this.btnCart != null)
+            //     this.btnCart.Click += btnCart_Click; // [ลบออก]
+            // if (this.btnAddToCart != null)
+            //     this.btnAddToCart.Click += btnAddToCart_Click; // [ลบออก]
         }
 
         private void ColdCrepeMenu_Load(object sender, EventArgs e)
@@ -206,20 +211,38 @@ namespace Whanjuay
 
             CartService.AddItem(customCrepe);
 
-            // [อัปเดต] ย้าย Focus ไปที่ปุ่ม "BACK"
-            // นี่คือการแก้บั๊กที่ถูกต้องครับ
+            // --- [FIX] แก้ปัญหาปุ่มยิง 2 รอบ ---
+            // (คงการแก้ไขนี้ไว้ แม้ว่าเราจะลบตัวผูกซ้ำไปแล้ว
+            // เพื่อป้องกันปัญหา Focus ในอนาคต)
+
+            // 1. ปิดปุ่ม "เพิ่มลงตะกร้า" ชั่วคราว
+            if (this.btnAddToCart != null)
+            {
+                this.btnAddToCart.Enabled = false;
+            }
+
+            // 2. ย้าย Focus
             if (this.btnBack != null)
             {
                 this.btnBack.Focus();
             }
             else
             {
-                this.Focus(); // ถ้าหา btnBack ไม่เจอ ให้ Focus ที่ฟอร์มแทน
+                this.Focus();
             }
 
+            // 3. แสดง MessageBox
             MessageBox.Show($"เพิ่ม 'เครปเย็น (สั่งทำ)' ราคา {totalPrice:N2} บาท ลงในตะกร้าแล้ว!", "เพิ่มสินค้าสำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+            // 4. Reset ค่า
             ResetAllSelections();
+
+            // 5. เปิดปุ่ม "เพิ่มลงตะกร้า" กลับมา
+            if (this.btnAddToCart != null)
+            {
+                this.btnAddToCart.Enabled = true;
+            }
+            // --- [END FIX] ---
         }
     }
 }

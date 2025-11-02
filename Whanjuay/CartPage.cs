@@ -15,6 +15,11 @@ namespace Whanjuay
         public CartPage()
         {
             InitializeComponent();
+
+            // --- [เพิ่มใหม่] ---
+            // ผูก Event ให้ปุ่มชำระเงิน
+            this.btnCheckout.Click += new System.EventHandler(this.btnCheckout_Click);
+            // --- [สิ้นสุด] ---
         }
 
         private void CartPage_Load(object sender, EventArgs e)
@@ -37,6 +42,10 @@ namespace Whanjuay
                 lblEmpty.AutoSize = true;
                 lblEmpty.Margin = new Padding(10);
                 flowCartItems.Controls.Add(lblEmpty);
+
+                // [เพิ่มใหม่] ถ้าตะกร้าว่าง ให้ปิดปุ่มชำระเงิน
+                btnCheckout.Enabled = false;
+                btnCheckout.FillColor = Color.Gainsboro;
             }
             else
             {
@@ -46,15 +55,15 @@ namespace Whanjuay
                     itemControl.SetData(item);
 
                     itemControl.CartUpdated += OnCartUpdated;
-                    // [แก้] ลบการผูก Event แก้ไข
-
                     flowCartItems.Controls.Add(itemControl);
                 }
+
+                // [เพิ่มใหม่] ถ้ามีของ ให้เปิดปุ่มชำระเงิน
+                btnCheckout.Enabled = true;
+                btnCheckout.FillColor = Color.FromArgb(255, 128, 128);
             }
             UpdateSummary();
         }
-
-        // [แก้] ลบฟังก์ชัน OnItemEditRequested
 
         private void OnCartUpdated()
         {
@@ -75,7 +84,7 @@ namespace Whanjuay
             {
                 mainForm.Show();
             }
-            this.Hide(); // เปลี่ยนจาก this.Close() เป็น this.Hide()
+            this.Hide();
         }
 
         // [แก้ไข Error CS1061] เพิ่มเมธอดที่ Designer อ้างถึงกลับเข้ามา
@@ -83,5 +92,38 @@ namespace Whanjuay
         {
             // ปล่อยว่างไว้
         }
+
+        // --- [เพิ่มใหม่] ---
+        // Event Handler สำหรับปุ่มชำระเงิน
+        private void btnCheckout_Click(object sender, EventArgs e)
+        {
+            decimal total = CartService.GetTotalPrice();
+
+            // ตรวจสอบอีกครั้งว่ามีของในตะกร้า
+            if (total <= 0)
+            {
+                MessageBox.Show("ตะกร้าของคุณว่างเปล่า", "ไม่สามารถชำระเงิน", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // เปิดฟอร์มชำระเงินแบบ Pop-up (Modal)
+            // โดยส่งยอดรวม (total) เข้าไป
+            using (PaymentForm paymentForm = new PaymentForm(total))
+            {
+                // .ShowDialog() จะหยุดโค้ดไว้จนกว่าหน้า PaymentForm จะถูกปิด
+                DialogResult result = paymentForm.ShowDialog(this);
+
+                // ตรวจสอบว่าการชำระเงินสำเร็จหรือไม่
+                if (result == DialogResult.OK)
+                {
+                    // ถ้าสำเร็จ (ผู้ใช้กดยืนยันและสลิปถูกอัปโหลด)
+                    // CartService.ClearCart() จะถูกเรียกใน PaymentForm แล้ว
+
+                    // ให้โหลดตะกร้าใหม่ (ซึ่งตอนนี้จะว่างเปล่า)
+                    LoadCartItems();
+                }
+            }
+        }
+        // --- [สิ้นสุด] ---
     }
 }
