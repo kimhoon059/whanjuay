@@ -10,11 +10,15 @@ using System.Windows.Forms;
 
 namespace Whanjuay
 {
-    public partial class UsersView : UserControl
+    // [แก้ไข] ต้องสืบทอดจาก UserControl
+    public partial class Orderview : UserControl
     {
-        public UsersView()
+        public Orderview()
         {
             InitializeComponent();
         }
+
+        // (คุณสามารถเพิ่มโค้ด Logic ของหน้า Order/User ได้ที่นี่)
+
     }
 }

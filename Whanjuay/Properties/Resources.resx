@@ -124,14 +124,14 @@
   <data name="K-PRA (4)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\K-PRA (4).jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Mainpage3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Mainpage3.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="K-PRA (5)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\K-PRA (5).jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="K-PRA (5)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\K-PRA (5).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="resetpw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\resetpw.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="K-PRA (8)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\K-PRA (8).jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="K-PRA" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\K-PRA.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -151,17 +151,17 @@
   <data name="K-PRA (9)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\K-PRA (9).jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="K-PRA (5)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\K-PRA (5).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="admin3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\admin3.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="resetpw" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\resetpw.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="K-PRA (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\K-PRA (1).jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Admin1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Admin1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="logowj" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\icon\logowj.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="forgetpw" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\forgetpw.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -199,16 +199,19 @@
   <data name="admin2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\admin2.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="K-PRA (8)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\K-PRA (8).jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Mainpage3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Mainpage3.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="K-PRA (11)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\K-PRA (11).jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Admin1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Admin1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Selectmenu" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Selectmenu.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="logowj" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\icon\logowj.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Adminwj1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Adminwj1.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

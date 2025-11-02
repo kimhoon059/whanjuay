@@ -32,7 +32,7 @@
             this.guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             this.DASHBOARD = new Guna.UI2.WinForms.Guna2Button();
             this.MENU = new System.Windows.Forms.Label();
-            this.USERS = new Guna.UI2.WinForms.Guna2Button();
+            this.ORER = new Guna.UI2.WinForms.Guna2Button();
             this.PRODUCT = new Guna.UI2.WinForms.Guna2Button();
             this.LOGOUTad = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Panel1.SuspendLayout();
@@ -40,12 +40,12 @@
             // 
             // guna2Panel1
             // 
-            this.guna2Panel1.BackgroundImage = global::Whanjuay.Properties.Resources.adminwj;
+            this.guna2Panel1.BackgroundImage = global::Whanjuay.Properties.Resources.Adminwj1;
             this.guna2Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.guna2Panel1.Controls.Add(this.guna2CustomGradientPanel1);
             this.guna2Panel1.Controls.Add(this.DASHBOARD);
             this.guna2Panel1.Controls.Add(this.MENU);
-            this.guna2Panel1.Controls.Add(this.USERS);
+            this.guna2Panel1.Controls.Add(this.ORER);
             this.guna2Panel1.Controls.Add(this.PRODUCT);
             this.guna2Panel1.Controls.Add(this.LOGOUTad);
             this.guna2Panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -96,23 +96,23 @@
             this.MENU.Text = "MENU";
             this.MENU.Click += new System.EventHandler(this.MENU_Click);
             // 
-            // USERS
+            // ORER
             // 
-            this.USERS.BackColor = System.Drawing.Color.Transparent;
-            this.USERS.BorderRadius = 15;
-            this.USERS.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.USERS.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.USERS.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.USERS.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.USERS.FillColor = System.Drawing.Color.Transparent;
-            this.USERS.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
-            this.USERS.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.USERS.Location = new System.Drawing.Point(43, 478);
-            this.USERS.Name = "USERS";
-            this.USERS.Size = new System.Drawing.Size(220, 50);
-            this.USERS.TabIndex = 7;
-            this.USERS.Text = "USERS";
-            this.USERS.TextOffset = new System.Drawing.Point(-14, 0);
+            this.ORER.BackColor = System.Drawing.Color.Transparent;
+            this.ORER.BorderRadius = 15;
+            this.ORER.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.ORER.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.ORER.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.ORER.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.ORER.FillColor = System.Drawing.Color.Transparent;
+            this.ORER.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold);
+            this.ORER.ForeColor = System.Drawing.Color.SaddleBrown;
+            this.ORER.Location = new System.Drawing.Point(43, 478);
+            this.ORER.Name = "ORER";
+            this.ORER.Size = new System.Drawing.Size(220, 50);
+            this.ORER.TabIndex = 7;
+            this.ORER.Text = "ORDER";
+            this.ORER.TextOffset = new System.Drawing.Point(-14, 0);
             // 
             // PRODUCT
             // 
@@ -171,7 +171,7 @@
         private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
         private Guna.UI2.WinForms.Guna2Button LOGOUTad;
         private Guna.UI2.WinForms.Guna2Button PRODUCT;
-        private Guna.UI2.WinForms.Guna2Button USERS;
+        private Guna.UI2.WinForms.Guna2Button ORER;
         private System.Windows.Forms.Label MENU;
         private Guna.UI2.WinForms.Guna2Button DASHBOARD;
         protected Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel1;

@@ -394,6 +394,7 @@
     <Content Include="icon\iconhotcrepe.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Adminwj1.jpg" />
     <None Include="icon\logowj.jpg" />
     <None Include="Resources\Mainpagewj.jpg" />
     <None Include="Resources\regiswj.jpg" />
