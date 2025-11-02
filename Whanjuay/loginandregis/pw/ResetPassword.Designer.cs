@@ -37,7 +37,7 @@
             // 
             // resetpw
             // 
-            this.resetpw.BackgroundImage = global::Whanjuay.Properties.Resources.K_PRA__10_;
+            this.resetpw.BackgroundImage = global::Whanjuay.Properties.Resources.resetpw;
             this.resetpw.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.resetpw.Controls.Add(this.SUBMIT);
             this.resetpw.Controls.Add(this.CONFIRMPASS);

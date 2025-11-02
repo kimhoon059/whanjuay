@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            this.guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             this.DASHBOARD = new Guna.UI2.WinForms.Guna2Button();
             this.MENU = new System.Windows.Forms.Label();
             this.USERS = new Guna.UI2.WinForms.Guna2Button();
             this.PRODUCT = new Guna.UI2.WinForms.Guna2Button();
             this.LOGOUTad = new Guna.UI2.WinForms.Guna2Button();
-            this.guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             this.guna2Panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // guna2Panel1
             // 
-            this.guna2Panel1.BackgroundImage = global::Whanjuay.Properties.Resources.admin3;
+            this.guna2Panel1.BackgroundImage = global::Whanjuay.Properties.Resources.adminwj;
             this.guna2Panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.guna2Panel1.Controls.Add(this.guna2CustomGradientPanel1);
             this.guna2Panel1.Controls.Add(this.DASHBOARD);
@@ -54,6 +54,16 @@
             this.guna2Panel1.Size = new System.Drawing.Size(1264, 681);
             this.guna2Panel1.TabIndex = 0;
             this.guna2Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.guna2Panel1_Paint);
+            // 
+            // guna2CustomGradientPanel1
+            // 
+            this.guna2CustomGradientPanel1.BackColor = System.Drawing.Color.Transparent;
+            this.guna2CustomGradientPanel1.BorderRadius = 20;
+            this.guna2CustomGradientPanel1.Location = new System.Drawing.Point(323, 114);
+            this.guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
+            this.guna2CustomGradientPanel1.Size = new System.Drawing.Size(918, 545);
+            this.guna2CustomGradientPanel1.TabIndex = 0;
+            this.guna2CustomGradientPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.guna2CustomGradientPanel1_Paint);
             // 
             // DASHBOARD
             // 
@@ -139,16 +149,6 @@
             this.LOGOUTad.TabIndex = 5;
             this.LOGOUTad.Text = "LOG OUT";
             this.LOGOUTad.Click += new System.EventHandler(this.guna2Button6_Click);
-            // 
-            // guna2CustomGradientPanel1
-            // 
-            this.guna2CustomGradientPanel1.BackColor = System.Drawing.Color.Transparent;
-            this.guna2CustomGradientPanel1.BorderRadius = 20;
-            this.guna2CustomGradientPanel1.Location = new System.Drawing.Point(323, 114);
-            this.guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
-            this.guna2CustomGradientPanel1.Size = new System.Drawing.Size(918, 545);
-            this.guna2CustomGradientPanel1.TabIndex = 0;
-            this.guna2CustomGradientPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.guna2CustomGradientPanel1_Paint);
             // 
             // Admin
             // 

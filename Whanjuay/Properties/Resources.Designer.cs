@@ -103,6 +103,26 @@ namespace Whanjuay.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap adminwj {
+            get {
+                object obj = ResourceManager.GetObject("adminwj", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap forgetpw {
+            get {
+                object obj = ResourceManager.GetObject("forgetpw", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap K_PRA {
             get {
                 object obj = ResourceManager.GetObject("K-PRA", resourceCulture);
@@ -243,6 +263,36 @@ namespace Whanjuay.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Loginwj {
+            get {
+                object obj = ResourceManager.GetObject("Loginwj", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap logo {
+            get {
+                object obj = ResourceManager.GetObject("logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap logowj {
+            get {
+                object obj = ResourceManager.GetObject("logowj", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Mainpage {
             get {
                 object obj = ResourceManager.GetObject("Mainpage", resourceCulture);
@@ -266,6 +316,36 @@ namespace Whanjuay.Properties {
         internal static System.Drawing.Bitmap Mainpage3 {
             get {
                 object obj = ResourceManager.GetObject("Mainpage3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Mainpagewj {
+            get {
+                object obj = ResourceManager.GetObject("Mainpagewj", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap regiswj {
+            get {
+                object obj = ResourceManager.GetObject("regiswj", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap resetpw {
+            get {
+                object obj = ResourceManager.GetObject("resetpw", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

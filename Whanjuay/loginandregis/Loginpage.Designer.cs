@@ -39,7 +39,7 @@
             // 
             // LOGIN
             // 
-            this.LOGIN.BackgroundImage = global::Whanjuay.Properties.Resources.K_PRA__3_;
+            this.LOGIN.BackgroundImage = global::Whanjuay.Properties.Resources.Loginwj;
             this.LOGIN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.LOGIN.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LOGIN.Controls.Add(this.REGISTER);
