@@ -299,5 +299,10 @@ namespace Whanjuay
                     yield return child;
             }
         }
+
+        private void guna2Button1_Click_2(object sender, EventArgs e)
+        {
+
+        }
     }
 }

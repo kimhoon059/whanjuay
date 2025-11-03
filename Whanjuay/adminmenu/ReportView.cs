@@ -16,6 +16,8 @@ namespace Whanjuay
         public ReportView()
         {
             InitializeComponent();
+            // [เพิ่ม] ผูก Load Event ที่ขาดหายไป
+            this.Load += new System.EventHandler(this.ReportView_Load);
         }
 
         /// <summary>
