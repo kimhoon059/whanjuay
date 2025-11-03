@@ -24,6 +24,12 @@ namespace Whanjuay
 
         private string _generatedPdfPath = null;
 
+        // [เพิ่มใหม่] ตัวแปรสำหรับเก็บค่า
+        private decimal _grandTotal;
+        private decimal _subTotal;
+        private decimal _vatAmount;
+        private const decimal VAT_RATE_DIVISOR = 1.07m; // 1 + 0.07
+
         public ReceiptForm(string orderCode)
         {
             InitializeComponent();
@@ -52,11 +58,22 @@ namespace Whanjuay
                 DataRow orderRow = _dtOrder.Rows[0];
                 int orderId = Convert.ToInt32(orderRow["order_id"]);
 
+                // [แก้ไข] คำนวณ VAT
+                _grandTotal = Convert.ToDecimal(orderRow["total_amount"]);
+                _subTotal = _grandTotal / VAT_RATE_DIVISOR;
+                _vatAmount = _grandTotal - _subTotal;
+
                 // 2. แสดงข้อมูลหลัก (หน้า WinForm)
                 lblUsername.Text = "ผู้ใช้งาน: " + orderRow["username"].ToString();
                 lblOrderCode.Text = "Order ID: " + orderRow["order_code"].ToString();
                 lblDate.Text = "วันที่: " + Convert.ToDateTime(orderRow["order_date"]).ToString("yyyy-MM-dd HH:mm:ss");
-                lblTotal.Text = Convert.ToDecimal(orderRow["total_amount"]).ToString("N2") + " บาท";
+
+                // [แก้ไข] แสดงผล 3 บรรทัด
+                lblSubtotalValue.Text = _subTotal.ToString("N2") + " บาท";
+                lblVatValue.Text = _vatAmount.ToString("N2") + " บาท";
+                lblGrandTotalValue.Text = _grandTotal.ToString("N2") + " บาท";
+                lblGrandTotalLabel.Text = "ยอดรวมทั้งหมด:";
+
                 lblFooter.Text = "ทาน WHANJUAY ให้อร่อยนะค้าบ";
 
                 // 3. ดึงข้อมูลรายการสินค้า
@@ -64,7 +81,7 @@ namespace Whanjuay
 
                 // 4. วนลูปสร้าง Label รายการสินค้า (โค้ดส่วนนี้เหมือนเดิม)
                 flowItemsPanel.Controls.Clear();
-                foreach (DataRow itemRow in _dtItems.Rows) // <--- ลูปนี้ (สำหรับ WinForm) ถูกต้องอยู่แล้ว
+                foreach (DataRow itemRow in _dtItems.Rows)
                 {
                     decimal subTotal = Convert.ToDecimal(itemRow["sub_total"]);
                     int quantity = Convert.ToInt32(itemRow["quantity"]);
@@ -103,7 +120,7 @@ namespace Whanjuay
                     _generatedPdfPath = GenerateAndSaveReceiptPdf(
                         _orderCode,
                         _dtOrder.Rows[0],
-                        _dtItems // <--- ส่ง DataTable
+                        _dtItems
                     );
                 }
             }
@@ -133,7 +150,6 @@ namespace Whanjuay
 
                 if (!File.Exists(fontPath))
                 {
-                    // Fallback ถ้าหาฟอนต์ไม่เจอจริงๆ
                     throw new Exception("ไม่พบฟอนต์ 'tahoma.ttf' หรือ 'AngsanaNew.ttf'");
                 }
 
@@ -151,7 +167,6 @@ namespace Whanjuay
             }
         }
 
-        // [แก้ไข] เมธอดนี้รับ DataTable
         private string GenerateAndSaveReceiptPdf(string orderCode, DataRow orderRow, DataTable dtItems)
         {
             string relativeReceiptPath = $"Receipts/Receipt-{orderCode}.pdf";
@@ -162,14 +177,12 @@ namespace Whanjuay
 
             try
             {
-                // --- 1. สร้างไฟล์ PDF ---
                 using (FileStream stream = new FileStream(fullPath, FileMode.Create))
                 {
                     Document pdfDoc = new Document(PageSize.A4, 25, 25, 30, 30);
                     PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
                     pdfDoc.Open();
 
-                    // --- 1. โลโก้ ---
                     try
                     {
                         System.Drawing.Image logoImg = global::Whanjuay.Properties.Resources.logowj;
@@ -184,26 +197,22 @@ namespace Whanjuay
                     }
                     catch { /* ข้ามไปถ้าโหลดโลโก้ไม่ได้ */ }
 
-                    // --- 2. หัวกระดาษ ---
                     Paragraph header = new Paragraph("ใบเสร็จรับเงิน (Receipt)", fontThaiBold);
                     header.Alignment = Element.ALIGN_CENTER;
                     header.SpacingBefore = 10f;
                     pdfDoc.Add(header);
 
-                    // --- 3. ข้อมูล Order ---
                     Paragraph pUser = new Paragraph("ผู้ใช้งาน: " + orderRow["username"].ToString(), fontThai);
                     pUser.SpacingBefore = 10f;
                     pdfDoc.Add(pUser);
                     pdfDoc.Add(new Paragraph("Order ID: " + orderRow["order_code"].ToString(), fontThai));
                     pdfDoc.Add(new Paragraph("วันที่: " + Convert.ToDateTime(orderRow["order_date"]).ToString("yyyy-MM-dd HH:mm:ss"), fontThai));
 
-                    // --- 4. ตารางรายการสินค้า ---
                     pdfDoc.Add(new Paragraph(" ", fontThai));
                     PdfPTable table = new PdfPTable(3);
                     table.WidthPercentage = 100;
                     table.SetWidths(new float[] { 60f, 15f, 25f });
 
-                    // หัวตาราง
                     table.AddCell(new PdfPCell(new Phrase("รายการ", fontThaiBold)) { Border = 0, PaddingBottom = 5f });
                     table.AddCell(new PdfPCell(new Phrase("จํานวน", fontThaiBold)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingBottom = 5f });
                     table.AddCell(new PdfPCell(new Phrase("ราคา", fontThaiBold)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingBottom = 5f });
@@ -211,19 +220,12 @@ namespace Whanjuay
                     PdfPCell lineCellHeader = new PdfPCell(new Phrase(" ", fontThai)) { Colspan = 3, Border = 1, BorderWidthTop = 1f, BorderColor = BaseColor.BLACK, Padding = 0f, PaddingBottom = 5f };
                     table.AddCell(lineCellHeader);
 
-
-                    // ==========================================================
-                    // --- [แก้ไข] บรรทัดนี้คือจุดที่แก้ไข ---
-                    // ข้อมูลสินค้า (วนลูปจาก .Rows)
-                    foreach (DataRow itemRow in dtItems.Rows) // <--- แก้ไขจาก 'dtItems' เป็น 'dtItems.Rows'
+                    foreach (DataRow itemRow in dtItems.Rows)
                     {
-                        // ==========================================================
-
                         table.AddCell(new PdfPCell(new Phrase(itemRow["display_name"].ToString(), fontThai)) { Border = 0, PaddingTop = 5f });
                         table.AddCell(new PdfPCell(new Phrase(itemRow["quantity"].ToString(), fontThai)) { Border = 0, PaddingTop = 5f, HorizontalAlignment = Element.ALIGN_RIGHT });
                         table.AddCell(new PdfPCell(new Phrase(Convert.ToDecimal(itemRow["sub_total"]).ToString("N2"), fontThai)) { Border = 0, PaddingTop = 5f, HorizontalAlignment = Element.ALIGN_RIGHT });
 
-                        // รายละเอียด
                         string details = itemRow["details"]?.ToString();
                         if (!string.IsNullOrEmpty(details))
                         {
@@ -246,12 +248,24 @@ namespace Whanjuay
                     PdfPCell lineCellFooter = new PdfPCell(new Phrase(" ", fontThai)) { Colspan = 3, Border = 1, BorderWidthTop = 1f, BorderColor = BaseColor.BLACK, PaddingTop = 10f };
                     table.AddCell(lineCellFooter);
 
-                    // --- 5. ยอดรวม ---
-                    table.AddCell(new PdfPCell(new Phrase("รวมยอดเงิน:", fontThaiBold)) { Border = 0, Colspan = 2, HorizontalAlignment = Element.ALIGN_RIGHT });
-                    table.AddCell(new PdfPCell(new Phrase(Convert.ToDecimal(orderRow["total_amount"]).ToString("N2") + " บาท", fontThaiBold)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
-                    pdfDoc.Add(table);
+                    // --- [แก้ไข] ส่วนสรุปยอด ---
+                    // (ดึงค่าที่คำนวณไว้ใน Class Level)
 
-                    // --- 6. Footer ---
+                    // 1. ยอดรวมสินค้า (Subtotal)
+                    table.AddCell(new PdfPCell(new Phrase("ยอดรวมสินค้า:", fontThai)) { Border = 0, Colspan = 2, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 5f });
+                    table.AddCell(new PdfPCell(new Phrase(_subTotal.ToString("N2") + " บาท", fontThai)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 5f });
+
+                    // 2. ภาษี (VAT)
+                    table.AddCell(new PdfPCell(new Phrase("ภาษี (7%):", fontThai)) { Border = 0, Colspan = 2, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 5f });
+                    table.AddCell(new PdfPCell(new Phrase(_vatAmount.ToString("N2") + " บาท", fontThai)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 5f });
+
+                    // 3. ยอดรวมทั้งหมด (Grand Total)
+                    table.AddCell(new PdfPCell(new Phrase("ยอดรวมทั้งหมด:", fontThaiBold)) { Border = 0, Colspan = 2, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 5f });
+                    table.AddCell(new PdfPCell(new Phrase(_grandTotal.ToString("N2") + " บาท", fontThaiBold)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 5f });
+
+                    pdfDoc.Add(table);
+                    // --- [สิ้นสุดการแก้ไข] ---
+
                     Paragraph footer = new Paragraph("ทาน WHANJUAY ให้อร่อยนะค้าบ", fontThai);
                     footer.Alignment = Element.ALIGN_CENTER;
                     footer.SpacingBefore = 20f;
@@ -261,7 +275,6 @@ namespace Whanjuay
                     writer.Close();
                 }
 
-                // --- 2. บันทึก Path ลง DB ---
                 Db.UpdateOrderReceiptPath(orderCode, relativeReceiptPath);
 
                 return fullPath;

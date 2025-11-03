@@ -29,7 +29,7 @@ namespace Whanjuay
         private void HotCrepeMenu_Load(object sender, EventArgs e)
         {
             // [เพิ่มใหม่] ตั้งค่าปุ่มยืนยัน
-            chkConfirmCrepe.Text = $"ยืนยันเครปร้อน (ฐานราคา {BASE_CREPE_PRICE:N2} บาท)";
+            chkConfirmCrepe.Text = $"ยืนยันเครปร้อน (ราคา {BASE_CREPE_PRICE:N2} บาท)";
             chkConfirmCrepe.CheckedChanged += chkConfirmCrepe_CheckedChanged;
 
             // [เพิ่มใหม่] ตั้งค่าสถานะเริ่มต้น (ปิดการใช้งานวัตถุดิบ)
@@ -271,6 +271,11 @@ namespace Whanjuay
             ResetAllSelections(); // ล้างค่า
 
             btnAddToCart.Enabled = true;
+        }
+
+        private void chkConfirmCrepe_CheckedChanged_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

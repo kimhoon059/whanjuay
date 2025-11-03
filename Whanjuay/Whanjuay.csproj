@@ -267,6 +267,15 @@
     <EmbeddedResource Include="payandcart\cartt\CartPage.resx">
       <DependentUpon>CartPage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Selectmenu\ColdCrepeMenu.resx">
+      <DependentUpon>ColdCrepeMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Selectmenu\DessertsMenu.resx">
+      <DependentUpon>DessertsMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Selectmenu\DrinksMenu.resx">
+      <DependentUpon>DrinksMenu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Selectmenu\menucontrol\DrinkItemControl.resx">
       <DependentUpon>DrinkItemControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -403,6 +412,7 @@
     <Content Include="icon\iconhotcrepe.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\selectmenuwj.jpg" />
     <None Include="Resources\Loginwj1.jpg" />
     <None Include="Resources\Adminwj1.jpg" />
     <None Include="icon\logowj.jpg" />

@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.LOGIN = new System.Windows.Forms.Panel();
-            this.Contactus = new Guna.UI2.WinForms.Guna2Button();
             this.REGISTER = new Guna.UI2.WinForms.Guna2Button();
             this.FORGETPASSWORD = new Guna.UI2.WinForms.Guna2Button();
             this.USERNAME = new Guna.UI2.WinForms.Guna2TextBox();
@@ -43,7 +42,6 @@
             this.LOGIN.BackgroundImage = global::Whanjuay.Properties.Resources.Loginwj1;
             this.LOGIN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.LOGIN.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LOGIN.Controls.Add(this.Contactus);
             this.LOGIN.Controls.Add(this.REGISTER);
             this.LOGIN.Controls.Add(this.FORGETPASSWORD);
             this.LOGIN.Controls.Add(this.USERNAME);
@@ -55,24 +53,6 @@
             this.LOGIN.Size = new System.Drawing.Size(1264, 681);
             this.LOGIN.TabIndex = 0;
             this.LOGIN.Paint += new System.Windows.Forms.PaintEventHandler(this.LOGIN_Paint);
-            // 
-            // Contactus
-            // 
-            this.Contactus.BackColor = System.Drawing.Color.Transparent;
-            this.Contactus.BorderRadius = 20;
-            this.Contactus.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.Contactus.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.Contactus.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.Contactus.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.Contactus.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.Contactus.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.Contactus.ForeColor = System.Drawing.Color.White;
-            this.Contactus.Location = new System.Drawing.Point(1095, 133);
-            this.Contactus.Name = "Contactus";
-            this.Contactus.Size = new System.Drawing.Size(156, 51);
-            this.Contactus.TabIndex = 7;
-            this.Contactus.Text = "Contact Us";
-            this.Contactus.Click += new System.EventHandler(this.guna2Button1_Click_2);
             // 
             // REGISTER
             // 
@@ -197,7 +177,6 @@
         private Guna.UI2.WinForms.Guna2Button FORGETPASSWORD;
         private Guna.UI2.WinForms.Guna2Button REGISTER;
         private System.Windows.Forms.Panel LOGIN;
-        private Guna.UI2.WinForms.Guna2Button Contactus;
     }
 }
 

@@ -52,8 +52,8 @@ namespace Whanjuay
 
             // 1. ตรวจสอบแอดมิน (ใช้ค่า hard-coded เดิม)
             bool isAdmin =
-                string.Equals(user, "a", StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(pass, "a1", StringComparison.OrdinalIgnoreCase);
+                string.Equals(user, "adminwj", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(pass, "wj888", StringComparison.OrdinalIgnoreCase);
 
             if (isAdmin)
             {

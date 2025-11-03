@@ -30,30 +30,28 @@ namespace Whanjuay
     {
         private static List<CartItem> _items = new List<CartItem>();
         private static int _nextItemId = 1;
-
-        // [เพิ่มใหม่] เพิ่มตัวนับสำหรับเครปแต่ละชนิด
         private static int _hotCrepeCounter = 1;
         private static int _coldCrepeCounter = 1;
 
+        // [เพิ่มใหม่] กำหนดอัตรา VAT
+        private const decimal VAT_RATE = 0.07m;
 
-        // [อัปเดต] แก้ไขเมธอดนี้
+
         public static void AddItem(CartItem item)
         {
             item.ItemId = _nextItemId++;
 
-            // [อัปเดต] Logic การเพิ่มหมายเลขต่อท้าย
-            // เราจะเช็ค 'IsCustomCrepe' เพราะทั้งเครปร้อนและเย็นจะตั้งค่านี้เป็น true
             if (item.IsCustomCrepe)
             {
                 if (item.CategoryName == "เครปร้อน")
                 {
-                    item.DisplayName += $" #{_hotCrepeCounter}"; // เช่น เครปร้อน (สั่งทำ) #1
-                    _hotCrepeCounter++; // เพิ่มค่านับสำหรับชิ้นต่อไป
+                    item.DisplayName += $" #{_hotCrepeCounter}";
+                    _hotCrepeCounter++;
                 }
                 else if (item.CategoryName == "เครปเย็น")
                 {
-                    item.DisplayName += $" #{_coldCrepeCounter}"; // เช่น เครปเย็น (สั่งทำ) #1
-                    _coldCrepeCounter++; // เพิ่มค่านับสำหรับชิ้นต่อไป
+                    item.DisplayName += $" #{_coldCrepeCounter}";
+                    _coldCrepeCounter++;
                 }
             }
 
@@ -72,10 +70,6 @@ namespace Whanjuay
             {
                 _items.Remove(item);
             }
-
-            // หมายเหตุ: การลบของออกอาจทำให้เลขไม่เรียงกัน (เช่น มี #1, #3)
-            // แต่นี่คือวิธีที่ตรงตามคำสั่ง "นับตามลำดับที่กด" ที่สุดครับ
-            // หากต้องการให้เลขเรียงใหม่ทุกครั้งที่ลบ (Re-index) จะต้องแก้ไข Logic ซับซ้อนกว่านี้
         }
 
         public static void UpdateQuantity(int itemId, int newQuantity)
@@ -87,20 +81,36 @@ namespace Whanjuay
             }
         }
 
-        // [อัปเดต] แก้ไขเมธอดนี้
         public static void ClearCart()
         {
             _items.Clear();
             _nextItemId = 1;
-
-            // [อัปเดต] รีเซ็ตตัวนับกลับไปเป็น 1
             _hotCrepeCounter = 1;
             _coldCrepeCounter = 1;
         }
 
+        /// <summary>
+        /// [แก้ไข] เมธอดนี้คือยอดรวมสินค้า (Subtotal)
+        /// </summary>
         public static decimal GetTotalPrice()
         {
             return _items.Sum(item => item.TotalPrice * item.Quantity);
+        }
+
+        /// <summary>
+        /// [เพิ่มใหม่] คำนวณ VAT 7% จาก Subtotal
+        /// </summary>
+        public static decimal GetVatAmount()
+        {
+            return GetTotalPrice() * VAT_RATE;
+        }
+
+        /// <summary>
+        /// [เพิ่มใหม่] คำนวณยอดสุทธิ (Subtotal + VAT)
+        /// </summary>
+        public static decimal GetGrandTotal()
+        {
+            return GetTotalPrice() + GetVatAmount();
         }
     }
 }

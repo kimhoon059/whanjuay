@@ -19,18 +19,18 @@
         private void InitializeComponent()
         {
             this.pnlMain = new Guna.UI2.WinForms.Guna2Panel();
-            this.btnBack = new Guna.UI2.WinForms.Guna2Button();
-            this.btnCart = new Guna.UI2.WinForms.Guna2Button();
+            this.pnlRoundedContainer = new Guna.UI2.WinForms.Guna2Panel();
             this.flowMainPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddToCart = new Guna.UI2.WinForms.Guna2Button();
-            this.pnlRoundedContainer = new Guna.UI2.WinForms.Guna2Panel();
+            this.btnBack = new Guna.UI2.WinForms.Guna2Button();
+            this.btnCart = new Guna.UI2.WinForms.Guna2Button();
             this.pnlMain.SuspendLayout();
             this.pnlRoundedContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlMain
             // 
-            this.pnlMain.BackgroundImage = global::Whanjuay.Properties.Resources.Selectmenu;
+            this.pnlMain.BackgroundImage = global::Whanjuay.Properties.Resources.selectmenuwj;
             this.pnlMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pnlMain.Controls.Add(this.pnlRoundedContainer);
             this.pnlMain.Controls.Add(this.btnAddToCart);
@@ -42,39 +42,20 @@
             this.pnlMain.Size = new System.Drawing.Size(1264, 681);
             this.pnlMain.TabIndex = 0;
             // 
-            // btnBack
+            // pnlRoundedContainer
             // 
-            this.btnBack.BackColor = System.Drawing.Color.Transparent;
-            this.btnBack.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnBack.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnBack.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnBack.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnBack.FillColor = System.Drawing.Color.Transparent;
-            this.btnBack.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnBack.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.btnBack.Location = new System.Drawing.Point(40, 40);
-            this.btnBack.Name = "btnBack";
-            this.btnBack.Size = new System.Drawing.Size(180, 45);
-            this.btnBack.TabIndex = 2;
-            this.btnBack.Text = "BACK";
-            // 
-            // btnCart
-            // 
-            this.btnCart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCart.BackColor = System.Drawing.Color.Transparent;
-            this.btnCart.BorderRadius = 20;
-            this.btnCart.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnCart.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnCart.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnCart.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnCart.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.btnCart.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.btnCart.ForeColor = System.Drawing.Color.SaddleBrown;
-            this.btnCart.Location = new System.Drawing.Point(1042, 40);
-            this.btnCart.Name = "btnCart";
-            this.btnCart.Size = new System.Drawing.Size(180, 45);
-            this.btnCart.TabIndex = 1;
-            this.btnCart.Text = "CART";
+            this.pnlRoundedContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlRoundedContainer.BackColor = System.Drawing.Color.Transparent;
+            this.pnlRoundedContainer.BorderRadius = 30;
+            this.pnlRoundedContainer.Controls.Add(this.flowMainPanel);
+            this.pnlRoundedContainer.FillColor = System.Drawing.Color.White;
+            this.pnlRoundedContainer.Location = new System.Drawing.Point(40, 110);
+            this.pnlRoundedContainer.Name = "pnlRoundedContainer";
+            this.pnlRoundedContainer.Padding = new System.Windows.Forms.Padding(5);
+            this.pnlRoundedContainer.Size = new System.Drawing.Size(1182, 470);
+            this.pnlRoundedContainer.TabIndex = 4;
             // 
             // flowMainPanel
             // 
@@ -105,22 +86,42 @@
             this.btnAddToCart.Size = new System.Drawing.Size(230, 50);
             this.btnAddToCart.TabIndex = 3;
             this.btnAddToCart.Text = "เพิ่มลงตะกร้า";
-            this.btnAddToCart.Visible = false; // ซ่อนไว้
+            this.btnAddToCart.Visible = false;
             // 
-            // pnlRoundedContainer
+            // btnBack
             // 
-            this.pnlRoundedContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlRoundedContainer.BackColor = System.Drawing.Color.Transparent;
-            this.pnlRoundedContainer.BorderRadius = 30;
-            this.pnlRoundedContainer.Controls.Add(this.flowMainPanel);
-            this.pnlRoundedContainer.FillColor = System.Drawing.Color.White;
-            this.pnlRoundedContainer.Location = new System.Drawing.Point(40, 110);
-            this.pnlRoundedContainer.Name = "pnlRoundedContainer";
-            this.pnlRoundedContainer.Padding = new System.Windows.Forms.Padding(5);
-            this.pnlRoundedContainer.Size = new System.Drawing.Size(1182, 470);
-            this.pnlRoundedContainer.TabIndex = 4;
+            this.btnBack.BackColor = System.Drawing.Color.Transparent;
+            this.btnBack.BorderRadius = 20;
+            this.btnBack.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnBack.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnBack.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnBack.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnBack.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.btnBack.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnBack.ForeColor = System.Drawing.Color.White;
+            this.btnBack.Location = new System.Drawing.Point(40, 40);
+            this.btnBack.Name = "btnBack";
+            this.btnBack.Size = new System.Drawing.Size(180, 45);
+            this.btnBack.TabIndex = 2;
+            this.btnBack.Text = "BACK";
+            // 
+            // btnCart
+            // 
+            this.btnCart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCart.BackColor = System.Drawing.Color.Transparent;
+            this.btnCart.BorderRadius = 20;
+            this.btnCart.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnCart.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnCart.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnCart.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnCart.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.btnCart.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnCart.ForeColor = System.Drawing.Color.SaddleBrown;
+            this.btnCart.Location = new System.Drawing.Point(1042, 40);
+            this.btnCart.Name = "btnCart";
+            this.btnCart.Size = new System.Drawing.Size(180, 45);
+            this.btnCart.TabIndex = 1;
+            this.btnCart.Text = "CART";
             // 
             // DessertsMenu
             // 

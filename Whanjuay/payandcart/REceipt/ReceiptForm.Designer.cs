@@ -19,8 +19,8 @@
         {
             this.pnlReceipt = new System.Windows.Forms.Panel();
             this.lblFooter = new System.Windows.Forms.Label();
-            this.lblTotal = new System.Windows.Forms.Label();
-            this.lblTotalHeader = new System.Windows.Forms.Label();
+            this.lblGrandTotalValue = new System.Windows.Forms.Label();
+            this.lblGrandTotalLabel = new System.Windows.Forms.Label();
             this.lineSeparator = new System.Windows.Forms.Label();
             this.flowItemsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.lblItemsHeader = new System.Windows.Forms.Label();
@@ -31,19 +31,27 @@
             this.pbLogo = new System.Windows.Forms.PictureBox();
             this.btnDownloadPdf = new Guna.UI2.WinForms.Guna2Button();
             this.btnClose = new Guna.UI2.WinForms.Guna2Button();
+            this.lblVatValue = new System.Windows.Forms.Label();
+            this.lblVatLabel = new System.Windows.Forms.Label();
+            this.lblSubtotalValue = new System.Windows.Forms.Label();
+            this.lblSubtotalLabel = new System.Windows.Forms.Label();
             this.pnlReceipt.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlReceipt
             // 
-            this.pnlReceipt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // [!!! แก้ไขจุดที่ 1 !!!] ลบ AnchorStyles.Bottom ออกจากบรรทัดด้านล่าง
+            this.pnlReceipt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlReceipt.BackColor = System.Drawing.Color.White;
+            this.pnlReceipt.Controls.Add(this.lblVatValue);
+            this.pnlReceipt.Controls.Add(this.lblVatLabel);
+            this.pnlReceipt.Controls.Add(this.lblSubtotalValue);
+            this.pnlReceipt.Controls.Add(this.lblSubtotalLabel);
             this.pnlReceipt.Controls.Add(this.lblFooter);
-            this.pnlReceipt.Controls.Add(this.lblTotal);
-            this.pnlReceipt.Controls.Add(this.lblTotalHeader);
+            this.pnlReceipt.Controls.Add(this.lblGrandTotalValue);
+            this.pnlReceipt.Controls.Add(this.lblGrandTotalLabel);
             this.pnlReceipt.Controls.Add(this.lineSeparator);
             this.pnlReceipt.Controls.Add(this.flowItemsPanel);
             this.pnlReceipt.Controls.Add(this.lblItemsHeader);
@@ -69,48 +77,48 @@
             this.lblFooter.Text = "ทาน WHANJUAY ให้อร่อยนะค้าบ";
             this.lblFooter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblTotal
+            // lblGrandTotalValue
             // 
-            this.lblTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblTotal.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotal.Location = new System.Drawing.Point(232, 513);
-            this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(210, 23);
-            this.lblTotal.TabIndex = 9;
-            this.lblTotal.Text = "0.00 บาท";
-            this.lblTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblGrandTotalValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblGrandTotalValue.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblGrandTotalValue.Location = new System.Drawing.Point(232, 513);
+            this.lblGrandTotalValue.Name = "lblGrandTotalValue";
+            this.lblGrandTotalValue.Size = new System.Drawing.Size(210, 23);
+            this.lblGrandTotalValue.TabIndex = 9;
+            this.lblGrandTotalValue.Text = "0.00 บาท";
+            this.lblGrandTotalValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lblTotalHeader
+            // lblGrandTotalLabel
             // 
-            this.lblTotalHeader.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblTotalHeader.AutoSize = true;
-            this.lblTotalHeader.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalHeader.Location = new System.Drawing.Point(17, 513);
-            this.lblTotalHeader.Name = "lblTotalHeader";
-            this.lblTotalHeader.Size = new System.Drawing.Size(126, 23);
-            this.lblTotalHeader.TabIndex = 8;
-            this.lblTotalHeader.Text = "รวมยอดเงิน:";
+            this.lblGrandTotalLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblGrandTotalLabel.AutoSize = true;
+            this.lblGrandTotalLabel.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblGrandTotalLabel.Location = new System.Drawing.Point(17, 513);
+            this.lblGrandTotalLabel.Name = "lblGrandTotalLabel";
+            this.lblGrandTotalLabel.Size = new System.Drawing.Size(126, 23);
+            this.lblGrandTotalLabel.TabIndex = 8;
+            this.lblGrandTotalLabel.Text = "ยอดรวมทั้งหมด:";
             // 
             // lineSeparator
             // 
             this.lineSeparator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lineSeparator.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lineSeparator.Location = new System.Drawing.Point(18, 502);
+            this.lineSeparator.Location = new System.Drawing.Point(18, 442);
             this.lineSeparator.Name = "lineSeparator";
             this.lineSeparator.Size = new System.Drawing.Size(424, 2);
             this.lineSeparator.TabIndex = 7;
             // 
             // flowItemsPanel
             // 
-            this.flowItemsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // [!!! แก้ไขจุดที่ 2 !!!] ลบ AnchorStyles.Bottom ออกจากบรรทัดด้านล่าง
+            this.flowItemsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flowItemsPanel.AutoScroll = true;
             this.flowItemsPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowItemsPanel.Location = new System.Drawing.Point(18, 258);
             this.flowItemsPanel.Name = "flowItemsPanel";
-            this.flowItemsPanel.Size = new System.Drawing.Size(424, 232);
+            this.flowItemsPanel.Size = new System.Drawing.Size(424, 172);
             this.flowItemsPanel.TabIndex = 6;
             this.flowItemsPanel.WrapContents = false;
             // 
@@ -166,7 +174,6 @@
             // 
             // pbLogo
             // 
-            // [FIXED] เปลี่ยนไปใช้ Resource ชื่อ logowj
             this.pbLogo.Image = global::Whanjuay.Properties.Resources.logowj;
             this.pbLogo.Location = new System.Drawing.Point(121, 16);
             this.pbLogo.Name = "pbLogo";
@@ -204,6 +211,50 @@
             this.btnClose.TabIndex = 6;
             this.btnClose.Text = "ปิด";
             // 
+            // lblVatValue
+            // 
+            this.lblVatValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblVatValue.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVatValue.Location = new System.Drawing.Point(232, 483);
+            this.lblVatValue.Name = "lblVatValue";
+            this.lblVatValue.Size = new System.Drawing.Size(210, 16);
+            this.lblVatValue.TabIndex = 14;
+            this.lblVatValue.Text = "0.00 บาท";
+            this.lblVatValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblVatLabel
+            // 
+            this.lblVatLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblVatLabel.AutoSize = true;
+            this.lblVatLabel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVatLabel.Location = new System.Drawing.Point(18, 483);
+            this.lblVatLabel.Name = "lblVatLabel";
+            this.lblVatLabel.Size = new System.Drawing.Size(65, 16);
+            this.lblVatLabel.TabIndex = 13;
+            this.lblVatLabel.Text = "ภาษี (7%):";
+            // 
+            // lblSubtotalValue
+            // 
+            this.lblSubtotalValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSubtotalValue.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubtotalValue.Location = new System.Drawing.Point(232, 457);
+            this.lblSubtotalValue.Name = "lblSubtotalValue";
+            this.lblSubtotalValue.Size = new System.Drawing.Size(210, 16);
+            this.lblSubtotalValue.TabIndex = 12;
+            this.lblSubtotalValue.Text = "0.00 บาท";
+            this.lblSubtotalValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblSubtotalLabel
+            // 
+            this.lblSubtotalLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblSubtotalLabel.AutoSize = true;
+            this.lblSubtotalLabel.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubtotalLabel.Location = new System.Drawing.Point(18, 457);
+            this.lblSubtotalLabel.Name = "lblSubtotalLabel";
+            this.lblSubtotalLabel.Size = new System.Drawing.Size(84, 16);
+            this.lblSubtotalLabel.TabIndex = 11;
+            this.lblSubtotalLabel.Text = "ยอดรวมสินค้า:";
+            // 
             // ReceiptForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -237,10 +288,14 @@
         private System.Windows.Forms.Label lblItemsHeader;
         private System.Windows.Forms.FlowLayoutPanel flowItemsPanel;
         private System.Windows.Forms.Label lineSeparator;
-        private System.Windows.Forms.Label lblTotal;
-        private System.Windows.Forms.Label lblTotalHeader;
+        private System.Windows.Forms.Label lblGrandTotalValue;
+        private System.Windows.Forms.Label lblGrandTotalLabel;
         private System.Windows.Forms.Label lblFooter;
         private Guna.UI2.WinForms.Guna2Button btnDownloadPdf;
         private Guna.UI2.WinForms.Guna2Button btnClose;
+        private System.Windows.Forms.Label lblVatValue;
+        private System.Windows.Forms.Label lblVatLabel;
+        private System.Windows.Forms.Label lblSubtotalValue;
+        private System.Windows.Forms.Label lblSubtotalLabel;
     }
 }

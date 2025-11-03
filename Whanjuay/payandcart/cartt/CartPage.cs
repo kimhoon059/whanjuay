@@ -15,11 +15,7 @@ namespace Whanjuay
         public CartPage()
         {
             InitializeComponent();
-
-            // --- [เพิ่มใหม่] ---
-            // ผูก Event ให้ปุ่มชำระเงิน
             this.btnCheckout.Click += new System.EventHandler(this.btnCheckout_Click);
-            // --- [สิ้นสุด] ---
         }
 
         private void CartPage_Load(object sender, EventArgs e)
@@ -27,7 +23,6 @@ namespace Whanjuay
             LoadCartItems();
         }
 
-        // [อัปเดต] เปลี่ยนจาก private เป็น public
         public void LoadCartItems()
         {
             flowCartItems.Controls.Clear();
@@ -43,7 +38,6 @@ namespace Whanjuay
                 lblEmpty.Margin = new Padding(10);
                 flowCartItems.Controls.Add(lblEmpty);
 
-                // [เพิ่มใหม่] ถ้าตะกร้าว่าง ให้ปิดปุ่มชำระเงิน
                 btnCheckout.Enabled = false;
                 btnCheckout.FillColor = Color.Gainsboro;
             }
@@ -58,7 +52,6 @@ namespace Whanjuay
                     flowCartItems.Controls.Add(itemControl);
                 }
 
-                // [เพิ่มใหม่] ถ้ามีของ ให้เปิดปุ่มชำระเงิน
                 btnCheckout.Enabled = true;
                 btnCheckout.FillColor = Color.FromArgb(255, 128, 128);
             }
@@ -70,13 +63,22 @@ namespace Whanjuay
             LoadCartItems();
         }
 
+        /// <summary>
+        /// [แก้ไข] อัปเดตการแสดงผลสรุปยอด
+        /// </summary>
         private void UpdateSummary()
         {
-            decimal total = CartService.GetTotalPrice();
-            lblTotal.Text = $"{total:N2} บาท";
+            // ดึงค่าทั้ง 3 ค่าจาก CartService
+            decimal subTotal = CartService.GetTotalPrice();
+            decimal vatAmount = CartService.GetVatAmount();
+            decimal grandTotal = CartService.GetGrandTotal();
+
+            // อัปเดต Labels (ชื่อ Label ต้องตรงกับ .Designer.cs ที่แก้ไขไป)
+            lblSubtotalValue.Text = $"{subTotal:N2} บาท";
+            lblVatValue.Text = $"{vatAmount:N2} บาท";
+            lblGrandTotalValue.Text = $"{grandTotal:N2} บาท";
         }
 
-        // [อัปเดต] แก้ไขปุ่ม Back ให้ซ่อน (Hide) แทนการปิด (Close)
         private void btnBack_Click(object sender, EventArgs e)
         {
             mainpagewj mainForm = Application.OpenForms.OfType<mainpagewj>().FirstOrDefault();
@@ -87,43 +89,35 @@ namespace Whanjuay
             this.Hide();
         }
 
-        // [แก้ไข Error CS1061] เพิ่มเมธอดที่ Designer อ้างถึงกลับเข้ามา
         private void pnlMain_Paint(object sender, PaintEventArgs e)
         {
             // ปล่อยว่างไว้
         }
 
-        // --- [เพิ่มใหม่] ---
-        // Event Handler สำหรับปุ่มชำระเงิน
+        /// <summary>
+        /// [แก้ไข] ส่งยอด GrandTotal ไปยังหน้าชำระเงิน
+        /// </summary>
         private void btnCheckout_Click(object sender, EventArgs e)
         {
-            decimal total = CartService.GetTotalPrice();
+            // [แก้ไข] เปลี่ยนไปใช้ GetGrandTotal()
+            decimal grandTotal = CartService.GetGrandTotal();
 
-            // ตรวจสอบอีกครั้งว่ามีของในตะกร้า
-            if (total <= 0)
+            if (grandTotal <= 0)
             {
                 MessageBox.Show("ตะกร้าของคุณว่างเปล่า", "ไม่สามารถชำระเงิน", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // เปิดฟอร์มชำระเงินแบบ Pop-up (Modal)
-            // โดยส่งยอดรวม (total) เข้าไป
-            using (PaymentForm paymentForm = new PaymentForm(total))
+            // [แก้ไข] ส่ง grandTotal (ยอดรวมภาษี) ไป
+            using (PaymentForm paymentForm = new PaymentForm(grandTotal))
             {
-                // .ShowDialog() จะหยุดโค้ดไว้จนกว่าหน้า PaymentForm จะถูกปิด
                 DialogResult result = paymentForm.ShowDialog(this);
 
-                // ตรวจสอบว่าการชำระเงินสำเร็จหรือไม่
                 if (result == DialogResult.OK)
                 {
-                    // ถ้าสำเร็จ (ผู้ใช้กดยืนยันและสลิปถูกอัปโหลด)
-                    // CartService.ClearCart() จะถูกเรียกใน PaymentForm แล้ว
-
-                    // ให้โหลดตะกร้าใหม่ (ซึ่งตอนนี้จะว่างเปล่า)
                     LoadCartItems();
                 }
             }
         }
-        // --- [สิ้นสุด] ---
     }
 }
