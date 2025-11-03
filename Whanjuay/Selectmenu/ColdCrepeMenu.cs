@@ -13,32 +13,34 @@ namespace Whanjuay
 {
     public partial class ColdCrepeMenu : Form
     {
+        // [แก้ไข] เปลี่ยน ID
         private const int COLD_CREPE_CATEGORY_ID = 3;
+        // [เพิ่มใหม่] กำหนดราคาฐาน
+        private const decimal BASE_CREPE_PRICE = 45m;
         private string _categoryIconPath;
 
         public ColdCrepeMenu()
         {
             InitializeComponent();
             this.Load += ColdCrepeMenu_Load;
-
-            // [FIX] 
-            // ลบการผูก Event Click ซ้ำซ้อนของ
-            // btnBack, btnCart, และ btnAddToCart ออกจากตรงนี้
-            // เพราะไฟล์ .Designer.cs ผูกไว้ให้แล้ว
-
-            // if (this.btnBack != null)
-            //     this.btnBack.Click += btnBack_Click; // [ลบออก]
-            // if (this.btnCart != null)
-            //     this.btnCart.Click += btnCart_Click; // [ลบออก]
-            // if (this.btnAddToCart != null)
-            //     this.btnAddToCart.Click += btnAddToCart_Click; // [ลบออก]
+            // Event อื่นๆ ผูกใน Designer แล้ว
         }
 
         private void ColdCrepeMenu_Load(object sender, EventArgs e)
         {
+            // [เพิ่มใหม่] ตั้งค่าปุ่มยืนยัน
+            chkConfirmCrepe.Text = $"ยืนยันเครปเย็น (ฐานราคา {BASE_CREPE_PRICE:N2} บาท)";
+            chkConfirmCrepe.CheckedChanged += chkConfirmCrepe_CheckedChanged;
+
+            // [เพิ่มใหม่] ตั้งค่าสถานะเริ่มต้น
+            UpdateControlsState();
+
+            // [แก้ไข] กลับไปใช้ Logic การโหลดแบบเดิม
             LoadIngredientGroups();
+
             try
             {
+                // [แก้ไข] ID
                 _categoryIconPath = Db.GetCategoryIconPath(COLD_CREPE_CATEGORY_ID);
             }
             catch (Exception ex)
@@ -48,12 +50,31 @@ namespace Whanjuay
             }
         }
 
+        // [เพิ่มใหม่] Event เมื่อติ๊กปุ่มยืนยัน
+        private void chkConfirmCrepe_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateControlsState();
+        }
+
+        // [เพิ่มใหม่] เมธอดควบคุมสถานะ
+        private void UpdateControlsState()
+        {
+            bool isCrepeSelected = chkConfirmCrepe.Checked;
+            flowMainPanel.Enabled = isCrepeSelected;
+            if (!isCrepeSelected)
+            {
+                ResetAllSelections(false);
+            }
+        }
+
+        // [แก้ไข] กลับมาใช้ LoadIngredientGroups (เหมือน DrinksMenu.cs)
         private void LoadIngredientGroups()
         {
             if (flowMainPanel == null) return;
 
             try
             {
+                // [แก้ไข] ID
                 DataTable dtGroups = Db.GetIngredientCategories(COLD_CREPE_CATEGORY_ID);
 
                 if (dtGroups == null || dtGroups.Rows.Count == 0)
@@ -120,7 +141,8 @@ namespace Whanjuay
             }
         }
 
-        private void ResetAllSelections()
+        // [แก้ไข] ปรับปรุงการ Reset
+        private void ResetAllSelections(bool resetBaseCrepe = true)
         {
             if (flowMainPanel == null) return;
 
@@ -134,7 +156,16 @@ namespace Whanjuay
                     }
                 }
             }
-            flowMainPanel.AutoScrollPosition = new Point(0, 0);
+
+            if (resetBaseCrepe)
+            {
+                chkConfirmCrepe.Checked = false;
+            }
+
+            if (resetBaseCrepe)
+            {
+                UpdateControlsState();
+            }
         }
 
         private void btnBack_Click(object sender, EventArgs e)
@@ -151,19 +182,38 @@ namespace Whanjuay
         private void btnCart_Click(object sender, EventArgs e)
         {
             ResetAllSelections();
-
             mainpagewj mainForm = Application.OpenForms.OfType<mainpagewj>().FirstOrDefault();
             mainForm?.btnCart_Click(sender, e);
             this.Hide();
         }
 
+        // [แก้ไข] Logic การเพิ่มลงตะกร้า (กลับไปใช้แบบ Scan ทั้งหมด + เพิ่มราคาฐาน)
         private void btnAddToCart_Click(object sender, EventArgs e)
         {
             if (flowMainPanel == null) return;
 
-            List<CartIngredient> selectedIngredients = new List<CartIngredient>();
-            decimal totalPrice = 0;
+            // 1. ตรวจสอบ
+            if (!chkConfirmCrepe.Checked)
+            {
+                MessageBox.Show("กรุณาติ๊ก \"ยืนยันเครปเย็น\" ก่อนครับ", "ยังไม่ได้เลือกเครป", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            // 2. [แก้ไข] เริ่มต้นราคาที่ 45 บาท
+            List<CartIngredient> selectedIngredients = new List<CartIngredient>();
+            decimal totalPrice = BASE_CREPE_PRICE;
+
+            // 3. [เพิ่มใหม่] เพิ่ม "เครปฐาน"
+            selectedIngredients.Add(new CartIngredient
+            {
+                ProductId = -2, // ID พิเศษสำหรับเครปฐานเย็น
+                Name = $"เครปเย็น (ฐาน)",
+                BasePrice = BASE_CREPE_PRICE,
+                IsExtra = false,
+                ExtraPrice = 0
+            });
+
+            // 4. [แก้ไข] กลับไปใช้ Loop แบบเดิม
             foreach (Control groupControl in flowMainPanel.Controls)
             {
                 if (groupControl is FlowLayoutPanel itemPanel)
@@ -181,6 +231,8 @@ namespace Whanjuay
                                 ExtraPrice = ingredient.IsExtra ? ingredient.ExtraPrice : 0
                             };
                             selectedIngredients.Add(ingredientItem);
+
+                            // 5. [แก้ไข] คำนวณราคา
                             totalPrice += ingredient.BasePrice;
                             if (ingredient.IsExtra)
                             {
@@ -191,12 +243,14 @@ namespace Whanjuay
                 }
             }
 
-            if (selectedIngredients.Count == 0)
+            // 6. [แก้ไข] ตรวจสอบ
+            if (selectedIngredients.Count <= 1)
             {
                 MessageBox.Show("กรุณาเลือกวัตถุดิบอย่างน้อย 1 รายการ", "ยังไม่ได้เลือกสินค้า", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
+            // 7. สร้าง CartItem [แก้ไข] CategoryName, DisplayName
             CartItem customCrepe = new CartItem
             {
                 DisplayName = "เครปเย็น (สั่งทำ)",
@@ -211,38 +265,13 @@ namespace Whanjuay
 
             CartService.AddItem(customCrepe);
 
-            // --- [FIX] แก้ปัญหาปุ่มยิง 2 รอบ ---
-            // (คงการแก้ไขนี้ไว้ แม้ว่าเราจะลบตัวผูกซ้ำไปแล้ว
-            // เพื่อป้องกันปัญหา Focus ในอนาคต)
-
-            // 1. ปิดปุ่ม "เพิ่มลงตะกร้า" ชั่วคราว
-            if (this.btnAddToCart != null)
-            {
-                this.btnAddToCart.Enabled = false;
-            }
-
-            // 2. ย้าย Focus
-            if (this.btnBack != null)
-            {
-                this.btnBack.Focus();
-            }
-            else
-            {
-                this.Focus();
-            }
-
-            // 3. แสดง MessageBox
+            // 8. (เหมือนเดิม) แจ้งเตือน, Reset, เปิดปุ่ม
+            btnAddToCart.Enabled = false;
             MessageBox.Show($"เพิ่ม 'เครปเย็น (สั่งทำ)' ราคา {totalPrice:N2} บาท ลงในตะกร้าแล้ว!", "เพิ่มสินค้าสำเร็จ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            // 4. Reset ค่า
             ResetAllSelections();
 
-            // 5. เปิดปุ่ม "เพิ่มลงตะกร้า" กลับมา
-            if (this.btnAddToCart != null)
-            {
-                this.btnAddToCart.Enabled = true;
-            }
-            // --- [END FIX] ---
+            btnAddToCart.Enabled = true;
         }
     }
 }

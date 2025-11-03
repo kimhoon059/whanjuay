@@ -22,16 +22,23 @@
             this.btnCart = new Guna.UI2.WinForms.Guna2Button();
             this.flowMainPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddToCart = new Guna.UI2.WinForms.Guna2Button();
-            this.pnlRoundedContainer = new Guna.UI2.WinForms.Guna2Panel(); // [ใหม่] Panel ขอบมน
+            this.pnlRoundedContainer = new Guna.UI2.WinForms.Guna2Panel();
+            // [เพิ่มใหม่] Panel สำหรับวางปุ่มติ๊ก
+            this.pnlFilters = new Guna.UI2.WinForms.Guna2Panel();
+            // [เพิ่มใหม่] ปุ่มติ๊กยืนยันเครป
+            this.chkConfirmCrepe = new Guna.UI2.WinForms.Guna2CheckBox();
             this.pnlMain.SuspendLayout();
-            this.pnlRoundedContainer.SuspendLayout(); // [ใหม่]
+            this.pnlRoundedContainer.SuspendLayout();
+            this.pnlFilters.SuspendLayout(); // [เพิ่มใหม่]
             this.SuspendLayout();
             // 
             // pnlMain
             // 
             this.pnlMain.BackgroundImage = global::Whanjuay.Properties.Resources.Selectmenu;
             this.pnlMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pnlMain.Controls.Add(this.pnlRoundedContainer); // [แก้]
+            // [เพิ่มใหม่] เพิ่ม pnlFilters เข้าไป
+            this.pnlMain.Controls.Add(this.pnlFilters);
+            this.pnlMain.Controls.Add(this.pnlRoundedContainer);
             this.pnlMain.Controls.Add(this.btnAddToCart);
             this.pnlMain.Controls.Add(this.btnBack);
             this.pnlMain.Controls.Add(this.btnCart);
@@ -44,10 +51,6 @@
             // btnBack
             // 
             this.btnBack.BackColor = System.Drawing.Color.Transparent;
-            this.btnBack.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnBack.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnBack.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnBack.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnBack.FillColor = System.Drawing.Color.Transparent;
             this.btnBack.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnBack.ForeColor = System.Drawing.Color.SaddleBrown;
@@ -63,10 +66,6 @@
             this.btnCart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCart.BackColor = System.Drawing.Color.Transparent;
             this.btnCart.BorderRadius = 20;
-            this.btnCart.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnCart.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnCart.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnCart.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnCart.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
             this.btnCart.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.btnCart.ForeColor = System.Drawing.Color.SaddleBrown;
@@ -86,7 +85,8 @@
             this.flowMainPanel.Margin = new System.Windows.Forms.Padding(0);
             this.flowMainPanel.Name = "flowMainPanel";
             this.flowMainPanel.Padding = new System.Windows.Forms.Padding(10);
-            this.flowMainPanel.Size = new System.Drawing.Size(1172, 460);
+            // [แก้ไข] ขนาด Size เดิม
+            this.flowMainPanel.Size = new System.Drawing.Size(1172, 424);
             this.flowMainPanel.TabIndex = 0;
             // 
             // btnAddToCart
@@ -94,16 +94,13 @@
             this.btnAddToCart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAddToCart.BackColor = System.Drawing.Color.Transparent;
             this.btnAddToCart.BorderRadius = 20;
-            this.btnAddToCart.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnAddToCart.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnAddToCart.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnAddToCart.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
             this.btnAddToCart.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.btnAddToCart.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             this.btnAddToCart.ForeColor = System.Drawing.Color.White;
-            this.btnAddToCart.Location = new System.Drawing.Point(992, 606);
+            // [แก้ไข] ขยับปุ่มขึ้นเล็กน้อย
+            this.btnAddToCart.Location = new System.Drawing.Point(992, 629);
             this.btnAddToCart.Name = "btnAddToCart";
-            this.btnAddToCart.Size = new System.Drawing.Size(230, 50);
+            this.btnAddToCart.Size = new System.Drawing.Size(230, 40);
             this.btnAddToCart.TabIndex = 3;
             this.btnAddToCart.Text = "เพิ่มลงตะกร้า";
             this.btnAddToCart.Click += new System.EventHandler(this.btnAddToCart_Click);
@@ -117,11 +114,48 @@
             this.pnlRoundedContainer.BorderRadius = 30;
             this.pnlRoundedContainer.Controls.Add(this.flowMainPanel);
             this.pnlRoundedContainer.FillColor = System.Drawing.Color.White;
-            this.pnlRoundedContainer.Location = new System.Drawing.Point(40, 110);
+            // [แก้ไข] ขยับลง
+            this.pnlRoundedContainer.Location = new System.Drawing.Point(40, 150);
             this.pnlRoundedContainer.Name = "pnlRoundedContainer";
             this.pnlRoundedContainer.Padding = new System.Windows.Forms.Padding(5);
-            this.pnlRoundedContainer.Size = new System.Drawing.Size(1182, 470);
+            // [แก้ไข] ปรับขนาดให้สั้นลง
+            this.pnlRoundedContainer.Size = new System.Drawing.Size(1182, 434);
             this.pnlRoundedContainer.TabIndex = 4;
+            // 
+            // pnlFilters
+            // 
+            this.pnlFilters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlFilters.BackColor = System.Drawing.Color.Transparent;
+            this.pnlFilters.BorderRadius = 15;
+            this.pnlFilters.Controls.Add(this.chkConfirmCrepe);
+            this.pnlFilters.FillColor = System.Drawing.Color.White;
+            // [เพิ่มใหม่] ตำแหน่ง Panel
+            this.pnlFilters.Location = new System.Drawing.Point(40, 91);
+            this.pnlFilters.Name = "pnlFilters";
+            this.pnlFilters.Size = new System.Drawing.Size(1182, 53);
+            this.pnlFilters.TabIndex = 5;
+            // 
+            // chkConfirmCrepe
+            // 
+            this.chkConfirmCrepe.AutoSize = true;
+            this.chkConfirmCrepe.BackColor = System.Drawing.Color.Transparent;
+            this.chkConfirmCrepe.CheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(139)))), ((int)(((byte)(71)))), ((int)(((byte)(59)))));
+            this.chkConfirmCrepe.CheckedState.BorderRadius = 2;
+            this.chkConfirmCrepe.CheckedState.BorderThickness = 0;
+            this.chkConfirmCrepe.CheckedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(139)))), ((int)(((byte)(71)))), ((int)(((byte)(59)))));
+            this.chkConfirmCrepe.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.chkConfirmCrepe.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(139)))), ((int)(((byte)(71)))), ((int)(((byte)(59)))));
+            this.chkConfirmCrepe.Location = new System.Drawing.Point(23, 15);
+            this.chkConfirmCrepe.Name = "chkConfirmCrepe";
+            this.chkConfirmCrepe.Size = new System.Drawing.Size(262, 25);
+            this.chkConfirmCrepe.TabIndex = 0;
+            this.chkConfirmCrepe.Text = "ยืนยันเครปร้อน (ฐานราคา 45.00 บาท)";
+            this.chkConfirmCrepe.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
+            this.chkConfirmCrepe.UncheckedState.BorderRadius = 2;
+            this.chkConfirmCrepe.UncheckedState.BorderThickness = 0;
+            this.chkConfirmCrepe.UncheckedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
+            this.chkConfirmCrepe.UseVisualStyleBackColor = false;
             // 
             // HotCrepeMenu
             // 
@@ -135,7 +169,10 @@
             this.Load += new System.EventHandler(this.HotCrepeMenu_Load);
             this.pnlMain.ResumeLayout(false);
             this.pnlRoundedContainer.ResumeLayout(false);
+            this.pnlFilters.ResumeLayout(false); // [เพิ่มใหม่]
+            this.pnlFilters.PerformLayout(); // [เพิ่มใหม่]
             this.ResumeLayout(false);
+
         }
 
         #endregion
@@ -146,5 +183,8 @@
         private System.Windows.Forms.FlowLayoutPanel flowMainPanel;
         private Guna.UI2.WinForms.Guna2Button btnAddToCart;
         private Guna.UI2.WinForms.Guna2Panel pnlRoundedContainer;
+        // [เพิ่มใหม่]
+        private Guna.UI2.WinForms.Guna2Panel pnlFilters;
+        private Guna.UI2.WinForms.Guna2CheckBox chkConfirmCrepe;
     }
 }

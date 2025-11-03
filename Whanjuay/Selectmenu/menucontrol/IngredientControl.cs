@@ -7,6 +7,9 @@ namespace Whanjuay
 {
     public partial class IngredientControl : UserControl
     {
+        // [เพิ่มใหม่] Event สำหรับแจ้งเตือนฟอร์มแม่ เมื่อมีการ ติ๊ก/ไม่ติ๊ก
+        public event Action<IngredientControl, bool> SelectionChanged;
+
         public int ProductId { get; private set; }
         public string ItemName { get; private set; }
         public decimal BasePrice { get; private set; }
@@ -21,11 +24,19 @@ namespace Whanjuay
             InitializeComponent();
         }
 
-        // [เพิ่มใหม่] ฟังก์ชันสำหรับให้ฟอร์มแม่ (HotCrepeMenu) สั่งล้างค่า
         public void Reset()
         {
-            chkSelect.Checked = false;
-            chkExtra.Checked = false; // chkSelect_CheckedChanged จะซ่อนปุ่มนี้อัตโนมัติ
+            // [แก้ไข] ตั้งค่า Checked เป็น false โดยไม่ยิง Event
+            // เพื่อป้องกัน Loop การแจ้งเตือน
+            if (chkSelect.Checked)
+            {
+                chkSelect.Checked = false;
+            }
+            if (chkExtra.Checked)
+            {
+                chkExtra.Checked = false;
+            }
+            chkExtra.Visible = false;
         }
 
         public void SetData(int productId, string name, decimal price, string imagePath, string groupName)
@@ -38,6 +49,7 @@ namespace Whanjuay
             chkSelect.Text = name;
             lblPrice.Text = $"(+{price:N2} บาท)";
 
+            // (Logic การกำหนดราคา ExtraPrice เหมือนเดิม)
             if (groupName.Contains("แป้ง"))
             {
                 this.ExtraPrice = 10;
@@ -88,6 +100,9 @@ namespace Whanjuay
                 chkExtra.Visible = false;
                 chkExtra.Checked = false;
             }
+
+            // [เพิ่มใหม่] ยิง Event บอกฟอร์มแม่
+            SelectionChanged?.Invoke(this, chkSelect.Checked);
         }
     }
 }
